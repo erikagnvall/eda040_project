@@ -1,0 +1,3 @@
+$ ssh -N -f -L 1025:argus-2.student.lth.se:80 dt09XXX@login.student.lth.se
+surf to http://localhost:1025/
+
