@@ -4,8 +4,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>120</x>
-      <y>330</y>
+      <x>400</x>
+      <y>440</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -15,8 +15,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>120</x>
-      <y>430</y>
+      <x>400</x>
+      <y>540</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -27,8 +27,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>580</x>
-      <y>200</y>
+      <x>860</x>
+      <y>310</y>
       <w>70</w>
       <h>70</h>
     </coordinates>
@@ -39,8 +39,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>190</x>
-      <y>380</y>
+      <x>470</x>
+      <y>490</y>
       <w>70</w>
       <h>70</h>
     </coordinates>
@@ -51,8 +51,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>510</x>
-      <y>250</y>
+      <x>790</x>
+      <y>360</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -63,8 +63,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>620</x>
-      <y>500</y>
+      <x>900</x>
+      <y>610</y>
       <w>70</w>
       <h>70</h>
     </coordinates>
@@ -75,8 +75,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>490</x>
-      <y>150</y>
+      <x>770</x>
+      <y>260</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -87,8 +87,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>510</x>
-      <y>150</y>
+      <x>790</x>
+      <y>260</y>
       <w>50</w>
       <h>120</h>
     </coordinates>
@@ -98,8 +98,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>720</x>
-      <y>130</y>
+      <x>1000</x>
+      <y>240</y>
       <w>180</w>
       <h>50</h>
     </coordinates>
@@ -110,14 +110,15 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>700</x>
-      <y>270</y>
+      <x>980</x>
+      <y>380</y>
       <w>190</w>
       <h>160</h>
     </coordinates>
     <panel_attributes>ImageMonitor
 -----------------------
 -video:boolean
+-----------------------
 +putImage(Image)
 +getImage():Image
 +setVideo(boolean)
@@ -128,8 +129,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>440</x>
-      <y>550</y>
+      <x>720</x>
+      <y>660</y>
       <w>210</w>
       <h>50</h>
     </coordinates>
@@ -140,8 +141,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>190</x>
-      <y>280</y>
+      <x>470</x>
+      <y>390</y>
       <w>70</w>
       <h>70</h>
     </coordinates>
@@ -152,8 +153,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>0</x>
-      <y>320</y>
+      <x>280</x>
+      <y>430</y>
       <w>460</w>
       <h>270</h>
     </coordinates>
@@ -163,8 +164,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>0</x>
-      <y>420</y>
+      <x>280</x>
+      <y>530</y>
       <w>140</w>
       <h>50</h>
     </coordinates>
@@ -174,8 +175,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>590</x>
-      <y>400</y>
+      <x>870</x>
+      <y>510</y>
       <w>220</w>
       <h>170</h>
     </coordinates>
@@ -185,8 +186,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>780</x>
-      <y>150</y>
+      <x>1060</x>
+      <y>260</y>
       <w>50</w>
       <h>140</h>
     </coordinates>
@@ -196,8 +197,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>520</x>
-      <y>250</y>
+      <x>800</x>
+      <y>360</y>
       <w>200</w>
       <h>120</h>
     </coordinates>
@@ -207,8 +208,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>190</x>
-      <y>320</y>
+      <x>470</x>
+      <y>430</y>
       <w>380</w>
       <h>50</h>
     </coordinates>
@@ -218,8 +219,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>190</x>
-      <y>320</y>
+      <x>470</x>
+      <y>430</y>
       <w>220</w>
       <h>150</h>
     </coordinates>
@@ -229,22 +230,22 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>10</x>
-      <y>140</y>
+      <x>290</x>
+      <y>250</y>
       <w>120</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>ServerProtocol
 ---------------
-+sendJPEG()
++sendImage()
 +awaitCmd():int?</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>40</x>
-      <y>190</y>
+      <x>320</x>
+      <y>300</y>
       <w>140</w>
       <h>260</h>
     </coordinates>
@@ -254,8 +255,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>40</x>
-      <y>250</y>
+      <x>320</x>
+      <y>360</y>
       <w>140</w>
       <h>100</h>
     </coordinates>
@@ -265,8 +266,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>460</x>
-      <y>380</y>
+      <x>740</x>
+      <y>490</y>
       <w>130</w>
       <h>80</h>
     </coordinates>
@@ -279,8 +280,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>490</x>
-      <y>250</y>
+      <x>770</x>
+      <y>360</y>
       <w>50</w>
       <h>150</h>
     </coordinates>
@@ -290,12 +291,61 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>560</x>
-      <y>370</y>
+      <x>840</x>
+      <y>480</y>
       <w>160</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>30;30;140;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>500</x>
+      <y>190</y>
+      <w>180</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>Image
+-----------
+-mode:int
+-data</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>360</x>
+      <y>130</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>OutputStream
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>250</x>
+      <y>130</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>InputStream
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>260</x>
+      <y>130</y>
+      <w>170</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>90;120;90;80;150;80;150;30;150;80;90;80;30;80;30;30</additional_attributes>
   </element>
 </diagram>
