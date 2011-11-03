@@ -12,7 +12,6 @@ public class ServerProtocol {
 	}
 	
 	public void sendImage(Image img) {
-		
 		try {
 			s.getOutputStream().write(img.toBytes());
 		} catch (IOException e) {

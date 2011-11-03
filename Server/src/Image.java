@@ -1,13 +1,19 @@
 
 public class Image {
-	public static final int offset = 1;
-	private byte[] msg;
+	/*
+	 * ||| byte currentMode | int picLen | byte[] picData |||
+	 */
+	public static final int OFFSET = 5;
+	private byte[] pic;
+	private int actualLength;
 	
-	public Image(byte[] jpg) {
-		System.arraycopy(jpg, 0, msg, offset, jpg.length);
+	public Image(byte[] buff, int actualLength) {
+		this.actualLength = actualLength;
+		System.arraycopy(buff, 0, pic, OFFSET, actualLength);
 	}
 	
 	public byte[] toBytes() {
+		byte[] msg = new byte[OFFSET + actualLength];
 		return msg;
 	}
 }
