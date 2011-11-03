@@ -11,11 +11,13 @@ public class ImageCapture extends Thread {
 	}
 
 	public void run() {
-		while (true) {
-			byte[] buff = new byte[Axis211A.IMAGE_BUFFER_SIZE + Image.OFFSET];
+		byte[] buff;
+		while (!interrupted()) {
+			buff = new byte[Axis211A.IMAGE_BUFFER_SIZE];
 			int n = 0;
-			n = cam.getJPEG(buff, Image.OFFSET);
-			Image img = new Image(buff, n);
+			n = cam.getJPEG(buff, 0);
+			byte mode = (im.isVideo()) ? ServerProtocol.VIDEO_MODE : ServerProtocol.IDLE_MODE;
+			Image img = new Image(buff, n, mode);
 			im.putImage(img);
 		}
 	}

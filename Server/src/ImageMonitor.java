@@ -23,12 +23,12 @@ public class ImageMonitor {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println("getImg interrupted");
 			}
 		}
+		Image tmp = img;
 		img = null;
-		return img;
+		return tmp;
 	}
 	
 	public synchronized void setVideo(boolean isVideo) {
@@ -39,8 +39,18 @@ public class ImageMonitor {
 		return this.isConnected;
 	}
 	
-	public void disconnect() {
-		// you probably thought this method was alive.
-		// NOPE!
+	public synchronized void disconnect() {
+		isConnected = false;
 	}
+	
+	public synchronized void awaitDisconnect() {
+		while (isConnected) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println("Interrupted in awaitDisc.");
+			}
+		}
+	}
+	
 }

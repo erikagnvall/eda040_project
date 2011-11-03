@@ -4,7 +4,11 @@ import java.net.Socket;
 
 
 public class ServerProtocol {
-	private static final int MSG_LEN = 10;
+	private static final int MSG_LEN = 1;
+	public static final byte VIDEO_MODE = 1;
+	public static final byte IDLE_MODE = 0;
+	public static final byte DISCONNECT = 2;
+
 	private Socket s;
 	
 	public ServerProtocol(Socket s) {
@@ -15,29 +19,20 @@ public class ServerProtocol {
 		try {
 			s.getOutputStream().write(img.toBytes());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Could not send picture");
 		}
 	}
 	
-	public int awaitCommand() {
+	public byte awaitCommand() throws IOException {
 		byte[] buff = new byte[MSG_LEN];
 		InputStream in = null;
-		try {
-			in = s.getInputStream();
-		} catch (IOException e) {
-			// socket closed
-			e.printStackTrace();
-		}
+		in = s.getInputStream();
 		int readBytes = 0;
 		try {
 			readBytes = in.read(buff, 0, MSG_LEN);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		if (readBytes < MSG_LEN) { //might not be needed
-			//fail
 		}
 		return buff[0];
 	}
