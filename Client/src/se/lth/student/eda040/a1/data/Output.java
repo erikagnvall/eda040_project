@@ -1,9 +1,8 @@
 package se.lth.student.eda040.a1.data;
 
-import se.lth.student.eda040.a1.network.ClientProtocol;
-import se.lth.student.eda040.a1.network.Command;
+import se.lth.student.eda040.a1.network.*;
 
-public clase Output extends Thread {
+public class Output extends Thread {
 
 	ClientProtocol protocol;
 	ClientMonitor monitor;

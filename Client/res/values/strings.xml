@@ -4,4 +4,17 @@
 	<string name="hello">Hello World, EDA040_cameraActivity!</string>
 	<string name="app_name">EDA040_camera</string>
 
+	<string name="choose_camera">Pick a camera</string>
+	<string-array name="cameras">
+	    <item>argus-1</item>
+	    <item>argus-2</item>
+	    <item>argus-3</item>
+	    <item>argus-4</item>
+	    <item>argus-5</item>
+	    <item>argus-6</item>
+	    <item>argus-7</item>
+	    <item>argus-8</item>
+	    <item>argus-9</item>
+	    <item>argus-10</item>
+	</string-array>
 </resources>

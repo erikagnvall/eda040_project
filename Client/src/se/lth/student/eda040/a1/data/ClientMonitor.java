@@ -1,5 +1,7 @@
 package se.lth.student.eda040.a1.data;
 
+import se.lth.student.eda040.a1.network.*;
+
 public class ClientMonitor {
 
 	public ClientMonitor() {
@@ -7,7 +9,7 @@ public class ClientMonitor {
 
 	}
 
-	public void putImage(Image img){
+	public void putImage(Image img, int camera){
 		return;
 	}
 

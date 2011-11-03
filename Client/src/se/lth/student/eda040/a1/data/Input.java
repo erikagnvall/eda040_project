@@ -1,10 +1,12 @@
-package se.lth.student.eda040.a1.;
+package se.lth.student.eda040.a1.data;
+
+import se.lth.student.eda040.a1.network.*;
 
 public class Input extends Thread {
 	private ClientMonitor monitor;
-	private ClientProcol protocol;
+	private ClientProtocol protocol;
 
-	public Input(CientMonitor monitor) {
+	public Input(ClientMonitor monitor) {
 		this.monitor = monitor;
 	}
 
