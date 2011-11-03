@@ -1,0 +1,35 @@
+package network;
+
+import se.lth.cs.fakecamera.Axis211A;
+//import se.lth.cs.cameraproxy.Axis211A;
+//import se.lth.cs.camera.Axis211A;
+
+import data.ImageMonitor;
+
+public class ImageCapture extends Thread {
+	private ImageMonitor monitor;
+	private Axis211A camera;
+
+	public ImageCapture(ImageMonitor monitor) {
+		this.monitor = monitor;
+		camera = new Axis211A(); // Real and fakecamera.
+		//camera = new Axis211A("argus-7", 1084); // Proxycamera.
+		camera.connect();
+	}
+
+	public void run() {
+		byte[] buffer;
+		int readBytes;
+		byte mode;
+		Image image;
+		while (!interrupted()) {
+			buffer = new byte[Axis211A.IMAGE_BUFFER_SIZE];
+			readBytes = 0;
+			readBytes = camera.getJPEG(buffer, 0);
+			mode = (monitor.isVideo()) ? ServerProtocol.VIDEO_MODE : ServerProtocol.IDLE_MODE;
+			image = new Image(buffer, readBytes, mode);
+			monitor.putImage(image);
+		}
+	}
+
+}

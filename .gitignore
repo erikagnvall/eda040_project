@@ -4,3 +4,6 @@ bin
 gen
 .*.swp
 *.class
+tags
+build
+local.properties

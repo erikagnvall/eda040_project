@@ -1,9 +1,12 @@
+package data;
+
+import network.Image;
 
 public class ImageMonitor {
 	//out/in
 	private boolean isConnected;
 	private boolean isVideo;
-	private Image img;
+	private Image image;
 	
 	public ImageMonitor() {
 		isVideo = false;
@@ -13,21 +16,21 @@ public class ImageMonitor {
 		return isVideo;
 	}
 		
-	public synchronized void putImage(Image img) {
-		this.img = img;
+	public synchronized void putImage(Image image) {
+		this.image = image;
 		notifyAll();
 	}
 	
 	public synchronized Image getImage() {
-		while (img == null) {
+		while (image == null) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				System.err.println("getImg interrupted");
+				System.err.println("getImag interrupted");
 			}
 		}
-		Image tmp = img;
-		img = null;
+		Image tmp = image;
+		image = null;
 		return tmp;
 	}
 	

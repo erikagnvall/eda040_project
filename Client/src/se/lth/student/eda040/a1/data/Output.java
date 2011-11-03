@@ -1,6 +1,7 @@
 package se.lth.student.eda040.a1.data;
 
 import se.lth.student.eda040.a1.network.*;
+import java.io.IOException;
 
 public class Output extends Thread {
 
@@ -15,7 +16,11 @@ public class Output extends Thread {
 	public void run(){
 		while(!interrupted()){
 			Command cmd = monitor.awaitCommand(protocol.getCameraId());
+			try {
 			protocol.sendCommand(cmd);
+			} catch (IOException ie) {
+				// TODO 
+			}
 		}
 
 	}

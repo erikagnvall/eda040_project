@@ -1,15 +1,19 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import data.ImageMonitor;
+import data.In;
+import data.Out;
+import network.ServerProtocol;
 
 public class ConnectionSetup {
 	private ImageMonitor monitor;
-	private ServerSocket ss;
+	private ServerSocket serverSocket;
 
 	public ConnectionSetup() {
 		monitor = new ImageMonitor();
 		try {
-			ss = new ServerSocket(8080);
+			serverSocket = new ServerSocket(8080);
 		} catch (IOException e) {
 			System.err.println("Could not bind to port.");
 		}
@@ -20,7 +24,7 @@ public class ConnectionSetup {
 		System.out.println("Waiting for connection");
 		while (true) {
 			try {
-				socket = ss.accept();
+				socket = serverSocket.accept();
 			} catch (IOException e) {
 				System.err.println("Could not accept connection");
 			}
@@ -32,7 +36,6 @@ public class ConnectionSetup {
 			System.out.println("Waiting for disconnect");
 			monitor.awaitDisconnect();
 		}
-	       
 	}
 
 	public static void main(String[] args) {

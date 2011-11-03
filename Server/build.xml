@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Server" basedir="." default="compile">
+	<description>
+		Build script for project in  EDA040, network camera.
+	</description>
+
+	<!-- *** Global Variables *** -->
+	<property name="project.name" value="Server" />
+	<property name="path.source" value="src" />
+	<property name="path.destination" value="bin" />
+	<property name="path.library" value="lib" />
+
+
+	<!-- Library versions in use. Please update path externalLibs if you add/remove from here.-->
+	<property name="fakecamera" value="fakecamera.jar" />
+	<property name="media" value="media.jar" />
+
+	<!-- *** Paths *** -->
+	<path id="externalLibs">
+		<fileset dir="${path.library}">
+			<include name="${fakecamera}" />
+			<include name="${media}" />
+		</fileset>
+	</path>
+	
+	<!-- *** Targets *** -->
+	<target name="compile" depends="clean" description="Compile the sources to the destination.">
+		<mkdir dir="bin" />
+		<javac destdir="${path.destination}">
+			<src path="${path.source}" />
+			<classpath refid="externalLibs" />
+		</javac>
+	</target>
+
+	<target name="clean" description="Delete old binaries.">
+		<!--<delete dir="${path.destination}/" />-->
+		<delete includeemptydirs="true"> 
+			<fileset dir="${path.destination}" includes="**/*" />
+		</delete>
+	</target>
+
+</project>
