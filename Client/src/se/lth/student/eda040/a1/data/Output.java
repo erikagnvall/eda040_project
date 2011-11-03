@@ -14,7 +14,7 @@ public class Output extends Thread {
 
 	public void run(){
 		while(!interrupted()){
-			Command cmd = monitor.awaitCommand(protocol.getID());
+			Command cmd = monitor.awaitCommand(protocol.getCameraId());
 			protocol.sendCommand(cmd);
 		}
 
