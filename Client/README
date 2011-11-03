@@ -2,7 +2,9 @@
 $android create avd -n api_10 -t 10
 $emulator -avd api_10 &
 
-$ant install 
+$ant debug
+
+$ant installd
 or 
 $adb install <apk-file>
 
