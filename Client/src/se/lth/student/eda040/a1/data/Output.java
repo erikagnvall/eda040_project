@@ -4,7 +4,6 @@ import se.lth.student.eda040.a1.network.*;
 import java.io.IOException;
 
 public class Output extends Thread {
-
 	ClientProtocol protocol;
 	ClientMonitor monitor;
 
@@ -15,9 +14,9 @@ public class Output extends Thread {
 
 	public void run(){
 		while(!interrupted()){
-			Command cmd = monitor.awaitCommand(protocol.getCameraId());
 			try {
-			protocol.sendCommand(cmd);
+				Command cmd = monitor.awaitCommand(protocol.getCameraID());
+				protocol.sendCommand(cmd);
 			} catch (IOException ie) {
 				// TODO 
 			}

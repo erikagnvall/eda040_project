@@ -1,12 +1,13 @@
 package se.lth.student.eda040.a1.network;
 
 public class Image {
+	private int cameraID; // TODO byte is enough.
 	private byte[] data;
 	private boolean videoMode;
 
-	public Image(byte[] data, boolean videoMode) {
+	public Image(int cameraID, byte[] data, boolean videoMode) {
+		this.cameraID = cameraID;
 		this.data = data;
 		this.videoMode = videoMode;
 	}
-
 }

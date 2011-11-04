@@ -6,6 +6,7 @@ public class Command {
 	public static byte DISCONNECT = 2;
 
 	private byte command;
+
 	public Command(byte command) {
 		this.command = command;
 	}
