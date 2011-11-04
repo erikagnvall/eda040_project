@@ -7,9 +7,9 @@ import java.net.Socket;
 
 public class ServerProtocol {
 	private static final int MSG_LEN = 1;
-	public static final byte VIDEO_MODE = 1;
-	public static final byte IDLE_MODE = 2;
-	public static final byte DISCONNECT = 3;
+	public static final byte VIDEO_MODE = 'v';
+	public static final byte IDLE_MODE = 'i';
+	public static final byte DISCONNECT = 'd';
 
 	private InputStream input;
 	private OutputStream output;

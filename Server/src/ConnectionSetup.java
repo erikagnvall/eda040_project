@@ -48,6 +48,13 @@ public class ConnectionSetup {
 			    System.out.println("cold not join threads");
 			}
 			System.out.println("killed com threads");
+			try {
+			    socket.close();
+			} catch (IOException e) {
+			    System.err.println("cold not close connection");
+			    System.out.println("cold not close connection");
+			}			    
+			System.out.println("closed connection");
 		}
 	}
 
