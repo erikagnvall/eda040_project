@@ -6,11 +6,11 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class ClientProtocol {
-	private int cameraId;
+	private int cameraID;
 	private Socket socket;
 
-	public ClientProtocol(Socket socket, int cameraId) {
-		this.cameraId = cameraId;
+	public ClientProtocol(Socket socket, int cameraID) {
+		this.cameraID = cameraID;
 		this.socket = socket;
 	}
 
@@ -31,7 +31,7 @@ public class ClientProtocol {
 		while(bytesRead < imageLen){
 			bytesRead += is.read(imageData, bytesRead, imageLen-bytesRead);
 		}
-		Image img = new Image(imageData, ((int) buffer[0]) == 1); // TODO fix constant value
+		Image img = new Image(cameraID, imageData, ((int) buffer[0]) == 1); // TODO fix constant value
 		return img;
 	}
 
@@ -41,8 +41,8 @@ public class ClientProtocol {
 		return;
 	}
 
-	public int getCameraId() {
-		return cameraId;
+	public int getCameraID() {
+		return cameraID;
 	}
 	
 	public void disconnect() throws IOException {
