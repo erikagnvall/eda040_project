@@ -9,7 +9,6 @@ public class TrivialTest extends TestCase {
     }
 
     public void testTrivial(){
-        System.out.println("HERE");
         assertTrue(true);
     }
 }
