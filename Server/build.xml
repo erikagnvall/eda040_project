@@ -4,6 +4,11 @@
 		Build script for project in  EDA040, network camera.
 	</description>
 
+	<!-- Tasks allways run independent och specified target -->
+	<mkdir dir="bin" />
+	<!-- Local properties, copy and edit the local.properties.sample file -->
+	<loadproperties srcFile="local.properties" />
+
 	<!-- *** Global Variables *** -->
 	<property name="project.name" value="Server" />
 	<property name="path.source" value="src" />
@@ -37,6 +42,22 @@
 		<delete includeemptydirs="true"> 
 			<fileset dir="${path.destination}" includes="**/*" />
 		</delete>
+	</target>
+
+	<path id="classpath.tests">
+		<pathelement location="${junit.jar}"/>
+		<pathelement location="${path.destination}"/>
+	</path>
+	<target name="test" depends="compile" >
+		<junit>
+		    <formatter type="brief" usefile="false"/>
+		    <classpath refid="classpath.tests" />
+		    <batchtest>
+			    <fileset dir="${path.source}">
+			    <include name="tests/*.java" />
+			</fileset>
+		    </batchtest>
+		</junit>
 	</target>
 
 </project>
