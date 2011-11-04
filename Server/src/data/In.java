@@ -14,13 +14,14 @@ public class In extends Thread {
 	}
 	
 	public void run() {
-		while (!interrupted()) {
+	    while (!isInterrupted()) {
 			byte cmd = 0;
 			try {
 				cmd = protocol.awaitCommand();
 			} catch (IOException e) {
 				// TODO 
 				monitor.disconnect();
+				e.printStackTrace();
 			}
 			switch (cmd) {
 				case ServerProtocol.IDLE_MODE:
@@ -36,6 +37,7 @@ public class In extends Thread {
 					System.err.println("Unknown command recieved.");
 			}
 		}
+		System.out.println("in died");
 	}
 
 }

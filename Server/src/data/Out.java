@@ -2,6 +2,7 @@ package data;
 
 import java.net.Socket;
 import network.ServerProtocol;
+import network.Image;
 
 public class Out extends Thread {
 
@@ -14,8 +15,13 @@ public class Out extends Thread {
 	}
 	
 	public void run() {
-		while (true) {
-			protocol.sendImage(monitor.getImage());
+	    while (!isInterrupted()) {
+		Image img = monitor.getImage();
+		if (img != null) {
+		    protocol.sendImage(img);
+		    System.out.println("out got picture");
 		}
+	    }
+	    System.out.println("out died");
 	}
 }

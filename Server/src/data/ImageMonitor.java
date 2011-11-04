@@ -10,6 +10,7 @@ public class ImageMonitor {
 	
 	public ImageMonitor() {
 		isVideo = false;
+		isConnected = false;
 	}
 	
 	public boolean isVideo() {
@@ -22,7 +23,7 @@ public class ImageMonitor {
 	}
 	
 	public synchronized Image getImage() {
-		while (image == null) {
+		while (image == null && isConnected) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -44,7 +45,12 @@ public class ImageMonitor {
 	
 	public synchronized void disconnect() {
 		isConnected = false;
+		notifyAll();
 	}
+
+    public synchronized void connect() {
+	isConnected = true;
+    }
 	
 	public synchronized void awaitDisconnect() {
 		while (isConnected) {

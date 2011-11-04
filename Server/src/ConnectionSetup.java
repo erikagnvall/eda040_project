@@ -25,6 +25,8 @@ public class ConnectionSetup {
 		while (true) {
 			try {
 				socket = serverSocket.accept();
+				monitor.connect();
+				System.out.println("got new connection");
 			} catch (IOException e) {
 				System.err.println("Could not accept connection");
 			}
@@ -35,6 +37,17 @@ public class ConnectionSetup {
 			out.start();
 			System.out.println("Waiting for disconnect");
 			monitor.awaitDisconnect();
+			System.out.println("diconnected");
+			in.interrupt();
+			out.interrupt();
+			try {
+			    in.join();
+			    out.join();
+			} catch (InterruptedException e) {
+			    System.err.println("cold not join threads");
+			    System.out.println("cold not join threads");
+			}
+			System.out.println("killed com threads");
 		}
 	}
 
