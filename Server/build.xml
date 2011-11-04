@@ -30,7 +30,6 @@
 	
 	<!-- *** Targets *** -->
 	<target name="compile" depends="clean" description="Compile the sources to the destination.">
-		<mkdir dir="bin" />
 		<javac destdir="${path.destination}">
 			<src path="${path.source}" />
 			<classpath refid="externalLibs" />
@@ -54,8 +53,8 @@
 		    <classpath refid="classpath.tests" />
 		    <batchtest>
 			    <fileset dir="${path.source}">
-			    <include name="tests/*.java" />
-			</fileset>
+					<include name="tests/*.java" />
+		    	</fileset>
 		    </batchtest>
 		</junit>
 	</target>
