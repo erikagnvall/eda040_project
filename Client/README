@@ -1,5 +1,5 @@
 ## Build ##
-$android create avd -n api_10 -t 10
+$android create avd -n api_10 -t target-10
 $emulator -avd api_10 &
 
 $ant debug
