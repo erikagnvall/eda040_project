@@ -10,10 +10,8 @@ public class VideoActivity extends Activity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.videoview);
+		//AwesomeVideoView avv = (AwesomeVideoView) findViewById(R.id.avv);
 	}
 
-	//public void drawImage(Image image) {
-		//// TODO paint the bytes.
-	//}
 }

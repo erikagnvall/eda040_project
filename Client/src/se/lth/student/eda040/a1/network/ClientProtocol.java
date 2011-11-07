@@ -6,10 +6,10 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class ClientProtocol {
-	private int cameraID;
+	private byte cameraID;
 	private Socket socket;
 
-	public ClientProtocol(Socket socket, int cameraID) {
+	public ClientProtocol(Socket socket, byte cameraID) {
 		this.cameraID = cameraID;
 		this.socket = socket;
 	}
