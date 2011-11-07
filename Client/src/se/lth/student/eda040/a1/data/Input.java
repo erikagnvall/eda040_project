@@ -19,8 +19,8 @@ public class Input extends Thread {
 				image = protocol.awaitImage();
 				monitor.putImage(image, protocol.getCameraID());
 			} catch (IOException e) {
-				// TODO tell someone the camera disconnected
-				e.printStackTrace();
+				protocol.disconnect();
+				interrupt();
 			}
 		}
 	}

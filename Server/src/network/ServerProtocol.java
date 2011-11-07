@@ -36,11 +36,11 @@ public class ServerProtocol {
 	public byte awaitCommand() throws IOException {
 	    byte[] buff = new byte[MSG_LEN];
 	    int readBytes = 0;
-	    System.out.println("reading");
+	    //System.out.println("reading");
 	    readBytes = input.read(buff, 0, MSG_LEN);
-	    System.out.println("rb: "+ readBytes);
+	    //System.out.println("rb: "+ readBytes);
 	    if (readBytes == -1)
-		throw new IOException("connection dropped");
+			throw new IOException("connection dropped");
 	    return buff[0];
 	}
 }

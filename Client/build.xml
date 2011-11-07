@@ -88,7 +88,7 @@
     </path>
     <target name="test" depends="debug" >
         <junit>
-            <formatter type="plain" usefile="false"/>
+            <formatter type="brief" usefile="false"/>
             <classpath refid="classpath.tests" />
             <batchtest>
                 <fileset dir="./src/">

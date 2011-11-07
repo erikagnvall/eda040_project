@@ -8,6 +8,7 @@ import java.net.Socket;
 public class ClientProtocol {
 	private int cameraID;
 	private Socket socket;
+	public static byte VIDEO_MODE = 'v';
 
 	public ClientProtocol(Socket socket, int cameraID) {
 		this.cameraID = cameraID;
@@ -18,8 +19,13 @@ public class ClientProtocol {
 		InputStream is = socket.getInputStream();
 		byte[] buffer = new byte[5];
 		int bytesRead = 0;
+		int returnValue = 0;
 		while (bytesRead < 5) {
-			bytesRead += is.read(buffer, bytesRead, 5-bytesRead);
+			returnValue = is.read(buffer, bytesRead, 5-bytesRead);
+			if (returnValue == -1){
+				throw new IOException("Connection lost");
+			}
+			bytesRead += returnValue;
 		}
 		int imageLen = 0;
 		imageLen |= buffer[1] << 24;
@@ -29,9 +35,13 @@ public class ClientProtocol {
 		bytesRead = 0;
 		byte[] imageData = new byte[imageLen];
 		while(bytesRead < imageLen){
-			bytesRead += is.read(imageData, bytesRead, imageLen-bytesRead);
+			returnValue = is.read(imageData, bytesRead, imageLen-bytesRead);
+			if (returnValue == -1){
+				throw new IOException("Connection lost");
+			}
+			bytesRead += returnValue;
 		}
-		Image img = new Image(cameraID, imageData, ((int) buffer[0]) == 1); // TODO fix constant value
+		Image img = new Image(cameraID, imageData, ((int) buffer[0]) == VIDEO_MODE);
 		return img;
 	}
 

@@ -61,6 +61,41 @@ public class TestClientProtocol extends TestCase {
 		}
 	}
 
+	public void testVideoMode(){
+		byte[] input = {'v', 0x00, 0x00, 0x00, 0x01, 0x0F};
+		ClientProtocol cp = new ClientProtocol(new MockSocket(input), 0);
+		try {
+			Image img = cp.awaitImage();
+			assertTrue("Expected vieo mode, but wasn't", img.isVideoMode()); 
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Got Exception but shouldnt have");
+		}
+	}
+
+	public void testNotVideoMode(){
+		byte[] input = {'i', 0x00, 0x00, 0x00, 0x01, 0x0F};
+		ClientProtocol cp = new ClientProtocol(new MockSocket(input), 0);
+		try {
+			Image img = cp.awaitImage();
+			assertFalse("Expected vieo mode, but wasn't", img.isVideoMode()); 
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Got Exception but shouldnt have");
+		}
+	}
+
+	public void testLostConnection(){
+		byte[] input = {'i', 0x00, 0x00, 0x00, 0x02, 0x0F};
+		ClientProtocol cp = new ClientProtocol(new MockSocket(input), 0);
+		try {
+			Image img = cp.awaitImage();
+			fail("Should have throw an IOException but didn't");
+		} catch (IOException e) {
+			assertEquals("Connection lost", e.getMessage());
+		}
+	}
+
 	private class MockSocket extends Socket {
 		private java.io.InputStream in;
 		private java.io.OutputStream out;
