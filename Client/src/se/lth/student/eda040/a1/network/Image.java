@@ -10,4 +10,16 @@ public class Image {
 		this.data = data;
 		this.videoMode = videoMode;
 	}
+	
+	public byte[] getImageData(){
+		return data;
+	}
+
+	public int getCameraId(){
+		return cameraID;
+	}
+
+	public boolean isVideoMode(){
+		return videoMode;
+	}
 }
