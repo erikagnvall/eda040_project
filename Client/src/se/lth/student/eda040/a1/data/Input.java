@@ -19,7 +19,11 @@ public class Input extends Thread {
 				image = protocol.awaitImage();
 				monitor.putImage(image, protocol.getCameraID());
 			} catch (IOException e) {
-				protocol.disconnect();
+				try {
+					protocol.disconnect();
+				} catch (IOException ioe) {
+					System.err.println("kaoos");
+				}
 				interrupt();
 			}
 		}
