@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<se.lth.student.eda040.a1.AwesomeVideoView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/avv"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-	<ImageView 
+	<ImageView
 		android:id="@+id/view1"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="fill_parent"
+		android:background="#000000"
+		android:padding="1dp"
 	/>
 	<ImageView
 		android:id="@+id/view2"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:background="#000000"
+		android:padding="1dp"
 	/>
-</LinearLayout>
+
+	<TextView
+		android:id="@+id/texttest"
+		android:text = "ehlo"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	/>
+</se.lth.student.eda040.a1.AwesomeVideoView>
