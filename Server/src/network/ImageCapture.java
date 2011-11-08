@@ -24,6 +24,7 @@ public class ImageCapture extends Thread {
 		Image image;
 		while (!interrupted()) {
 			buffer = new byte[Axis211A.IMAGE_BUFFER_SIZE];
+			System.out.println("Kameran används2");
 			readBytes = 0;
 			readBytes = camera.getJPEG(buffer, 0);
 			mode = (monitor.isVideo()) ? ServerProtocol.VIDEO_MODE : ServerProtocol.IDLE_MODE;

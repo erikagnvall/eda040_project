@@ -19,12 +19,14 @@
 	<!-- Library versions in use. Please update path externalLibs if you add/remove from here.-->
 	<property name="fakecamera" value="fakecamera.jar" />
 	<property name="media" value="media.jar" />
+	<property name="junit" value="junit-3.8.2.jar" />
 
 	<!-- *** Paths *** -->
 	<path id="externalLibs">
 		<fileset dir="${path.library}">
 			<include name="${fakecamera}" />
 			<include name="${media}" />
+			<include name="${junit}" />
 		</fileset>
 	</path>
 	

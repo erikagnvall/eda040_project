@@ -5,10 +5,12 @@ import data.ImageMonitor;
 import data.In;
 import data.Out;
 import network.ServerProtocol;
+import network.ImageCapture;
 
 public class ConnectionSetup {
 	private ImageMonitor monitor;
 	private ServerSocket serverSocket;
+	private ImageCapture capture;
 
 	public ConnectionSetup() {
 		monitor = new ImageMonitor();
@@ -17,9 +19,11 @@ public class ConnectionSetup {
 		} catch (IOException e) {
 			System.err.println("Could not bind to port.");
 		}
+		this.capture = new ImageCapture(monitor);
 	}
 
 	public void run() {
+		capture.start();
 		Socket socket = null;
 		System.out.println("Waiting for connection");
 		while (true) {
