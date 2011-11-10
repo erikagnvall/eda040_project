@@ -7,7 +7,7 @@ public class Output extends Thread {
 	ClientProtocol protocol;
 	ClientMonitor monitor;
 
-	public Output(ClientProtocol protocol, ClientMonitor monitor) {
+	public Output(ClientMonitor monitor, ClientProtocol protocol ) {
 		this.protocol = protocol;
 		this.monitor = monitor;
 	}

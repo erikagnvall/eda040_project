@@ -8,8 +8,9 @@ public class Input extends Thread {
 	private ClientMonitor monitor;
 	private ClientProtocol protocol;
 
-	public Input(ClientMonitor monitor) {
+	public Input(ClientMonitor monitor, ClientProtocol protocol) {
 		this.monitor = monitor;
+		this.protocol = protocol;
 	}
 
 	public void run() {

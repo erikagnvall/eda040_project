@@ -6,22 +6,33 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class ClientProtocol {
-	private byte cameraID;
-	private Socket socket;
 	public static byte VIDEO_MODE = 'v';
 
-	public ClientProtocol(Socket socket, byte cameraID) {
+	private static int REMOTE_PORT = 8080;
+
+	private byte cameraID;
+	private Socket socket;
+	private InputStream inputStream;
+	private OutputStream outputStream;
+
+	public ClientProtocol(byte cameraID, String host) throws CouldNotConnectException {
 		this.cameraID = cameraID;
-		this.socket = socket;
+		try {
+			this.socket = new Socket(host, REMOTE_PORT);
+			this.inputStream = socket.getInputStream();
+			this.outputStream = socket.getOutputStream();
+		} catch (IOException ie) {
+			throw new CouldNotConnectException();
+		}
 	}
 
 	public Image awaitImage() throws IOException{
-		InputStream is = socket.getInputStream();
+		InputStream inputStream = socket.getInputStream();
 		byte[] buffer = new byte[5];
 		int bytesRead = 0;
 		int returnValue = 0;
 		while (bytesRead < 5) {
-			returnValue = is.read(buffer, bytesRead, 5-bytesRead);
+			returnValue = inputStream.read(buffer, bytesRead, 5-bytesRead);
 			if (returnValue == -1){
 				throw new IOException("Connection lost");
 			}
@@ -35,7 +46,7 @@ public class ClientProtocol {
 		bytesRead = 0;
 		byte[] imageData = new byte[imageLen];
 		while(bytesRead < imageLen){
-			returnValue = is.read(imageData, bytesRead, imageLen-bytesRead);
+			returnValue = inputStream.read(imageData, bytesRead, imageLen-bytesRead);
 			if (returnValue == -1){
 				throw new IOException("Connection lost");
 			}
@@ -46,8 +57,7 @@ public class ClientProtocol {
 	}
 
 	public void sendCommand(Command cmd) throws IOException{
-		OutputStream os = socket.getOutputStream();
-		os.write(cmd.getCommand());
+		outputStream.write(cmd.getCommand());
 		return;
 	}
 
