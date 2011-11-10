@@ -21,16 +21,6 @@ public class AwesomeVideoView extends LinearLayout {
 		Log.d("aaaaaaaaaaaaaaaaaaaaaa", "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 	}
 
-	//public AwesomeVideoView(Context context) {
-		//super(context);
-		//this.view1 = new ImageView(context);
-		//this.view2 = new ImageView(context);
-		//int myHeigth = getHeigth();
-		//int myWidth = getWidth();
-		//view1.set
-		//view1.setImageBitmap(BitmapFactory.decodeFile("/sdcard/test2.jpg"));
-
-	//}
 	public void onFinishInflate() {
 		this.view1 = (ImageView) findViewById(R.id.view1);
 		this.view2 = (ImageView) findViewById(R.id.view2);
@@ -66,15 +56,4 @@ public class AwesomeVideoView extends LinearLayout {
 		}
 		view.setImageBitmap(image.toBitmap());
 	}
-
-	//@Override
-	//protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-		//// TODO 
-		//if (changed) {
-			//view1.layout(0, top, right, bottom / 2);
-			//view2.layout(left, top + bottom / 2, right, bottom);
-		//}
-		
-	//}
-
 }
