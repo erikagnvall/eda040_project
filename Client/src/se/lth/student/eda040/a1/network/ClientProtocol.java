@@ -15,7 +15,6 @@ public class ClientProtocol {
 	private Socket socket;
 	private InputStream inputStream;
 	private OutputStream outputStream;
-
 	public ClientProtocol(byte cameraId) {
 		this.cameraId = cameraId;
 	}
@@ -60,8 +59,8 @@ public class ClientProtocol {
 		return img;
 	}
 
-	public void sendCommand(Command cmd) throws IOException{
-		outputStream.write(cmd.getCommand());
+	public void sendCommand(Command command) throws IOException{
+		outputStream.write(command.getCommand());
 	}
 
 	public byte getCameraId() {
