@@ -22,7 +22,7 @@ public class AwesomeVideoView extends LinearLayout {
 
 	public void drawImage(Image image) {
 		ImageView view = null;
-		switch (image.getCameraID()) {
+		switch (image.getCameraId()) {
 			case 0:
 				view = view1;
 				break;
