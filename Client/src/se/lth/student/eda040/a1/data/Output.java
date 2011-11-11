@@ -7,21 +7,21 @@ public class Output extends Thread {
 	ClientProtocol protocol;
 	ClientMonitor monitor;
 
-	public Output(ClientMonitor monitor, ClientProtocol protocol ) {
-		this.protocol = protocol;
+	public Output(ClientMonitor monitor, ClientProtocol protocol) {
 		this.monitor = monitor;
+		this.protocol = protocol;
 	}
 
 	public void run(){
+		Command command;
 		while(!interrupted()){
 			try {
-				Command cmd = monitor.awaitCommand(protocol.getCameraID());
-				protocol.sendCommand(cmd);
+				command = monitor.awaitCommand(protocol.getCameraId());
+				protocol.sendCommand(command);
 			} catch (IOException ie) {
 				// TODO 
 			}
 		}
 
 	}
-
 }

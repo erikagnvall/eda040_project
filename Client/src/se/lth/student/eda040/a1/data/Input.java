@@ -17,13 +17,14 @@ public class Input extends Thread {
 		Image image;
 		while (!interrupted()) {
 			try {
+				monitor.connectionCheck(protocol.getCameraId());
 				image = protocol.awaitImage();
-				monitor.putImage(image, protocol.getCameraID());
+				monitor.putImage(image, protocol.getCameraId());
 			} catch (IOException e) {
 				try {
 					protocol.disconnect();
 				} catch (IOException ioe) {
-					System.err.println("kaoos");
+					System.err.println("Could not disconnect some how.");
 				}
 				interrupt();
 			}

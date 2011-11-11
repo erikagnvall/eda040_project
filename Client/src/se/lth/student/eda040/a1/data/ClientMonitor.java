@@ -6,25 +6,26 @@ import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
-import java.io.IOException;
 
 public class ClientMonitor {
 	private Queue<Command> commandQueue;
 	private Queue<Image> imageBuffer;
-	private Map<Byte, ClientProtocol> cameras;
+	private Map<Byte, ClientProtocol> protocols;
+	private boolean[] connected;
 
 	public ClientMonitor() {
 		commandQueue = new LinkedList<Command>();
 		imageBuffer = new LinkedList<Image>();
-		cameras = new HashMap<Byte, ClientProtocol>();
+		protocols = new HashMap<Byte, ClientProtocol>();
+		connected = new boolean[2];
 	}
 
-	public synchronized void putCommand(Command command, int cameraID){
+	public synchronized void putCommand(Command command, int cameraId){
 		commandQueue.offer(command);
 		notifyAll();
 	}
 
-	public synchronized Command awaitCommand(int cameraID){
+	public synchronized Command awaitCommand(int cameraId){
 		while (commandQueue.isEmpty()) {
 			try {
 				wait();
@@ -51,16 +52,33 @@ public class ClientMonitor {
 		return imageBuffer.poll();
 	}
 
-	public synchronized void awaitStateChange() {
-		// wait for command in what buffer?
+	public synchronized boolean connectTo(byte cameraId, String host) {
+		boolean success = false;
+		if (!protocols.containsKey(cameraId)) {
+			ClientProtocol protocol = protocols.get(cameraId);
+			try {
+				protocol.connectTo(host);
+				success = true;
+			} catch (Exception e)  {
+				success = false;
+			}
+		}
+
+		if (success) {
+			connected[cameraId] = true;
+			notifyAll();
+		}
+
+		return success;
 	}
-	
-	public synchronized void connectCamera(byte id, String host) throws CouldNotConnectException, IOException {
-		// TODO instanciate In and Out threads here? And main-thread calling this method should not instanciate ClientProtocol (and the Socketj) since that is blocking?
-		if (!cameras.containsKey(id)) {
-			cameras.put(id, new ClientProtocol(id, host));
-		} else {
-			throw new IOException("Camera " + id + " allready connected.");
+
+	public synchronized void connectionCheck(byte cameraId) {
+		while (!connected[cameraId]) {
+			try {
+				wait();
+			} catch (InterruptedException ie) {
+				System.err.println("Broken bed.");
+			}
 		}
 	}
 }
