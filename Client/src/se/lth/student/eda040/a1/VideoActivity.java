@@ -8,6 +8,8 @@ import se.lth.student.eda040.a1.network.ClientProtocol;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuInflater;
+import android.view.Menu;
 
 
 public class VideoActivity extends Activity {
@@ -36,4 +38,10 @@ public class VideoActivity extends Activity {
 		out1.start();
 	}
 
+	//@Override
+	//public boolean onCreateOptionsMenu(Menu menu) {
+		//MenuInflater inflater = getMenuInflater();
+		//inflater.inflate(R.menu.videomenu, menu);
+		//return true;
+	//}
 }

@@ -3,6 +3,7 @@
 
 	<string name="hello">Hello World, EDA040_cameraActivity!</string>
 	<string name="app_name">BigBrother</string>
+	<string name="contr_menuitem">Control panel</string>
 
 	<string name="choose_camera">Pick a camera</string>
 	<string-array name="cameras">
