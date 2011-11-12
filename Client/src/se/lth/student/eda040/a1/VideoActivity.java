@@ -12,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.Menu;
 import android.util.Log;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 
 
 public class VideoActivity extends Activity {
@@ -20,6 +22,7 @@ public class VideoActivity extends Activity {
 	private Output out0;
 	private Output out1;
 	private Handler handler;
+	private ClientMonitor monitor;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,7 +31,7 @@ public class VideoActivity extends Activity {
 		
 		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
 		handler = new Handler();
-		ClientMonitor monitor = new ClientMonitor();
+		monitor = new ClientMonitor();
 		ImageFetcher fetcher = new ImageFetcher(monitor, avv, handler);
 		ClientProtocol protocol0 = new ClientProtocol((byte) 0);
 		ClientProtocol protocol1 = new ClientProtocol((byte) 1);
@@ -44,16 +47,58 @@ public class VideoActivity extends Activity {
 		out0.start();
 		out1.start();
 		fetcher.start();
-		Log.d("VideoActivity","pre connect to monitor");
-		monitor.connectTo((byte) 0, "10.0.2.2");
-		monitor.connectTo((byte) 1, "10.0.2.2");
-		Log.d("VideoActivity","post connect to monitor");
+		//Log.d("VideoActivity","pre connect to monitor");
+		//monitor.connectTo((byte) 0, "10.0.2.2");
+		//monitor.connectTo((byte) 1, "10.0.2.2");
+		//Log.d("VideoActivity","post connect to monitor");
 	}
 
-	//@Override
-	//public boolean onCreateOptionsMenu(Menu menu) {
-		//MenuInflater inflater = getMenuInflater();
-		//inflater.inflate(R.menu.videomenu, menu);
-		//return true;
-	//}
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.videomenu, menu);
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.connectCam0:
+				Log.d("VideoActivity", "Selected connectCam0 option.");
+				// TODO let user choose camera here.
+				monitor.connectTo((byte) 0, "10.0.2.2");
+				break;
+		case R.id.connectCam1:
+				Log.d("VideoActivity", "Selected connectCam0 option.");
+				// TODO let user choose camera here.
+				monitor.connectTo((byte) 1, "10.0.2.2");
+				break;
+		case R.id.disconnectCam0:
+				Log.d("VideoActivity", "Selected disconnectCam0");
+				monitor.disconnectCamera((byte) 0);	
+				break;
+		case R.id.disconnectCam1:
+				Log.d("VideoActivity", "Selected disconnectCam1");
+				monitor.disconnectCamera((byte) 1);	
+				break;
+		default:
+				super.onOptionsItemSelected(item);
+		}
+		return true;
+	}
+
+	public boolean onPrepareOptionsMenu(Menu menu) {
+				// TODO this overides the icons that otherwide would be used according to the xml. What to do?
+				menu.clear();	 // Clears all items, below: rebuild from scratch.
+				if (monitor.isConnectedCamera((byte) 0)) {
+					menu.add(0, R.id.disconnectCam0, 0, "Disconnect c0");
+				} else {
+					menu.add(0, R.id.connectCam0, 0, "Connect c0");
+				}
+
+				if (monitor.isConnectedCamera((byte) 1)) {
+					menu.add(1, R.id.disconnectCam1, 1, "Disconnect c1");
+				} else {
+					menu.add(1, R.id.connectCam1, 1, "Connect c1");
+				}
+		return true;
+	}
 }

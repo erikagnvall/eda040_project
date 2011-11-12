@@ -6,6 +6,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.IOException;
 import android.util.Log;
 
 public class ClientMonitor {
@@ -82,9 +83,21 @@ public class ClientMonitor {
 			connected[cameraId] = true;
 			notifyAll();
 		} else {
-			Log.d("ClientMonitor", "Unsjccesfull connecttion to host with " + cameraId);
+			Log.d("ClientMonitor", "Unsuccessfull connecttion to host with " + cameraId);
 		}
 		return success;
+	}
+
+	public synchronized void disconnectCamera(byte cameraId) {
+		if (protocols.containsKey(cameraId)) {
+			try {
+			protocols.get(cameraId).disconnect();
+			} catch (IOException ioe) {
+				// TODO what to do?
+			}
+		}
+		connected[cameraId] = false;
+		Log.d("ClientMonitor", "Disconnected camera " + cameraId);
 	}
 
 	public synchronized void connectionCheck(byte cameraId) {
@@ -97,5 +110,9 @@ public class ClientMonitor {
 			}
 		}
 		Log.d("ClientMonitor", "Released in connectionCheck for camera " + cameraId);
+	}
+
+	public synchronized boolean isConnectedCamera(byte cameraId) {
+		return connected[cameraId];
 	}
 }

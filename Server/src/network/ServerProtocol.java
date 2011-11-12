@@ -15,6 +15,7 @@ public class ServerProtocol {
 	private OutputStream output;
 	private Socket socket;
 
+	// TODO use DatagramSocket for better performance.
 	public ServerProtocol(Socket socket) {
 		this.socket = socket;
 		try {

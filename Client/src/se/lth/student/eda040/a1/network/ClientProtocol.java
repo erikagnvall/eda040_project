@@ -90,6 +90,7 @@ public class ClientProtocol {
 	public void disconnect() throws IOException {
 		socket.close();
 		inputStream = null;
+		outputStream.flush();
 		outputStream = null;
 	}
 }

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/ctrlb"
+	<item android:id="@+id/connectCam0"
 		android:icon="@drawable/ic_launcher"
-		android:title="@string/contr_menuitem" />
+		android:title="@string/connectCam0" />
+	<item android:id="@+id/connectCam1"
+		android:icon="@drawable/ic_launcher"
+		android:title="@string/connectCam1" />
+
+	<item android:id="@+id/disconnectCam0"
+		android:icon="@drawable/ic_launcher"
+		android:title="@string/disconnectCam0" />
+	<item android:id="@+id/disconnectCam1"
+		android:icon="@drawable/ic_launcher"
+		android:title="@string/disconnectCam1" />
 </menu>
