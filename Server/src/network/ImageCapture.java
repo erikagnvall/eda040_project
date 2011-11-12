@@ -14,7 +14,9 @@ public class ImageCapture extends Thread {
 		this.monitor = monitor;
 		camera = new Axis211A(); // Real and fakecamera.
 		//camera = new Axis211A("argus-7", 1084); // Proxycamera.
+		System.out.println("try connect to camera");
 		camera.connect();
+		System.out.println("connected to camera");
 	}
 
 	public void run() {
@@ -24,7 +26,7 @@ public class ImageCapture extends Thread {
 		Image image;
 		while (!interrupted()) {
 			buffer = new byte[Axis211A.IMAGE_BUFFER_SIZE];
-			System.out.println("Kameran används2");
+			//System.out.println("Kameran används2");
 			readBytes = 0;
 			readBytes = camera.getJPEG(buffer, 0);
 			mode = (monitor.isVideo()) ? ServerProtocol.VIDEO_MODE : ServerProtocol.IDLE_MODE;

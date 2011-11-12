@@ -6,6 +6,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
+import android.util.Log;
 
 public class ClientMonitor {
 	private Queue<Command> commandQueue;
@@ -38,7 +39,8 @@ public class ClientMonitor {
 
 	public synchronized void putImage(Image image, int camera){
 		imageBuffer.offer(image);
-		notifyAll();
+		Log.d("ClientMonitor", "Put image in buffer");
+		notifyAll(); 
 	}
 
 	public synchronized Image awaitImage() {
@@ -49,36 +51,51 @@ public class ClientMonitor {
 				System.err.println("Wait interrupted.");
 			}
 		}
+		Log.d("ClientMonitor", "Polled image in buffer");
+		notifyAll(); 
 		return imageBuffer.poll();
+	}
+
+	public synchronized void addProtocol(byte cameraId, ClientProtocol protocol) {
+		protocols.put(cameraId, protocol);
 	}
 
 	public synchronized boolean connectTo(byte cameraId, String host) {
 		boolean success = false;
-		if (!protocols.containsKey(cameraId)) {
+		if (protocols.containsKey(cameraId)) {
 			ClientProtocol protocol = protocols.get(cameraId);
 			try {
 				protocol.connectTo(host);
+				Log.d("ClientMonitor", "Connecting camera " + cameraId);
 				success = true;
 			} catch (Exception e)  {
 				success = false;
+				Log.d("ClientMonitor", "caught exception" + e.toString());
 			}
+		} else {
+			Log.d("ClientMonitor", "Could not fins protocol for camera " + cameraId);
+			System.err.println("missing protocol.");
 		}
 
 		if (success) {
+			Log.d("ClientMonitor", "Successfully connected to host with " + cameraId);
 			connected[cameraId] = true;
 			notifyAll();
+		} else {
+			Log.d("ClientMonitor", "Unsjccesfull connecttion to host with " + cameraId);
 		}
-
 		return success;
 	}
 
 	public synchronized void connectionCheck(byte cameraId) {
 		while (!connected[cameraId]) {
 			try {
+				Log.d("ClientMonitor", "Waiting in connectionCheck for camera " + cameraId);
 				wait();
 			} catch (InterruptedException ie) {
 				System.err.println("Broken bed.");
 			}
 		}
+		Log.d("ClientMonitor", "Released in connectionCheck for camera " + cameraId);
 	}
 }

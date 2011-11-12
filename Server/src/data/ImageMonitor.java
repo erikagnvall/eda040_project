@@ -49,7 +49,8 @@ public class ImageMonitor {
 	}
 
     public synchronized void connect() {
-	isConnected = true;
+		isConnected = true;
+		notifyAll(); //?
     }
 	
 	public synchronized void awaitDisconnect() {

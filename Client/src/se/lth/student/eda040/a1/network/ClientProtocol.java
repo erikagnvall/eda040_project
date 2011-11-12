@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.net.Socket;
+import android.util.Log;
 
 // TODO needs to be synchronized because of connectTo? if they share the socket? But that no good since is.read is blocking....
 public class ClientProtocol {
@@ -20,43 +21,38 @@ public class ClientProtocol {
 	}
 
 	public Image awaitImage() throws IOException{
-		while (inputStream == null) {
-			try {
-				wait();
-			} catch (InterruptedException ie) {
-				System.err.println("Caught an interrupted exception. What to do");
-			}
-		}
-
 		byte[] buffer = new byte[5];
 		int bytesRead = 0;
 		int returnValue = 0;
+		Log.d("ClientProtocol", "Start reading header from inputStream");
 		while (bytesRead < 5) {
-			returnValue = inputStream.read(buffer, bytesRead, 5-bytesRead);
-			if (returnValue == -1){
+			returnValue = inputStream.read(buffer, bytesRead, (5 - bytesRead));
+			if (returnValue == -1) { // TODO what is this?
 				throw new IOException("Connection lost");
 			}
 			bytesRead += returnValue;
 		}
+		Log.d("ClientProtocol", "Stopt reading header from inputStream");
 		int imageLen = 0;
-		imageLen |= buffer[1] << 24;
-		imageLen |= buffer[2] << 16;
-		imageLen |= buffer[3] << 8;
-		imageLen |= buffer[4];
-
+		imageLen |= (int) buffer[1] << 24;
+		imageLen |= (int) buffer[2] << 16;
+		imageLen |= (int) buffer[3] << 8;
+		imageLen |= (int) buffer[4];
+		Log.d("ClientProtocol", "imageLen == " + imageLen);
 		bytesRead = 0;
 		byte[] imageData = new byte[imageLen];
 
-		while(bytesRead < imageLen){
-			returnValue = inputStream.read(imageData, bytesRead, imageLen-bytesRead);
+		Log.d("ClientProtocol", "Start reading data from inputStream");
+		while (bytesRead < imageLen) {
+			returnValue = inputStream.read(imageData, bytesRead, (imageLen - bytesRead));
 			if (returnValue == -1){
 				throw new IOException("Connection lost");
 			}
 			bytesRead += returnValue;
 		}
+		Log.d("ClientProtocol", "Stopt reading data from inputStream");
 
-		Image img = new Image(cameraId, imageData, ((int) buffer[0]) == VIDEO_MODE);
-		return img;
+		return new Image(cameraId, imageData, ((int) buffer[0]) == VIDEO_MODE);
 	}
 
 	public void sendCommand(Command command) throws IOException{
@@ -68,9 +64,14 @@ public class ClientProtocol {
 	}
 
 	public void connectTo(String host) throws IOException, UnknownHostException {
+		Log.d("ClientProtocol", "Pre socket instanciation for host " + host);
 		socket = new Socket(host, CAMERA_PORT);
+		//socket = new Socket("10.0.2.2", 8080);
+		Log.d("ClientProtocol", "Post socket instanciation for host " + host);
 		inputStream = socket.getInputStream();
 		outputStream = socket.getOutputStream();
+		Log.d("ClientProtocol", "Got in and output streams");
+		//notifyAll();
 	}
 
 	public void disconnect() throws IOException {

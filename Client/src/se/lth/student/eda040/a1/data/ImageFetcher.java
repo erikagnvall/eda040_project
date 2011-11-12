@@ -3,8 +3,9 @@ package se.lth.student.eda040.a1.data;
 import se.lth.student.eda040.a1.ImageTransferer;
 import se.lth.student.eda040.a1.AwesomeVideoView;
 import se.lth.student.eda040.a1.network.Image;
+import android.util.Log;
 
-class ImageFetcher extends Thread {
+public class ImageFetcher extends Thread {
 	private ClientMonitor monitor;
 	private AwesomeVideoView videoView; 
 
@@ -18,6 +19,7 @@ class ImageFetcher extends Thread {
 		while(!interrupted()){
 			image = monitor.awaitImage();
 			videoView.post(new ImageTransferer(videoView, image));
+			Log.d("ImageTransferer", "Fetched an image and posted an ImageTransferer");
 		}
 	}
 }

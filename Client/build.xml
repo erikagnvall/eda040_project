@@ -86,6 +86,7 @@
         <pathelement location="${junit.jar}"/>
         <pathelement location="bin/classes"/>
     </path>
+
     <target name="test" depends="debug" >
         <junit>
             <formatter type="brief" usefile="false"/>

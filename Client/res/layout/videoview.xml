@@ -6,14 +6,14 @@
     android:orientation="vertical">
 
 	<ImageView
-		android:id="@+id/view1"
+		android:id="@+id/view0"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:background="#000000"
 		android:padding="1dp"
 	/>
 	<ImageView
-		android:id="@+id/view2"
+		android:id="@+id/view1"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:background="#000000"
