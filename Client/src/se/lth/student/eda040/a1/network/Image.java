@@ -6,11 +6,13 @@ import android.graphics.BitmapFactory;
 public class Image {
 	private byte cameraID; 
 	private byte[] data;
+	private long timestamp;
 	private boolean videoMode;
 
-	public Image(byte cameraID, byte[] data, boolean videoMode) {
+	public Image(byte cameraID, byte[] data, long timestamp, boolean videoMode) {
 		this.cameraID = cameraID;
 		this.data = data;
+		this.timestamp = timestamp;
 		this.videoMode = videoMode;
 	}
 	
@@ -24,6 +26,10 @@ public class Image {
 
 	public byte getCameraId() {
 		return cameraID;
+	}
+
+	public long getTimstamp() {
+		return timestamp;
 	}
 
 	public Bitmap toBitmap() {

@@ -52,7 +52,7 @@ public class AwesomeVideoView extends LinearLayout {
 				view = view1;
 				break;
 		}
-		Log.d("VideoView", "Recieved image to draw");
+		Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
 		view.setImageBitmap(image.toBitmap());
 	}
 }

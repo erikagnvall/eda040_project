@@ -1,6 +1,5 @@
 package se.lth.student.eda040.a1;
 
-//import se.lth.student.eda040.a1.network.Image;
 import se.lth.student.eda040.a1.data.Input;
 import se.lth.student.eda040.a1.data.Output;
 import se.lth.student.eda040.a1.data.ClientMonitor;
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.util.Log;
+import android.os.Handler;
 
 
 public class VideoActivity extends Activity {
@@ -19,6 +19,7 @@ public class VideoActivity extends Activity {
 	private Input in1;
 	private Output out0;
 	private Output out1;
+	private Handler handler;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,8 +27,9 @@ public class VideoActivity extends Activity {
 		AwesomeVideoView avv = (AwesomeVideoView) findViewById(R.id.avv);
 		
 		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
+		handler = new Handler();
 		ClientMonitor monitor = new ClientMonitor();
-		ImageFetcher fetcher = new ImageFetcher(monitor, avv);
+		ImageFetcher fetcher = new ImageFetcher(monitor, avv, handler);
 		ClientProtocol protocol0 = new ClientProtocol((byte) 0);
 		ClientProtocol protocol1 = new ClientProtocol((byte) 1);
 		monitor.addProtocol((byte) 0, protocol0);
@@ -44,6 +46,7 @@ public class VideoActivity extends Activity {
 		fetcher.start();
 		Log.d("VideoActivity","pre connect to monitor");
 		monitor.connectTo((byte) 0, "10.0.2.2");
+		monitor.connectTo((byte) 1, "10.0.2.2");
 		Log.d("VideoActivity","post connect to monitor");
 	}
 

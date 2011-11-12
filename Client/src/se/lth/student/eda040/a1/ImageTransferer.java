@@ -1,6 +1,9 @@
 package se.lth.student.eda040.a1;
 
 import se.lth.student.eda040.a1.network.Image;
+import se.lth.student.eda040.a1.AwesomeVideoView;
+import android.util.Log;
+
 
 public class ImageTransferer implements Runnable {
 	private AwesomeVideoView videoView;
@@ -12,6 +15,7 @@ public class ImageTransferer implements Runnable {
 	}
 
 	public void run() {
+		Log.d("ImageTransferer", "Now calling Handler.drawImage()");
 		videoView.drawImage(image);
 	}
 }

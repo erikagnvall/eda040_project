@@ -15,7 +15,7 @@ public class Image {
 		image[0] = mode;
 		byte b;
 		for (int i = 0; i < 4; i++) {
-			b = (byte) (actualLength >> (8 * (3-i))) ;
+			b = (byte) (actualLength >> (8 * (3-i)) & 0xFF) ;
 			//System.out.println(String.format("bits: %02X", b));
 			image[i + 1] = b; 
 		}

@@ -3,6 +3,7 @@ package se.lth.student.eda040.a1.network;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.net.UnknownHostException;
 import java.net.Socket;
 import android.util.Log;
@@ -21,12 +22,12 @@ public class ClientProtocol {
 	}
 
 	public Image awaitImage() throws IOException{
-		byte[] buffer = new byte[5];
+		byte[] headerBytes = new byte[5];
 		int bytesRead = 0;
 		int returnValue = 0;
 		Log.d("ClientProtocol", "Start reading header from inputStream");
 		while (bytesRead < 5) {
-			returnValue = inputStream.read(buffer, bytesRead, (5 - bytesRead));
+			returnValue = inputStream.read(headerBytes, bytesRead, (5 - bytesRead));
 			if (returnValue == -1) { // TODO what is this?
 				throw new IOException("Connection lost");
 			}
@@ -34,17 +35,21 @@ public class ClientProtocol {
 		}
 		Log.d("ClientProtocol", "Stopt reading header from inputStream");
 		int imageLen = 0;
-		imageLen |= (int) buffer[1] << 24;
-		imageLen |= (int) buffer[2] << 16;
-		imageLen |= (int) buffer[3] << 8;
-		imageLen |= (int) buffer[4];
+		//imageLen |= (int) (headerBytes[1] << 24);
+		//imageLen |= (int) (headerBytes[2] << 16);
+		//imageLen |= (int) (headerBytes[3] << 8);
+		//imageLen |= (int) (headerBytes[4]);
+		for (int i = 0; i < 4; ++i) {
+			imageLen |= (int) ((headerBytes[1 + i] < 0 ? 256 + headerBytes[i +1] : headerBytes[i + 1]) << (8 * (3 - i)));
+		}
+
 		Log.d("ClientProtocol", "imageLen == " + imageLen);
 		bytesRead = 0;
-		byte[] imageData = new byte[imageLen];
+		byte[] imageBytes = new byte[imageLen];
 
 		Log.d("ClientProtocol", "Start reading data from inputStream");
 		while (bytesRead < imageLen) {
-			returnValue = inputStream.read(imageData, bytesRead, (imageLen - bytesRead));
+			returnValue = inputStream.read(imageBytes, bytesRead, (imageLen - bytesRead));
 			if (returnValue == -1){
 				throw new IOException("Connection lost");
 			}
@@ -52,7 +57,15 @@ public class ClientProtocol {
 		}
 		Log.d("ClientProtocol", "Stopt reading data from inputStream");
 
-		return new Image(cameraId, imageData, ((int) buffer[0]) == VIDEO_MODE);
+		long timestamp = 0;
+		for (int i = 0; i < 4; ++i) {
+				timestamp |= (long) ((imageBytes[25 + i] < 0 ? 256 + imageBytes[25 + i] : imageBytes[25 + i]) << (8 * (3 - i)));
+		}
+		// TODO should really the timestampdata be a part of the image to draw?
+		timestamp *= 1000;
+		Log.d("ClientProtocol", "Timestamp == " + timestamp + ", or in HR == " + new Date(timestamp));
+		timestamp |= (long) (imageBytes[29] < 0 ? 256 + imageBytes[29] : imageBytes[29]);
+		return new Image(cameraId, imageBytes, timestamp, ((int) headerBytes[0]) == VIDEO_MODE);
 	}
 
 	public void sendCommand(Command command) throws IOException{

@@ -25,6 +25,13 @@ public class ImageCapture extends Thread {
 		byte mode;
 		Image image;
 		while (!interrupted()) {
+			try {
+				//sleep(500);
+				sleep(1000);
+			} catch (InterruptedException ie) {
+				System.err.println("Broken bed");
+			}
+
 			buffer = new byte[Axis211A.IMAGE_BUFFER_SIZE];
 			//System.out.println("Kameran används2");
 			readBytes = 0;
