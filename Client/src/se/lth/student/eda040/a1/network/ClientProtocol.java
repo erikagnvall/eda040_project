@@ -88,9 +88,9 @@ public class ClientProtocol {
 	}
 
 	public void disconnect() throws IOException {
+		outputStream.flush();
 		socket.close();
 		inputStream = null;
-		outputStream.flush();
 		outputStream = null;
 	}
 }
