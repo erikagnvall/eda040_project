@@ -28,8 +28,8 @@ public class Input extends Thread {
 					protocol.disconnect();
 				} catch (IOException ioe) {
 					System.err.println("Could not disconnect some how.");
+					interrupt();
 				}
-				interrupt();
 			}
 		}
 	}
