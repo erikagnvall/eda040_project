@@ -88,13 +88,17 @@ public class ClientMonitor {
 		return success;
 	}
 
+	public synchronized void gracefullDiscoCamera(byte cameraId) {
+		if (protocols.containsKey(cameraId)) {
+			protocols.get(cameraId).gracefullDisco();
+		}
+		connected[cameraId] = false;
+		Log.d("ClientMonitor", "Disconnected camera " + cameraId);
+	}
+
 	public synchronized void disconnectCamera(byte cameraId) {
 		if (protocols.containsKey(cameraId)) {
-			try {
 			protocols.get(cameraId).disconnect();
-			} catch (IOException ioe) {
-				// TODO what to do?
-			}
 		}
 		connected[cameraId] = false;
 		Log.d("ClientMonitor", "Disconnected camera " + cameraId);

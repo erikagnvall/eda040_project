@@ -73,11 +73,11 @@ public class VideoActivity extends Activity {
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
-				monitor.disconnectCamera((byte) 0);	
+				monitor.gracefullDiscoCamera((byte) 0);	
 				break;
 		case R.id.disconnectCam1:
 				Log.d("VideoActivity", "Selected disconnectCam1");
-				monitor.disconnectCamera((byte) 1);	
+				monitor.gracefullDiscoCamera((byte) 1);	
 				break;
 		default:
 				super.onOptionsItemSelected(item);

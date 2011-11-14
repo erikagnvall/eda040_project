@@ -82,13 +82,21 @@ public class ClientProtocol {
 		Log.d("ClientProtocol", "Got in and output streams");
 		//notifyAll();
 	}
-
-	public void disconnect() {
-		outputStream.write('d');
+	
+	public void gracefullDisco() {
 		try {
+			outputStream.write('d');
 			inputStream.close();
 			outputStream.flush();
 			outputStream.close();
+		} catch (IOException ioe) {
+			Log.d("ClientProtocol", "No disco.");
+		}
+		disconnect();
+	}
+
+	public void disconnect() {
+		try {
 			socket.close();
 		} catch (IOException ioe) {
 			Log.d("ClientProtocol", "Problem closing connection.");

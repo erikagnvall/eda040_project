@@ -22,6 +22,7 @@ public class In extends Thread {
 				// TODO 
 				monitor.disconnect();
 			}
+			System.out.println("Recieved command " + cmd);
 			switch (cmd) {
 				case ServerProtocol.IDLE_MODE:
 					monitor.setVideo(false);
