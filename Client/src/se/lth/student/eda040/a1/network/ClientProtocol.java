@@ -83,18 +83,20 @@ public class ClientProtocol {
 		//notifyAll();
 	}
 	
-	public void gracefullDisco() {
+	public void gracefullDisconnect() {
 		try {
-			outputStream.write('d');
 			inputStream.close();
 			outputStream.flush();
 			outputStream.close();
 		} catch (IOException ioe) {
-			Log.d("ClientProtocol", "No disco.");
+			Log.d("ClientProtocol", "Gracefull disconnections failed.");
 		}
+		//Log.d("ClientProtocol", "Thread calling gracefullDisconnect: " + Thread.currentThread().getName());
+		Log.d("ClientProtocol", "Gracefullt disconnect camera " + cameraId);
 		disconnect();
 	}
 
+	// emergency 
 	public void disconnect() {
 		try {
 			socket.close();
@@ -103,5 +105,6 @@ public class ClientProtocol {
 		}
 		inputStream = null;
 		outputStream = null;
+		Log.d("ClientProtocol", "Hard-Disconnect camera " + cameraId);
 	}
 }

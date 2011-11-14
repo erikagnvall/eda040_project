@@ -10,32 +10,30 @@ import java.io.IOException;
 import android.util.Log;
 
 public class ClientMonitor {
-	private Queue<Command> commandQueue;
+	private Queue<Command>[] commandQueues;
 	private Queue<Image> imageBuffer;
 	private Map<Byte, ClientProtocol> protocols;
 	private boolean[] connected;
 
 	public ClientMonitor() {
-		commandQueue = new LinkedList<Command>();
+		commandQueues = (LinkedList<Command>[]) new LinkedList[2];
+		commandQueues[0] = new LinkedList<Command>();
+		commandQueues[1] = new LinkedList<Command>();
 		imageBuffer = new LinkedList<Image>();
 		protocols = new HashMap<Byte, ClientProtocol>();
 		connected = new boolean[2];
 	}
 
 	public synchronized void putCommand(Command command, int cameraId){
-		commandQueue.offer(command);
+		commandQueues[cameraId].offer(command);
 		notifyAll();
 	}
 
-	public synchronized Command awaitCommand(int cameraId){
-		while (commandQueue.isEmpty()) {
-			try {
-				wait();
-			} catch (InterruptedException ie) {
-				System.err.println("Wait got interrupted.");
-			}
+	public synchronized Command awaitCommand(int cameraId) throws InterruptedException{
+		while (commandQueues[cameraId].isEmpty()) {
+			wait();
 		}
-		return commandQueue.poll();
+		return commandQueues[cameraId].poll();
 	}
 
 	public synchronized void putImage(Image image, int camera){
@@ -44,13 +42,10 @@ public class ClientMonitor {
 		notifyAll(); 
 	}
 
-	public synchronized Image awaitImage() {
+	public synchronized Image awaitImage() throws InterruptedException{
+		Log.d("ClientMonitor", "Waiting for image in buffer");
 		while (imageBuffer.isEmpty()) {
-			try {
-				wait();
-			} catch (InterruptedException ie){
-				System.err.println("Wait interrupted.");
-			}
+			wait();
 		}
 		Log.d("ClientMonitor", "Polled image in buffer");
 		notifyAll(); 
@@ -88,15 +83,22 @@ public class ClientMonitor {
 		return success;
 	}
 
-	public synchronized void gracefullDiscoCamera(byte cameraId) {
+	/**
+	 * Sends command to camera server to disconnect.
+	 */
+	public synchronized void gracefullDisconnect(byte cameraId) {
 		if (protocols.containsKey(cameraId)) {
-			protocols.get(cameraId).gracefullDisco();
+			commandQueues[cameraId].offer(new Command(Command.DISCONNECT, cameraId, protocols.get(cameraId)));
 		}
 		connected[cameraId] = false;
 		Log.d("ClientMonitor", "Disconnected camera " + cameraId);
 	}
 
-	public synchronized void disconnectCamera(byte cameraId) {
+	/**
+	 * Emergency disconnect.
+	 * To be used in emergencies only! Will without warning disconnect the specified camera socket.
+	 */
+	public synchronized void disconnect(byte cameraId) {
 		if (protocols.containsKey(cameraId)) {
 			protocols.get(cameraId).disconnect();
 		}
@@ -104,14 +106,10 @@ public class ClientMonitor {
 		Log.d("ClientMonitor", "Disconnected camera " + cameraId);
 	}
 
-	public synchronized void connectionCheck(byte cameraId) {
+	public synchronized void connectionCheck(byte cameraId) throws InterruptedException{
+		Log.d("ClientMonitor", "Waiting in connectionCheck for camera " + cameraId);
 		while (!connected[cameraId]) {
-			try {
-				Log.d("ClientMonitor", "Waiting in connectionCheck for camera " + cameraId);
-				wait();
-			} catch (InterruptedException ie) {
-				System.err.println("Broken bed.");
-			}
+			wait();
 		}
 		Log.d("ClientMonitor", "Released in connectionCheck for camera " + cameraId);
 	}

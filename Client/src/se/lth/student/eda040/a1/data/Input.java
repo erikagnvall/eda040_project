@@ -21,11 +21,13 @@ public class Input extends Thread {
 			try {
 				Log.d("Input", "Checking for connection in monitor");
 				monitor.connectionCheck(cameraId);
-				Log.d("Input", "In started to fetch images");
+				// TODO not threadsafe
 				image = protocol.awaitImage();
 				monitor.putImage(image, cameraId);
 			} catch (IOException e) {
-				monitor.disconnectCamera(cameraId);
+				monitor.disconnect(cameraId);
+			} catch (InterruptedException ie) {
+				// noop
 			}
 		}
 	}

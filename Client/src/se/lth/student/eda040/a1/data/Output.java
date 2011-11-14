@@ -18,8 +18,11 @@ public class Output extends Thread {
 			try {
 				command = monitor.awaitCommand(protocol.getCameraId());
 				protocol.sendCommand(command);
+				command.doPost();
 			} catch (IOException ie) {
 				// TODO 
+			} catch (InterruptedException e){
+				// Dont care!... yet
 			}
 		}
 

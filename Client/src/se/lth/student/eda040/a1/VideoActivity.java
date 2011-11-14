@@ -5,6 +5,7 @@ import se.lth.student.eda040.a1.data.Output;
 import se.lth.student.eda040.a1.data.ClientMonitor;
 import se.lth.student.eda040.a1.data.ImageFetcher;
 import se.lth.student.eda040.a1.network.ClientProtocol;
+import se.lth.student.eda040.a1.network.Command;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -47,10 +48,6 @@ public class VideoActivity extends Activity {
 		out0.start();
 		out1.start();
 		fetcher.start();
-		//Log.d("VideoActivity","pre connect to monitor");
-		//monitor.connectTo((byte) 0, "10.0.2.2");
-		//monitor.connectTo((byte) 1, "10.0.2.2");
-		//Log.d("VideoActivity","post connect to monitor");
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,11 +70,11 @@ public class VideoActivity extends Activity {
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
-				monitor.gracefullDiscoCamera((byte) 0);	
+				monitor.gracefullDisconnect((byte) 0);	
 				break;
 		case R.id.disconnectCam1:
 				Log.d("VideoActivity", "Selected disconnectCam1");
-				monitor.gracefullDiscoCamera((byte) 1);	
+				monitor.gracefullDisconnect((byte) 1);	
 				break;
 		default:
 				super.onOptionsItemSelected(item);
