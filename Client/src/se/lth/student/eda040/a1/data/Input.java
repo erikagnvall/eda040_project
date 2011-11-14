@@ -16,20 +16,16 @@ public class Input extends Thread {
 
 	public void run() {
 		Image image;
+		byte cameraId = protocol.getCameraId();
 		while (!interrupted()) {
 			try {
 				Log.d("Input", "Checking for connection in monitor");
-				monitor.connectionCheck(protocol.getCameraId());
+				monitor.connectionCheck(cameraId);
 				Log.d("Input", "In started to fetch images");
 				image = protocol.awaitImage();
-				monitor.putImage(image, protocol.getCameraId());
+				monitor.putImage(image, cameraId);
 			} catch (IOException e) {
-				try {
-					protocol.disconnect();
-				} catch (IOException ioe) {
-					System.err.println("Could not disconnect some how.");
-					interrupt();
-				}
+				monitor.disconnectCamera(cameraId);
 			}
 		}
 	}

@@ -21,24 +21,20 @@ public class ClientProtocol {
 		this.cameraId = cameraId;
 	}
 
-	public Image awaitImage() throws IOException{
+	public Image awaitImage() throws IOException {
 		byte[] headerBytes = new byte[5];
 		int bytesRead = 0;
 		int returnValue = 0;
 		Log.d("ClientProtocol", "Start reading header from inputStream");
 		while (bytesRead < 5) {
 			returnValue = inputStream.read(headerBytes, bytesRead, (5 - bytesRead));
-			if (returnValue == -1) { // TODO what is this?
-				throw new IOException("Connection lost");
+			if (returnValue == -1) {
+				throw new IOException("End of stream.");
 			}
 			bytesRead += returnValue;
 		}
 		Log.d("ClientProtocol", "Stopt reading header from inputStream");
 		int imageLen = 0;
-		//imageLen |= (int) (headerBytes[1] << 24);
-		//imageLen |= (int) (headerBytes[2] << 16);
-		//imageLen |= (int) (headerBytes[3] << 8);
-		//imageLen |= (int) (headerBytes[4]);
 		for (int i = 0; i < 4; ++i) {
 			imageLen |= (int) ((headerBytes[1 + i] < 0 ? 256 + headerBytes[i +1] : headerBytes[i + 1]) << (8 * (3 - i)));
 		}
@@ -87,9 +83,16 @@ public class ClientProtocol {
 		//notifyAll();
 	}
 
-	public void disconnect() throws IOException {
-		outputStream.flush();
-		socket.close();
+	public void disconnect() {
+		outputStream.write('d');
+		try {
+			inputStream.close();
+			outputStream.flush();
+			outputStream.close();
+			socket.close();
+		} catch (IOException ioe) {
+			Log.d("ClientProtocol", "Problem closing connection.");
+		}
 		inputStream = null;
 		outputStream = null;
 	}
