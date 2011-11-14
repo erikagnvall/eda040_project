@@ -48,7 +48,7 @@
 	</target>
 
 	<path id="classpath.tests">
-		<pathelement location="${junit.jar}"/>
+		<pathelement location="${path.library}/${junit}"/>
 		<pathelement location="${path.destination}"/>
 	</path>
 	<target name="test" depends="compile" >
