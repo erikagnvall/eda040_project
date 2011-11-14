@@ -21,7 +21,6 @@ public class In extends Thread {
 			} catch (IOException e) {
 				// TODO 
 				monitor.disconnect();
-				e.printStackTrace();
 			}
 			switch (cmd) {
 				case ServerProtocol.IDLE_MODE:
