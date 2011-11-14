@@ -1,7 +1,7 @@
 package network;
 
-//import se.lth.cs.fakecamera.Axis211A;
-import se.lth.cs.cameraproxy.Axis211A;
+import se.lth.cs.fakecamera.Axis211A;
+//import se.lth.cs.cameraproxy.Axis211A;
 //import se.lth.cs.camera.Axis211A;
 
 import data.ImageMonitor;
@@ -12,8 +12,8 @@ public class ImageCapture extends Thread {
 
 	public ImageCapture(ImageMonitor monitor) {
 		this.monitor = monitor;
-		//camera = new Axis211A(); // Real and fakecamera.
-		camera = new Axis211A("argus-4", 8080); // Proxycamera.
+		camera = new Axis211A(); // Real and fakecamera.
+		//camera = new Axis211A("argus-4", 8080); // Proxycamera.
 		System.out.println("try connect to camera");
 		camera.connect();
 		System.out.println("connected to camera");

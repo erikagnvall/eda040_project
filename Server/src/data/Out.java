@@ -22,6 +22,6 @@ public class Out extends Thread {
 		    System.out.println("out got picture");
 		}
 	    }
-	    System.out.println("out died");
+	    System.out.println("out done running");
 	}
 }
