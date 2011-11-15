@@ -16,12 +16,12 @@ public class Out extends Thread {
 	
 	public void run() {
 	    while (!isInterrupted()) {
-		Image img = monitor.getImage();
-		if (img != null) {
-		    protocol.sendImage(img);
-		    System.out.println("out got picture");
-		}
+			Image img = monitor.getImage();
+			if (img != null) {
+				protocol.sendImage(img);
+				//System.out.println("out got picture");
+			}
 	    }
-	    System.out.println("out done running");
+	    //System.out.println("out done running");
 	}
 }

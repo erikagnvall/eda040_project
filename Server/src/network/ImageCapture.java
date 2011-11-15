@@ -1,9 +1,9 @@
 package network;
 
-import se.lth.cs.fakecamera.Axis211A;
-import se.lth.cs.fakecamera.MotionDetector;
-//import se.lth.cs.cameraproxy.Axis211A;
-//import se.lth.cs.cameraproxy.MotionDetector;
+//import se.lth.cs.fakecamera.Axis211A;
+//import se.lth.cs.fakecamera.MotionDetector;
+import se.lth.cs.cameraproxy.Axis211A;
+import se.lth.cs.cameraproxy.MotionDetector;
 //import se.lth.cs.camera.Axis211A;
 //import se.lth.cs.camera.Axis211A;
 
@@ -16,10 +16,10 @@ public class ImageCapture extends Thread {
 
 	public ImageCapture(ImageMonitor monitor) {
 		this.monitor = monitor;
-		this.camera = new Axis211A(); // Real and fakecamera.
-		//camera = new Axis211A("argus-4", 8080); // Proxycamera.
-		this.motionDetector = new MotionDetector();
-		//this.motionDetector = new MotionDetector("argus-4", 8080); // Proxycamera
+		//this.camera = new Axis211A(); // Real and fakecamera.
+		camera = new Axis211A("argus-4", 8080); // Proxycamera.
+		//this.motionDetector = new MotionDetector();
+		this.motionDetector = new MotionDetector("argus-4", 8080); // Proxycamera
 		camera.connect();
 	}
 
