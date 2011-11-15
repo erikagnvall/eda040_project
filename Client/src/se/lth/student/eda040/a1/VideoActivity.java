@@ -77,6 +77,9 @@ public class VideoActivity extends Activity {
 				Log.d("VideoActivity", "Selected disconnectCam1");
 				monitor.gracefullDisconnect((byte) 1);	
 				break;
+		case R.id.setIdle:
+				monitor.setIdleMode();
+				break;
 		default:
 				super.onOptionsItemSelected(item);
 		}
@@ -87,16 +90,17 @@ public class VideoActivity extends Activity {
 				// TODO this overides the icons that otherwide would be used according to the xml. What to do?
 				menu.clear();	 // Clears all items, below: rebuild from scratch.
 				if (monitor.isConnectedCamera((byte) 0)) {
-					menu.add(0, R.id.disconnectCam0, 0, "Disconnect c0");
+					menu.add(Menu.NONE, R.id.disconnectCam0, 0, "Disconnect c0");
 				} else {
-					menu.add(0, R.id.connectCam0, 0, "Connect c0");
+					menu.add(Menu.NONE, R.id.connectCam0, 0, "Connect c0");
 				}
 
 				if (monitor.isConnectedCamera((byte) 1)) {
-					menu.add(1, R.id.disconnectCam1, 1, "Disconnect c1");
+					menu.add(Menu.NONE, R.id.disconnectCam1, 1, "Disconnect c1");
 				} else {
-					menu.add(1, R.id.connectCam1, 1, "Connect c1");
+					menu.add(Menu.NONE, R.id.connectCam1, 1, "Connect c1");
 				}
+				menu.add(Menu.NONE, R.id.setIdle, 2, "Set Idle");
 		return true;
 	}
 }

@@ -65,6 +65,7 @@ public class ClientProtocol {
 	}
 
 	public void sendCommand(Command command) throws IOException{
+		Log.d("ClientProtocol", "Sending command: " + command.getCommand());
 		outputStream.write(command.getCommand());
 	}
 

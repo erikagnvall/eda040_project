@@ -43,10 +43,10 @@ public class ClientMonitor {
 		imageBuffer.offer(image);
 		byte cameraId = image.getCameraId();
 		byte otherCamera = (byte) (((int) cameraId + 1) % 2);
-		if (protocols.containsKey(otherCamera) && isVideoMode[cameraId] != image.isVideoMode()) {
-			isVideoMode[cameraId] = image.isVideoMode();
+		if (connected[otherCamera] && !isVideoMode[cameraId] && image.isVideoMode()) {
 			putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
 		}
+		isVideoMode[cameraId] = image.isVideoMode();
 		Log.d("ClientMonitor", "Put image in buffer");
 		notifyAll(); 
 	}
@@ -125,5 +125,13 @@ public class ClientMonitor {
 
 	public synchronized boolean isConnectedCamera(byte cameraId) {
 		return connected[cameraId];
+	}
+	
+	public synchronized void setIdleMode() {
+		for (ClientProtocol protocol : protocols.values()) {
+			if (connected[protocol.getCameraId()]) {
+				putCommand(new Command(Command.MODE_IDLE, protocol), protocol.getCameraId());
+			}
+		}
 	}
 }
