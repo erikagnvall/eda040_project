@@ -12,6 +12,7 @@ import android.util.Log;
 public class ClientMonitor {
 	private Queue<Command>[] commandQueues;
 	private Queue<Image> imageBuffer;
+	private boolean[] isVideoMode;
 	private Map<Byte, ClientProtocol> protocols;
 	private boolean[] connected;
 
@@ -20,10 +21,12 @@ public class ClientMonitor {
 		commandQueues[0] = new LinkedList<Command>();
 		commandQueues[1] = new LinkedList<Command>();
 		imageBuffer = new LinkedList<Image>();
+		isVideoMode = new boolean[2];
 		protocols = new HashMap<Byte, ClientProtocol>();
 		connected = new boolean[2];
 	}
 
+	// TODO private
 	public synchronized void putCommand(Command command, int cameraId){
 		commandQueues[cameraId].offer(command);
 		notifyAll();
@@ -36,8 +39,14 @@ public class ClientMonitor {
 		return commandQueues[cameraId].poll();
 	}
 
-	public synchronized void putImage(Image image, int camera){
+	public synchronized void putImage(Image image){
 		imageBuffer.offer(image);
+		byte cameraId = image.getCameraId();
+		byte otherCamera = (byte) (((int) cameraId + 1) % 2);
+		if (connected[otherCamera] && !isVideoMode[cameraId] && image.isVideoMode()) {
+			putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
+		}
+		isVideoMode[cameraId] = image.isVideoMode();
 		Log.d("ClientMonitor", "Put image in buffer");
 		notifyAll(); 
 	}
@@ -88,7 +97,7 @@ public class ClientMonitor {
 	 */
 	public synchronized void gracefullDisconnect(byte cameraId) {
 		if (protocols.containsKey(cameraId)) {
-			commandQueues[cameraId].offer(new Command(Command.DISCONNECT, cameraId, protocols.get(cameraId)));
+			putCommand(new Command(Command.DISCONNECT, protocols.get(cameraId)), cameraId);
 		}
 		connected[cameraId] = false;
 		Log.d("ClientMonitor", "Disconnected camera " + cameraId);
@@ -116,5 +125,13 @@ public class ClientMonitor {
 
 	public synchronized boolean isConnectedCamera(byte cameraId) {
 		return connected[cameraId];
+	}
+	
+	public synchronized void setIdleMode() {
+		for (ClientProtocol protocol : protocols.values()) {
+			if (connected[protocol.getCameraId()]) {
+				putCommand(new Command(Command.MODE_IDLE, protocol), protocol.getCameraId());
+			}
+		}
 	}
 }

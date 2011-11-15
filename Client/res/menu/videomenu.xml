@@ -13,4 +13,9 @@
 	<item android:id="@+id/disconnectCam1"
 		android:icon="@drawable/ic_launcher"
 		android:title="@string/disconnectCam1" />
+
+
+	<item android:id="@+id/setIdle"
+		android:icon="@drawable/ic_launcher"
+		android:title="@string/setIdle" />
 </menu>

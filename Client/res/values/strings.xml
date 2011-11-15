@@ -9,6 +9,7 @@
 	<string name="connectCam1">Connect c1</string>
 	<string name="disconnectCam0">Disconnect c0</string>
 	<string name="disconnectCam1">Disconnect c1</string>
+	<string name="setIdle">Set Idle</string>
 
 	<string name="choose_camera">Pick a camera</string>
 	<string-array name="cameras">
