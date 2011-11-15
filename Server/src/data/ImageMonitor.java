@@ -23,6 +23,16 @@ public class ImageMonitor {
 	}
 	
 	public synchronized Image getImage() {
+		if (!isVideo) {
+			long stopTime = System.currentTimeMillis() + 5000;
+			while (stopTime > System.currentTimeMillis()) {
+				try {
+					wait(stopTime - System.currentTimeMillis());
+				} catch (InterruptedException ie) {
+					System.err.println("oops");
+				}
+			}
+		}
 		while (image == null && isConnected) {
 			try {
 				wait();
