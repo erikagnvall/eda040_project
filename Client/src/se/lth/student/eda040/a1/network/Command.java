@@ -9,9 +9,8 @@ public class Command {
 	private byte cameraId;
 	private ClientProtocol protocol;
 
-	public Command(byte command, byte cameraId, ClientProtocol protocol) {
+	public Command(byte command, ClientProtocol protocol) {
 		this.command = command;
-		this.cameraId = cameraId;
 		this.protocol = protocol;
 	}
 

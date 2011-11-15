@@ -23,7 +23,7 @@ public class Input extends Thread {
 				monitor.connectionCheck(cameraId);
 				// TODO not threadsafe
 				image = protocol.awaitImage();
-				monitor.putImage(image, cameraId);
+				monitor.putImage(image);
 			} catch (IOException e) {
 				monitor.disconnect(cameraId);
 			} catch (InterruptedException ie) {
