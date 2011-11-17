@@ -57,7 +57,6 @@ public class ClientProtocol {
 		for (int i = 0; i < 4; ++i) {
 				timestamp |= (long) ((imageBytes[25 + i] < 0 ? 256 + imageBytes[25 + i] : imageBytes[25 + i]) << (8 * (3 - i)));
 		}
-		// TODO should really the timestampdata be a part of the image to draw?
 		timestamp *= 1000;
 		Log.d("ClientProtocol", "Timestamp == " + timestamp + ", or in HR == " + new Date(timestamp));
 		timestamp |= (long) (imageBytes[29] < 0 ? 256 + imageBytes[29] : imageBytes[29]);

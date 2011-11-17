@@ -83,16 +83,29 @@
     <import file="${sdk.dir}/tools/ant/build.xml" />
 
     <path id="classpath.tests">
-        <pathelement location="${junit.jar}"/>
-        <pathelement location="bin/classes"/>
+	<pathelement location="lib/junit-4.10.jar"/>
+	<pathelement location="lib/robolectric-1.0-RC4-jar-with-dependencies.jar"/>
+	<pathelement location="lib/android.jar"/>
+	<!-- <fileset dir="lib">
+		<include name="*.jar"/>
+	</fileset> -->
+	<pathelement location="bin/classes"/>
+	<pathelement location="tests/"/>
     </path>
 
-    <target name="test" depends="debug" >
+    <target name="compile-test" >
+	    <javac srcdir="tests">
+		    <classpath refid="classpath.tests"/>
+		</javac>
+
+    </target>
+
+    <target name="test" depends="compile-test">
         <junit>
             <formatter type="brief" usefile="false"/>
             <classpath refid="classpath.tests" />
             <batchtest>
-                <fileset dir="./src/">
+                <fileset dir="./tests/">
                     <include name="tests/*.java" />
                 </fileset>
             </batchtest>
