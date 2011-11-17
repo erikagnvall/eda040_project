@@ -11,15 +11,16 @@ import android.util.Log;
 
 public class ClientMonitor {
 
-    public static final double SYNC_THRESHOLD;
+    public static final double SYNC_THRESHOLD = 0.2;
 
 	private Queue<Command>[] commandQueues;
-	private Queue<Image> imageBuffer;
+	private LinkedList<Image> imageBuffer;
 	private boolean[] isVideoMode;
 	private Map<Byte, ClientProtocol> protocols;
 	private boolean[] connected;
     private boolean isSyncMode;
-    private boolean[] latestTimestamp;
+    private long[] latestTimestamp;
+    private long delayNextUntil;
 
 	public ClientMonitor() {
 		commandQueues = (LinkedList<Command>[]) new LinkedList[2];
@@ -30,7 +31,8 @@ public class ClientMonitor {
 		protocols = new HashMap<Byte, ClientProtocol>();
 		connected = new boolean[2];
 		isSyncMode = false;
-		latestTimestamp = new boolean[2];
+		latestTimestamp = new long[2];
+		delayNextUntil = 0;
 	}
 
 	// TODO private
@@ -48,22 +50,22 @@ public class ClientMonitor {
 
 	public synchronized void putImage(Image image){
 	    LinkedList<Image> tmp = null;
-	    int deltaT = 0;
+	    long deltaT = 0;
 	    byte cameraId = image.getCameraId();
 	    byte otherCamera = (byte) (((int) cameraId + 1) % 2);
 
-	    if (latestTimestamp[cameraId] < image.getTimestamp)
-		latestTimestamp[cameraId] = image.getTimestamp;
+	    if (latestTimestamp[cameraId] < image.getTimstamp())
+		latestTimestamp[cameraId] = image.getTimstamp();
 
-	    delatT = math.abs(latestTimestamp[0] - latestTimeStamp[1]);
+	    deltaT = Math.abs(latestTimestamp[0] - latestTimestamp[1]);
 	    isSyncMode = deltaT < SYNC_THRESHOLD;
 
 	    if (isSyncMode) {
 		tmp = new LinkedList<Image>();
-		while (imageBuffer.size() > 0 && imageBuffer.getLast().getTimestamp() > image.getTimestamp) {
-		    tmp.putFirst(imageBuffer.removeLast());
+		while (imageBuffer.size() > 0 && imageBuffer.getLast().getTimstamp() > image.getTimstamp()) {
+		    tmp.addFirst(imageBuffer.removeLast());
 		}
-		imageBuffer.putLast(image);
+		imageBuffer.addLast(image);
 		imageBuffer.addAll(tmp);
 	    } else {
 		imageBuffer.offer(image);
@@ -79,10 +81,27 @@ public class ClientMonitor {
 	}
 
 	public synchronized Image awaitImage() throws InterruptedException{
+
+	    Image p1 = null;
+	    Image p2 = null;
+
 		Log.d("ClientMonitor", "Waiting for image in buffer");
 		while (imageBuffer.isEmpty()) {
 			wait();
 		}
+		while (System.currentTimeMillis() < delayNextUntil)
+		    wait(delayNextUntil - System.currentTimeMillis());
+
+		if (isSyncMode && imageBuffer.size() >= 2) {
+		    p1 = imageBuffer.get(1);
+		    p2 = imageBuffer.get(2);
+		    // if there is no image to delay for the time is already up and there is no need to set he delaytime to now. Promise.
+		    if (p1.getCameraId() != p2.getCameraId())
+			this.delayNextUntil = p2.getTimstamp() - p1.getTimstamp() + System.currentTimeMillis();
+		} else {
+		    this.delayNextUntil = System.currentTimeMillis();
+		}
+		
 		Log.d("ClientMonitor", "Polled image in buffer");
 		notifyAll(); 
 		return imageBuffer.poll();
