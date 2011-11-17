@@ -1,6 +1,7 @@
 # TODO support two host names
 #!/bin/bash
-# Builds the software for the campera and uploads it.
+# Cross-compiles the server software for the camera, upload and starts it. 
+# Usage: ./compile2c.sh [host1 [host2]] [< passwordfile]
 DEST=c
 HOST1="argus-7"
 HOST2="argus-8"
@@ -11,7 +12,7 @@ ftype="$(stat --printf=%F $stdin)"
 
 if [[ "$ftype" == 'character special file' ]]; then
 	stty -echo 
-	read -p "Papiren bitte: " -r PW
+	read -p "Passwort für die komputermaschine, bitte: " -r PW
 	stty echo 
 	echo
 elif [[ "$ftype" == 'regular file' ]]; then
