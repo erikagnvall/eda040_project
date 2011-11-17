@@ -1,7 +1,4 @@
-package data;
-
 import java.io.IOException;
-import network.ServerProtocol;
 
 public class In extends Thread {
 
@@ -20,17 +17,17 @@ public class In extends Thread {
 			    cmd = protocol.awaitCommand();
 			    System.out.println("Recieved command " + cmd);
 			    switch (cmd) {
-			    case ServerProtocol.IDLE_MODE:
-				monitor.setVideo(false);
-				break;
-			    case ServerProtocol.VIDEO_MODE:
-				monitor.setVideo(true);
-				break;
-			    case ServerProtocol.DISCONNECT:
-				monitor.disconnect();
-				break;
-			    default:
-				System.err.println("Unknown command recieved.");
+					case ServerProtocol.IDLE_MODE:
+						monitor.setVideo(false);
+						break;
+					case ServerProtocol.VIDEO_MODE:
+						monitor.setVideo(true);
+						break;
+					case ServerProtocol.DISCONNECT:
+						monitor.disconnect();
+						break;
+					default:
+						System.err.println("Unknown command recieved.");
 			    }
 			
 			} catch (IOException e) {

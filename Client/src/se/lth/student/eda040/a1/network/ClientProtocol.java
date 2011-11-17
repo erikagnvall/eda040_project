@@ -39,6 +39,7 @@ public class ClientProtocol {
 			imageLen |= (int) ((headerBytes[1 + i] < 0 ? 256 + headerBytes[i +1] : headerBytes[i + 1]) << (8 * (3 - i)));
 		}
 
+		System.out.println(cameraId + "<>" + this);
 		Log.d("ClientProtocol", "imageLen == " + imageLen);
 		bytesRead = 0;
 		byte[] imageBytes = new byte[imageLen];

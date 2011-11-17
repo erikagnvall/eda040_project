@@ -109,6 +109,7 @@ public class ClientMonitor {
 
 	public synchronized void addProtocol(byte cameraId, ClientProtocol protocol) {
 		protocols.put(cameraId, protocol);
+		System.out.println(protocols.size());
 	}
 
 	public synchronized boolean connectTo(byte cameraId, String host) {

@@ -1,5 +1,3 @@
-package network;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,12 +24,8 @@ public class ServerProtocol {
 		}
 	}
 
-	public void sendImage(Image image) {
-		try {
-			socket.getOutputStream().write(image.toBytes());
-		} catch (IOException e) {
-			System.err.println("Could not send picture");
-		}
+	public void sendImage(Image image) throws IOException {
+		socket.getOutputStream().write(image.toBytes());
 	}
 
 	public byte awaitCommand() throws IOException {
@@ -42,6 +36,6 @@ public class ServerProtocol {
 	    //System.out.println("rb: "+ readBytes);
 	    if (readBytes == -1)
 			throw new IOException("connection dropped");
-	    return buff[0];
+	    return (byte) (buff[0] < 0 ? buff[0] + 256 : buff[0]);
 	}
 }

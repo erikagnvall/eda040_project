@@ -61,13 +61,15 @@ public class VideoActivity extends Activity {
 		case R.id.connectCam0:
 				Log.d("VideoActivity", "Selected connectCam0 option.");
 				// TODO let user choose camera here.
-				monitor.connectTo((byte) 0, "10.0.2.2");
+				//monitor.connectTo((byte) 0, "10.0.2.2");
+				monitor.connectTo((byte) 0, "argus-7.student.lth.se");
 				break;
 		case R.id.connectCam1:
 				Log.d("VideoActivity", "Selected connectCam0 option.");
 				// TODO let user choose camera here.
 				// The actual state will not be changed unit StateFetcher notifies about it.
-				monitor.connectTo((byte) 1, "10.0.2.2");
+				//monitor.connectTo((byte) 1, "10.0.2.2");
+				monitor.connectTo((byte) 1, "argus-8.student.lth.se");
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");

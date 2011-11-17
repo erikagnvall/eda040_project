@@ -1,7 +1,3 @@
-package data;
-
-import network.Image;
-
 public class ImageMonitor {
 	//out/in
 	private boolean isConnected;
@@ -22,23 +18,15 @@ public class ImageMonitor {
 		notifyAll();
 	}
 	
-	public synchronized Image getImage() {
+	public synchronized Image getImage() throws InterruptedException {
 		if (!isVideo) {
 			long stopTime = System.currentTimeMillis() + 5000;
 			while (stopTime > System.currentTimeMillis()) {
-				try {
-					wait(stopTime - System.currentTimeMillis());
-				} catch (InterruptedException ie) {
-					System.err.println("oops");
-				}
+				wait(stopTime - System.currentTimeMillis());
 			}
 		}
 		while (image == null && isConnected) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				System.err.println("getImag interrupted");
-			}
+			wait();
 		}
 		Image tmp = image;
 		image = null;

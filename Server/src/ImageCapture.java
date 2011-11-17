@@ -1,13 +1,10 @@
-package network;
 
 //import se.lth.cs.fakecamera.Axis211A;
 //import se.lth.cs.fakecamera.MotionDetector;
-import se.lth.cs.cameraproxy.Axis211A;
-import se.lth.cs.cameraproxy.MotionDetector;
-//import se.lth.cs.camera.Axis211A;
-//import se.lth.cs.camera.Axis211A;
-
-import data.ImageMonitor;
+//import se.lth.cs.cameraproxy.Axis211A;
+//import se.lth.cs.cameraproxy.MotionDetector;
+import se.lth.cs.camera.Axis211A;
+import se.lth.cs.camera.MotionDetector;
 
 public class ImageCapture extends Thread {
 	private ImageMonitor monitor;
@@ -16,10 +13,10 @@ public class ImageCapture extends Thread {
 
 	public ImageCapture(ImageMonitor monitor) {
 		this.monitor = monitor;
-		//this.camera = new Axis211A(); // Real and fakecamera.
-		camera = new Axis211A("argus-4", 8080); // Proxycamera.
-		//this.motionDetector = new MotionDetector();
-		this.motionDetector = new MotionDetector("argus-4", 8080); // Proxycamera
+		this.camera = new Axis211A(); // Real and fakecamera.
+		//camera = new Axis211A("argus-4", 8080); // Proxycamera.
+		this.motionDetector = new MotionDetector();
+		//this.motionDetector = new MotionDetector("argus-4", 8080); // Proxycamera
 		camera.connect();
 	}
 
@@ -29,6 +26,11 @@ public class ImageCapture extends Thread {
 		byte mode;
 		Image image;
 		while (!interrupted()) {
+			//try {
+				//sleep(400);
+			//} catch (InterruptedException ie) {
+
+			//}
 			buffer = new byte[Axis211A.IMAGE_BUFFER_SIZE];
 			readBytes = 0;
 			readBytes = camera.getJPEG(buffer, 0);
