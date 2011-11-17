@@ -10,12 +10,16 @@ import java.io.IOException;
 import android.util.Log;
 
 public class ClientMonitor {
+
+    public static final double SYNC_THRESHOLD;
+
 	private Queue<Command>[] commandQueues;
 	private Queue<Image> imageBuffer;
 	private boolean[] isVideoMode;
 	private Map<Byte, ClientProtocol> protocols;
 	private boolean[] connected;
     private boolean isSyncMode;
+    private boolean[] latestTimestamp;
 
 	public ClientMonitor() {
 		commandQueues = (LinkedList<Command>[]) new LinkedList[2];
@@ -26,6 +30,7 @@ public class ClientMonitor {
 		protocols = new HashMap<Byte, ClientProtocol>();
 		connected = new boolean[2];
 		isSyncMode = false;
+		latestTimestamp = new boolean[2];
 	}
 
 	// TODO private
@@ -43,8 +48,15 @@ public class ClientMonitor {
 
 	public synchronized void putImage(Image image){
 	    LinkedList<Image> tmp = null;
+	    int deltaT = 0;
 	    byte cameraId = image.getCameraId();
 	    byte otherCamera = (byte) (((int) cameraId + 1) % 2);
+
+	    if (latestTimestamp[cameraId] < image.getTimestamp)
+		latestTimestamp[cameraId] = image.getTimestamp;
+
+	    delatT = math.abs(latestTimestamp[0] - latestTimeStamp[1]);
+	    isSyncMode = deltaT < SYNC_THRESHOLD;
 
 	    if (isSyncMode) {
 		tmp = new LinkedList<Image>();
