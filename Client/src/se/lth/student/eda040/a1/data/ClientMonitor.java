@@ -15,6 +15,7 @@ public class ClientMonitor {
 	private boolean[] isVideoMode;
 	private Map<Byte, ClientProtocol> protocols;
 	private boolean[] connected;
+    private boolean isSyncMode;
 
 	public ClientMonitor() {
 		commandQueues = (LinkedList<Command>[]) new LinkedList[2];
@@ -24,6 +25,7 @@ public class ClientMonitor {
 		isVideoMode = new boolean[2];
 		protocols = new HashMap<Byte, ClientProtocol>();
 		connected = new boolean[2];
+		isSyncMode = false;
 	}
 
 	// TODO private
@@ -40,15 +42,28 @@ public class ClientMonitor {
 	}
 
 	public synchronized void putImage(Image image){
-		imageBuffer.offer(image);
-		byte cameraId = image.getCameraId();
-		byte otherCamera = (byte) (((int) cameraId + 1) % 2);
-		if (connected[otherCamera] && !isVideoMode[cameraId] && image.isVideoMode()) {
-			putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
+	    LinkedList<Image> tmp = null;
+	    byte cameraId = image.getCameraId();
+	    byte otherCamera = (byte) (((int) cameraId + 1) % 2);
+
+	    if (isSyncMode) {
+		tmp = new LinkedList<Image>();
+		while (imageBuffer.size() > 0 && imageBuffer.getLast().getTimestamp() > image.getTimestamp) {
+		    tmp.putFirst(imageBuffer.removeLast());
 		}
-		isVideoMode[cameraId] = image.isVideoMode();
-		Log.d("ClientMonitor", "Put image in buffer");
-		notifyAll(); 
+		imageBuffer.putLast(image);
+		imageBuffer.addAll(tmp);
+	    } else {
+		imageBuffer.offer(image);
+	    }
+
+	    if (connected[otherCamera] && !isVideoMode[cameraId] && image.isVideoMode()) {
+		putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
+	    }
+
+	    isVideoMode[cameraId] = image.isVideoMode();
+	    Log.d("ClientMonitor", "Put image in buffer");
+	    notifyAll(); 
 	}
 
 	public synchronized Image awaitImage() throws InterruptedException{
