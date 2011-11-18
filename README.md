@@ -42,11 +42,11 @@ Change to:
 	this.camera = new Axis211A("argus-4", 8080); // Proxycamera.
 	this.motionDetector = new MotionDetector("argus-4", 8080); // Proxycamera
 
-Because we're now using modern Java, exceptions must be caugt.
+Because we're now using modern `Java`, exceptions must be caugt.
 
 	$vi src/CameraServer.java
 
-In run(), change to:
+In `run()`, change to:
 
 	try {
 		socket.close();
@@ -66,7 +66,7 @@ the C-compiler.
 Open a new shell and run the following:
 
 	$telnet argus-4
-	$telnet> /etc/CameraProxy 8080
+	telnet> /etc/CameraProxy 8080
 
 Now return to the previous shell:
 
@@ -77,16 +77,25 @@ Now return to the previous shell:
 ### Emulator
 	$android create avd -n api_10 -t target-10
 	$emulator -avd api_10 &
-	wait until emulator is started.
+
+Wait until emulator is started.
+
 	$ant debug
 	$ant installd
 	$adb lolcat
 
+If the program should freeze at any point, run the following:
+
+	$ddms &
+
+And find the process `se.lth.student.eda040.a1` in the upper left frame
+and press the stop button.
+
 Start the application	
 #### Proxy
-	Choose proxy-camera.
+Choose proxy-camera.
 #### Direct connection
-	Choose a real camera.
+Choose a real camera.
 	
 ### Real phone
 Connect the phone to your computer.
@@ -98,3 +107,5 @@ Connect the phone to your computer.
 Start the application	
 Choose a real camera.
 
+##Contributors
+Erik Jansson, Erik Westrup, Oscar Olsson, Tommy Olofsson.
