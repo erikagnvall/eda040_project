@@ -74,19 +74,11 @@ public class VideoActivity extends Activity {
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
-                try{
-                    monitor.gracefullDisconnect((byte) 1);	
-                } catch (IOException e){
-                    Log.d("VideoActivity", "failed to disconnect!");
-                }
+        monitor.gracefullDisconnect((byte) 1);	
 				break;
 		case R.id.disconnectCam1:
 				Log.d("VideoActivity", "Selected disconnectCam1");
-                try{
-                    monitor.gracefullDisconnect((byte) 1);	
-                } catch (IOException e){
-                    Log.d("VideoActivity", "failed to disconnect!");
-                }
+        monitor.gracefullDisconnect((byte) 1);	
 		case R.id.setIdle:
 				monitor.setIdleMode();
 				break;
