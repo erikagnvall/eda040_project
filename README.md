@@ -22,7 +22,7 @@ Make sure you did not execute the commands in `Proxy server` below.
 	$cat 'CAMERAPASSWORD' > password.local
 	$./compile2c.sh argus-X argus-Y < password.local
 
-Enjoy
+Enjoy, ice cold.
 
 ### Proxy server
 	$vi src/ImageCapture.java
@@ -42,7 +42,7 @@ Change to:
 	this.camera = new Axis211A("argus-4", 8080); // Proxycamera.
 	this.motionDetector = new MotionDetector("argus-4", 8080); // Proxycamera
 
-Because we're now using modern `Java`, exceptions must be caugt.
+Because we're now using modern `Java`, exceptions must be caught.
 
 	$vi src/CameraServer.java
 
@@ -54,12 +54,12 @@ In `run()`, change to:
 		System.err.println("cold not close connection");
 	}	
 
-Now you can compile it:
+The files we move in this step is only needed as mock placeholders for
+the C-crosscompiler.
 
 	$mv src/se /tmp
 
-The files we move in this step is only needed as mock placeholders for
-the C-compiler.
+Now you can compile the junk:
 
 	$ant
 
@@ -68,7 +68,7 @@ Open a new shell and run the following:
 	$telnet argus-4
 	telnet> /etc/CameraProxy 8080
 
-Now return to the previous shell:
+Now return to the previous shell. It's time for execution! (not the lethal one):
 
 	$java -cp bin:lib/* CameraServer
 
@@ -78,7 +78,7 @@ Now return to the previous shell:
 	$android create avd -n api_10 -t target-10
 	$emulator -avd api_10 &
 
-Wait until emulator is started.
+Wait until emulator is started and Android OS i up an running. Then compile, upload and watch the lolcat.
 
 	$ant debug
 	$ant installd
@@ -108,4 +108,7 @@ Start the application
 Choose a real camera.
 
 ##Contributors
-Erik Jansson, Erik Westrup, Oscar Olsson, Tommy Olofsson.
+Erik Jansson
+Erik Westrup
+Oscar Olsson
+Tommy Olofsson
