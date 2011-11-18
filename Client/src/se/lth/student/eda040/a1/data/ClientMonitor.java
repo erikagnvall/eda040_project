@@ -3,6 +3,7 @@ package se.lth.student.eda040.a1.data;
 import se.lth.student.eda040.a1.network.*;
 
 import java.util.Queue;
+import java.util.PriorityQueue;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
@@ -11,26 +12,28 @@ import android.util.Log;
 
 public class ClientMonitor {
 
-    public static final double SYNC_THRESHOLD = 0.2;
+    public static final int SYNC_THRESHOLD = 200;
 
 	private Queue<Command>[] commandQueues;
-	private LinkedList<Image> imageBuffer;
+	private Queue<Image> imageBuffer;
 	private boolean[] isVideoMode;
 	private Map<Byte, ClientProtocol> protocols;
 	private boolean[] connected;
     private boolean isSyncMode;
     private long[] latestTimestamp;
+    private int[] delay;
     private long delayNextUntil;
 
 	public ClientMonitor() {
 		commandQueues = (LinkedList<Command>[]) new LinkedList[2];
 		commandQueues[0] = new LinkedList<Command>();
 		commandQueues[1] = new LinkedList<Command>();
-		imageBuffer = new LinkedList<Image>();
+		imageBuffer = new PriorityQueue<Image>();
 		isVideoMode = new boolean[2];
 		protocols = new HashMap<Byte, ClientProtocol>();
 		connected = new boolean[2];
 		isSyncMode = false;
+		delay = new int[2];
 		latestTimestamp = new long[2];
 		delayNextUntil = 0;
 	}
@@ -49,34 +52,23 @@ public class ClientMonitor {
 	}
 
 	public synchronized void putImage(Image image){
-	    LinkedList<Image> tmp = null;
-	    long deltaT = 0;
 	    byte cameraId = image.getCameraId();
 	    byte otherCamera = (byte) (((int) cameraId + 1) % 2);
+	    int delay;
 
-	    if (latestTimestamp[cameraId] < image.getTimstamp())
-		latestTimestamp[cameraId] = image.getTimstamp();
+	    delay = (int)(System.currentTimeMillis() - image.getTimestamp());
+	    image.setDelay(delay);
 
-	    deltaT = Math.abs(latestTimestamp[0] - latestTimestamp[1]);
-	    isSyncMode = deltaT < SYNC_THRESHOLD;
 
-	    if (isSyncMode) {
-		tmp = new LinkedList<Image>();
-		while (imageBuffer.size() > 0 && imageBuffer.getLast().getTimstamp() > image.getTimstamp()) {
-		    tmp.addFirst(imageBuffer.removeLast());
-		}
-		imageBuffer.addLast(image);
-		imageBuffer.addAll(tmp);
-	    } else {
 		imageBuffer.offer(image);
-	    }
 
+		// If videomode distribute comand to other camera
 	    if (connected[otherCamera] && !isVideoMode[cameraId] && image.isVideoMode()) {
 		putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
 	    }
 
 	    isVideoMode[cameraId] = image.isVideoMode();
-	    Log.d("ClientMonitor", "Put image in buffer");
+	    //Log.d("ClientMonitor", "Put image in buffer");
 	    notifyAll(); 
 	}
 
@@ -85,26 +77,30 @@ public class ClientMonitor {
 	    Image p1 = null;
 	    Image p2 = null;
 
-		Log.d("ClientMonitor", "Waiting for image in buffer");
+		//Log.d("ClientMonitor", "Waiting for image in buffer");
 		while (imageBuffer.isEmpty()) {
 			wait();
 		}
 		while (System.currentTimeMillis() < delayNextUntil)
 		    wait(delayNextUntil - System.currentTimeMillis());
 
-		if (isSyncMode && imageBuffer.size() >= 2) {
-		    p1 = imageBuffer.get(1);
-		    p2 = imageBuffer.get(2);
-		    // if there is no image to delay for the time is already up and there is no need to set he delaytime to now. Promise.
-		    if (p1.getCameraId() != p2.getCameraId())
-			this.delayNextUntil = p2.getTimstamp() - p1.getTimstamp() + System.currentTimeMillis();
-		} else {
-		    this.delayNextUntil = System.currentTimeMillis();
+		Image image = imageBuffer.poll();
+		Image next = imageBuffer.peek();
+		int delayDiff = 0;
+		if(next != null){
+			delayDiff = Math.abs((int)image.getDelay() - this.delay[image.getCameraId()]);
 		}
-		
-		Log.d("ClientMonitor", "Polled image in buffer");
+		if (delayDiff < SYNC_THRESHOLD && next != null){
+			int dt = (int)(next.getTimestamp() - image.getTimestamp());
+			delayNextUntil = System.currentTimeMillis() + dt;
+		} else {
+			delayNextUntil = 0;
+		}
+
+		//Log.d("ClientMonitor", "Polled image in buffer");
+		this.delay[image.getCameraId()] = image.getDelay();
 		notifyAll(); 
-		return imageBuffer.poll();
+		return image;
 	}
 
 	public synchronized void addProtocol(byte cameraId, ClientProtocol protocol) {

@@ -17,10 +17,15 @@ public class ClientProtocol {
 	private Socket socket;
 	private InputStream inputStream;
 	private OutputStream outputStream;
+
 	public ClientProtocol(byte cameraId) {
 		this.cameraId = cameraId;
 	}
 
+	/** Fetches an image from the remote end.
+	 * Fetches the image data and extracts timestamp data from JPEG image.
+	 * throws IOException if connection is lost during transfer.
+	 */
 	public Image awaitImage() throws IOException {
 		byte[] headerBytes = new byte[5];
 		int bytesRead = 0;
@@ -76,12 +81,10 @@ public class ClientProtocol {
 	public void connectTo(String host) throws IOException, UnknownHostException {
 		Log.d("ClientProtocol", "Pre socket instanciation for host " + host);
 		socket = new Socket(host, CAMERA_PORT);
-		//socket = new Socket("10.0.2.2", 8080);
 		Log.d("ClientProtocol", "Post socket instanciation for host " + host);
 		inputStream = socket.getInputStream();
 		outputStream = socket.getOutputStream();
 		Log.d("ClientProtocol", "Got in and output streams");
-		//notifyAll();
 	}
 	
 	public void gracefullDisconnect() {
@@ -92,7 +95,6 @@ public class ClientProtocol {
 		} catch (IOException ioe) {
 			Log.d("ClientProtocol", "Gracefull disconnections failed.");
 		}
-		//Log.d("ClientProtocol", "Thread calling gracefullDisconnect: " + Thread.currentThread().getName());
 		Log.d("ClientProtocol", "Gracefullt disconnect camera " + cameraId);
 		disconnect();
 	}
