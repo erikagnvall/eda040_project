@@ -1,10 +1,13 @@
+import java.net.Socket;
+
 public class ImageMonitor {
-	//out/in
 	private boolean isConnected;
 	private boolean isVideo;
 	private Image image;
+	private ServerProtocol protocol;
 	
-	public ImageMonitor() {
+	public ImageMonitor(ServerProtocol protocol) {
+		this.protocol = protocol;
 		isVideo = false;
 		isConnected = false;
 	}
@@ -19,6 +22,7 @@ public class ImageMonitor {
 	}
 	
 	public synchronized Image getImage() throws InterruptedException {
+		connectionCheck();
 		if (!isVideo) {
 			long stopTime = System.currentTimeMillis() + 5000;
 			while (stopTime > System.currentTimeMillis()) {
@@ -46,9 +50,11 @@ public class ImageMonitor {
 		notifyAll();
 	}
 
-    public synchronized void connect() {
+    public synchronized void setConnection(Socket socket) {
+		System.out.println("Monitor seting up a new connection.");
+		protocol.setConnection(socket);
 		isConnected = true;
-		notifyAll(); //?
+		notifyAll(); 
     }
 	
 	public synchronized void awaitDisconnect() {
@@ -61,4 +67,9 @@ public class ImageMonitor {
 		}
 	}
 	
+	public synchronized void connectionCheck() throws InterruptedException {
+		while (!isConnected) {
+			wait();
+		}
+	}
 }

@@ -13,7 +13,7 @@ public class Out extends Thread {
 	
 	public void run() {
 		Image image = null;
-	    while (!isInterrupted() && monitor.hasConnection()) {
+	    while (!interrupted()) {
 			try {
 				image = monitor.getImage();
 			} catch (InterruptedException ie) {

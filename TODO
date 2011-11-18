@@ -1,5 +1,0 @@
-When http://torvalds.cs.lth.se/moin/Courses/EDA040/Compiling is updated; automate the building.
-
-Testing
-IOExceptions when connection is closed in Server.
-Client: reconnect does not work, a deadlock?

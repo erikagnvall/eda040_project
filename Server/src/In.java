@@ -11,9 +11,11 @@ public class In extends Thread {
 	}
 	
 	public void run() {
-	    while (!isInterrupted() && monitor.hasConnection()) {
+	    while (!interrupted()) {
 			byte cmd = 0;
 			try {
+				// TODO not thread safe.
+				monitor.connectionCheck();
 			    cmd = protocol.awaitCommand();
 			    System.out.println("Recieved command " + cmd);
 			    switch (cmd) {
@@ -33,9 +35,11 @@ public class In extends Thread {
 			} catch (IOException e) {
 				// TODO 
 				monitor.disconnect();
+			} catch (InterruptedException ie) {
+				// noop.
 			}
 		}
-		System.out.println("in done running");
+		System.out.println("In done running");
 	}
 
 }

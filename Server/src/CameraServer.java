@@ -5,56 +5,47 @@ import java.net.Socket;
 public class CameraServer {
 	private ImageMonitor monitor;
 	private ServerSocket serverSocket;
+	private ServerProtocol protocol;
+	private In in;
+	private Out out;
 	private ImageCapture capture;
 
 	public CameraServer() {
-		monitor = new ImageMonitor();
 		try {
-			serverSocket = new ServerSocket(8080);
+			this.serverSocket = new ServerSocket(8080);
 		} catch (IOException e) {
 			System.err.println("Could not bind to port.");
 		}
+		this.protocol = new ServerProtocol();
+		monitor = new ImageMonitor(protocol);
+		this.in = new In(protocol, monitor);
+		this.out = new Out(protocol, monitor);
 		this.capture = new ImageCapture(monitor);
 	}
 
 	public void run() {
 		capture.start();
 		Socket socket = null;
-		ServerProtocol protocol;
-		In in;
-		Out out;
+		in.start();
+		out.start();
 		while (true) {
 			System.out.println("Waiting for connection");
 			try {
 				socket = serverSocket.accept();
-				monitor.connect();
-				System.out.println("got new connection");
+				System.out.println("Got new connection");
+				monitor.setConnection(socket);
 			} catch (IOException e) {
 				System.err.println("Could not accept connection");
 			}
-			protocol = new ServerProtocol(socket);
-			in = new In(protocol, monitor);
-			out = new Out(protocol, monitor);
-			in.start();
-			out.start();
 			System.out.println("Waiting for disconnect");
 			monitor.awaitDisconnect();
-			System.out.println("diconnected");
-			in.interrupt();
-			out.interrupt();
-			try {
-			    in.join();
-			    out.join();
-			} catch (InterruptedException e) {
-			    System.err.println("cold not join threads");
-			}
-			System.out.println("killed com threads");
+			System.out.println("Diconnected");
 			//try {
 			    socket.close();
 			//} catch (IOException e) {
 				//System.err.println("cold not close connection");
 			//}			    
-			System.out.println("closed connection");
+			//System.out.println("Closed connection");
 		}
 	}
 

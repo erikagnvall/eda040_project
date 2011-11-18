@@ -13,10 +13,15 @@ public class ImageCapture extends Thread {
 
 	public ImageCapture(ImageMonitor monitor) {
 		this.monitor = monitor;
-		this.camera = new Axis211A(); // Real and fakecamera.
-		//camera = new Axis211A("argus-4", 8080); // Proxycamera.
+
+		// Real and fake.
+		this.camera = new Axis211A(); 
 		this.motionDetector = new MotionDetector();
+
+		// Proxy.
+		//this.camera = new Axis211A("argus-4", 8080); // Proxycamera.
 		//this.motionDetector = new MotionDetector("argus-4", 8080); // Proxycamera
+
 		camera.connect();
 	}
 

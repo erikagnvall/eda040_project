@@ -27,7 +27,7 @@ public class Input extends Thread {
 			} catch (IOException e) {
 				monitor.disconnect(cameraId);
 			} catch (InterruptedException ie) {
-				// noop
+				// noop.
 			}
 		}
 	}
