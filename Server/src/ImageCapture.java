@@ -1,4 +1,3 @@
-
 //import se.lth.cs.fakecamera.Axis211A;
 //import se.lth.cs.fakecamera.MotionDetector;
 //import se.lth.cs.cameraproxy.Axis211A;
@@ -39,7 +38,9 @@ public class ImageCapture extends Thread {
 			buffer = new byte[Axis211A.IMAGE_BUFFER_SIZE];
 			readBytes = 0;
 			readBytes = camera.getJPEG(buffer, 0);
-			monitor.setVideo(motionDetector.detect());
+
+			if (!monitor.isVideo() && motionDetector.detect())
+			    monitor.setVideo(true);
 			mode = (monitor.isVideo()) ? ServerProtocol.VIDEO_MODE : ServerProtocol.IDLE_MODE;
 			image = new Image(buffer, readBytes, mode);
 			monitor.putImage(image);
