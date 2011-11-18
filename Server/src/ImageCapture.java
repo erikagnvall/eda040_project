@@ -34,8 +34,13 @@ public class ImageCapture extends Thread {
 			buffer = new byte[Axis211A.IMAGE_BUFFER_SIZE];
 			readBytes = 0;
 			readBytes = camera.getJPEG(buffer, 0);
+			/* this is the good way of doing things
 			monitor.setVideo(motionDetector.detect());
 			mode = (monitor.isVideo()) ? ServerProtocol.VIDEO_MODE : ServerProtocol.IDLE_MODE;
+			*/
+			/* this is the bad way */
+			mode = (motionDetector.detect()) ? ServerProtocol.VIDEO_MODE : ServerProtocol.IDLE_MODE;
+			/* end of bad way */
 			image = new Image(buffer, readBytes, mode);
 			monitor.putImage(image);
 		}
