@@ -109,6 +109,9 @@ Choose a real camera.
 
 ##Contributors
 Erik Jansson
+
 Erik Westrup
+
 Oscar Olsson
+
 Tommy Olofsson
