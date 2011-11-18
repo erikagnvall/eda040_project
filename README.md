@@ -56,9 +56,21 @@ In run(), change to:
 
 Now you can compile it:
 
-	$ant
-	$java -cp bin:lib/* CameraServer
+	$mv src/se /tmp
 
+The files we move in this step is only needed as mock placeholders for
+the C-compiler.
+
+	$ant
+
+Open a new shell and run the following:
+
+	$telnet argus-4
+	$telnet> /etc/CameraProxy 8080
+
+Now return to the previous shell:
+
+	$java -cp bin:lib/* CameraServer
 
 ## Client
 	$cd Client

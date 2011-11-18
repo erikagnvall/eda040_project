@@ -18,8 +18,8 @@ public class ImageCapture extends Thread {
 		this.motionDetector = new MotionDetector();
 
 		// Proxy.
-		//this.camera = new Axis211A("argus-4", 8080); // Proxycamera.
-		//this.motionDetector = new MotionDetector("argus-4", 8080); // Proxycamera
+		//this.camera = new Axis211A("argus-4", 8080);
+		//this.motionDetector = new MotionDetector("argus-4", 8080);
 
 		camera.connect();
 	}
