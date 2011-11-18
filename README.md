@@ -10,14 +10,14 @@ Project in the course EDA040 at Lund University.
 	$PATH=$PATH:"`pwd`/android-sdk-linux/tools"
 	$cd eda040_project
 
-Be aware, you have to redo the second last command if you switch shell.
+Beware! You have to redo the second last command if you switch shell.
 ## Server
 Server should be started before trying to connect with client....
 
 	$cd Server
 
 ### Cross compiled
-Make sure you did not execute the above changes.
+Make sure you did not execute the commands in `Proxy server` below.
 
 	$cat 'CAMERAPASSWORD' > password.local
 	$./compile2c.sh argus-X argus-Y < password.local
