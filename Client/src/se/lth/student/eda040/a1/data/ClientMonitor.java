@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import android.util.Log;
 
 public class ClientMonitor {
@@ -108,23 +109,29 @@ public class ClientMonitor {
 		System.out.println(protocols.size());
 	}
 
-	public synchronized boolean connectTo(byte cameraId, String host) {
+    /**
+     * Connects the specified camera to the specified host.
+     * Notifies threads waiting for connection.
+     * Returns true if successfull.
+     * Throws IllegalArgumentException if the cameraId is invalid.
+     * Throws Exceptions also thrown by socket.connect().
+     */
+	public synchronized boolean connectTo(byte cameraId, String host)
+            throws UnknownHostException, IOException, IllegalArgumentException{
 		boolean success = false;
 		if (protocols.containsKey(cameraId)) {
 			ClientProtocol protocol = protocols.get(cameraId);
-			try {
-				protocol.connectTo(host);
-				Log.d("ClientMonitor", "Connecting camera " + cameraId);
-				success = true;
-			} catch (Exception e)  {
-				success = false;
-				Log.d("ClientMonitor", "caught exception" + e.toString());
-			}
+            protocol.connectTo(host);
+            Log.d("ClientMonitor", "Camera: " + cameraId + " is connected.");
+            success = true;
 		} else {
-			Log.d("ClientMonitor", "Could not fins protocol for camera " + cameraId);
+			Log.d("ClientMonitor", "Could not find protocol for camera " + cameraId);
 			System.err.println("missing protocol.");
+            throw new IllegalArgumentException("No camera with id: " + cameraId + "!");
 		}
 
+        // TODO this could be simplified rigth? The camera should be connected if
+        // we've gotten this far.
 		if (success) {
 			Log.d("ClientMonitor", "Successfully connected to host with " + cameraId);
 			connected[cameraId] = true;
@@ -154,7 +161,6 @@ public class ClientMonitor {
 		if (protocols.containsKey(cameraId)) {
 			protocols.get(cameraId).disconnect();
 		}
-		connected[cameraId] = false;
 		Log.d("ClientMonitor", "Disconnected camera " + cameraId);
 	}
 

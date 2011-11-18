@@ -16,6 +16,9 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.net.UnknownHostException;
+import java.io.IOException;
+
 
 public class VideoActivity extends Activity {
 	private Input in0;
@@ -61,24 +64,29 @@ public class VideoActivity extends Activity {
 		case R.id.connectCam0:
 				Log.d("VideoActivity", "Selected connectCam0 option.");
 				// TODO let user choose camera here.
-				//monitor.connectTo((byte) 0, "10.0.2.2");
-				monitor.connectTo((byte) 0, "argus-7.student.lth.se");
+				connectCamera((byte) 0, "argus-7.student.lth.se");
 				break;
 		case R.id.connectCam1:
 				Log.d("VideoActivity", "Selected connectCam0 option.");
 				// TODO let user choose camera here.
 				// The actual state will not be changed unit StateFetcher notifies about it.
-				//monitor.connectTo((byte) 1, "10.0.2.2");
-				monitor.connectTo((byte) 1, "argus-8.student.lth.se");
+				connectCamera((byte) 1, "argus-8.student.lth.se");
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
-				monitor.gracefullDisconnect((byte) 0);	
+                try{
+                    monitor.gracefullDisconnect((byte) 1);	
+                } catch (IOException e){
+                    Log.d("VideoActivity", "failed to disconnect!");
+                }
 				break;
 		case R.id.disconnectCam1:
 				Log.d("VideoActivity", "Selected disconnectCam1");
-				monitor.gracefullDisconnect((byte) 1);	
-				break;
+                try{
+                    monitor.gracefullDisconnect((byte) 1);	
+                } catch (IOException e){
+                    Log.d("VideoActivity", "failed to disconnect!");
+                }
 		case R.id.setIdle:
 				monitor.setIdleMode();
 				break;
@@ -87,6 +95,26 @@ public class VideoActivity extends Activity {
 		}
 		return true;
 	}
+
+    private void connectCamera(byte cameraId, String host){
+        try{
+            if(!monitor.connectTo(cameraId, host)){
+                Log.d("videoactivity", "failed to connect camera: " + cameraId);
+                // display information text
+            }
+        }catch (UnknownHostException e){
+            Log.d("videoactivity", "failed to connect camera: " + cameraId +
+                    ". unable to conect to host: " + host + ".");
+            // display information text
+        } catch (IOException e){
+            Log.d("videoactivity", "failed to connect camera: " + cameraId);
+            // display information text
+        } catch (IllegalArgumentException e){
+            Log.d("videoactivity", "failed to connect camera: " + cameraId + 
+                    "Camera has not been set up!");
+            // display information text
+        }
+    }
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
 				// TODO this overides the icons that otherwide would be used according to the xml. What to do?
