@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class CameraServer {
+public class CameraServer implements Runnable {
 	private ImageMonitor monitor;
 	private ServerSocket serverSocket;
 	private ServerProtocol protocol;
