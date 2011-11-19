@@ -3,7 +3,7 @@
 Project in the course EDA040 at Lund University.
 
 
-# How to build
+# How to build and run
 	$git clone git://github.com/Meldanya/eda040_project.git
 	$wget http://dl.google.com/android/android-sdk_r15-linux.tgz
 	$tar xvzf android-sdk_r15-linux.tgz
