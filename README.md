@@ -19,7 +19,7 @@ Server should be started before trying to connect with client....
 ### Cross compiled
 Make sure you did not execute the commands in `Proxy server` below.
 
-	$cat 'CAMERAPASSWORD' > password.local
+	$echo 'CAMERAPASSWORD' > password.local
 	$./compile2c.sh argus-X argus-Y < password.local
 
 Enjoy, ice cold.
