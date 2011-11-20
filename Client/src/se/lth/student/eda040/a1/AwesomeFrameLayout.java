@@ -13,11 +13,14 @@ import android.util.Log;
 import android.graphics.Canvas;
 import android.view.View.MeasureSpec;
 import android.view.Gravity;
+import android.view.View;
 
 
 public class AwesomeFrameLayout extends FrameLayout {
 	private ImageView view;
 	private TextView overlay;
+	private Bitmap disconnectedImage;
+	private boolean disconnected;
 
 	public AwesomeFrameLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -28,7 +31,10 @@ public class AwesomeFrameLayout extends FrameLayout {
 		Log.d("AwesomeFrameLayout", " In onFinishInflate");
 		this.view = (ImageView) findViewById(R.id.view);
 		this.overlay = (TextView) findViewById(R.id.overlay);
-		view.setImageBitmap(BitmapFactory.decodeFile("/sdcard/test2.jpg"));
+		this.disconnectedImage = BitmapFactory.decodeResource(getResources(), R.drawable.disconnected);
+		//view.setImageBitmap(BitmapFactory.decodeFile("/sdcard/test2.jpg"));
+		view.setImageBitmap(disconnectedImage);
+		overlay.setVisibility(View.INVISIBLE);
 	}
 
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -49,7 +55,20 @@ public class AwesomeFrameLayout extends FrameLayout {
 	
 	public void drawImage(Image image) {
 		//Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
-		view.setImageBitmap(image.toBitmap());
-		overlay.setText("Δ " + image.getDelay() + " ms");
+		if (!disconnected) {
+			view.setImageBitmap(image.toBitmap());
+			overlay.setVisibility(View.VISIBLE);
+			overlay.setText("Δ " + image.getDelay() + " ms");
+		}
+	}
+
+	public void connect() {
+		disconnected = false;
+	}
+
+	public void disconnect() {
+		disconnected = true;
+		view.setImageBitmap(disconnectedImage);
+		overlay.setVisibility(View.INVISIBLE);
 	}
 }
