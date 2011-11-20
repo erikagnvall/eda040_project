@@ -8,16 +8,28 @@ import se.lth.student.eda040.a1.network.ClientProtocol;
 import se.lth.student.eda040.a1.network.Command;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.view.MenuInflater;
-import android.view.Menu;
-import android.util.Log;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.net.UnknownHostException;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class VideoActivity extends Activity {
@@ -27,12 +39,36 @@ public class VideoActivity extends Activity {
 	private Output out1;
 	private Handler handler;
 	private ClientMonitor monitor;
+	private ContextMenu contextMenu;
+	private int currentCam = -1;
+
+	private String[] cams = {
+		"argus-1",
+		"argus-2",
+		"argus-3",
+		"argus-4",
+		"argus-5",
+		"argus-6",
+		"argus-7",
+		"argus-8",
+		"argus-9",
+		"argus-10",
+		"fake cam",
+	};
+
+	private List<String> cameras = new ArrayList<String>(Arrays.asList(cams));
+
+	private String[] connectedCameras = new String[2];
+	private ArrayAdapter<String> adapter;
+	private AlertDialog cameraPicker;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videoview);
 		AwesomeVideoView avv = (AwesomeVideoView) findViewById(R.id.avv);
-		
+
+		setUpCameraDialog();
+
 		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
 		handler = new Handler();
 		monitor = new ClientMonitor();
@@ -53,6 +89,27 @@ public class VideoActivity extends Activity {
 		fetcher.start();
 	}
 
+	private void setUpCameraDialog() {
+		cameras = new ArrayList<String>(Arrays.asList(cams));
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cameras);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Pick a camera");
+		builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialogInterface, int item) {
+				connectedCameras[currentCam] = adapter.getItem(item);
+				if (connectedCameras[currentCam].equals("fake cam")) {
+					connectCamera((byte) currentCam, "10.0.2.2");
+				} else {
+					connectCamera((byte) currentCam, connectedCameras[currentCam] + ".student.lth.se");
+				}
+
+				adapter.remove(connectedCameras[currentCam]);
+				adapter.notifyDataSetChanged();
+			}
+		});
+		cameraPicker = builder.create();
+	}
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.videomenu, menu);
@@ -64,21 +121,23 @@ public class VideoActivity extends Activity {
 		case R.id.connectCam0:
 				Log.d("VideoActivity", "Selected connectCam0 option.");
 				// TODO let user choose camera here.
-				connectCamera((byte) 0, "argus-2.student.lth.se");
+				currentCam = 0;
+				cameraPicker.show();
 				break;
 		case R.id.connectCam1:
 				Log.d("VideoActivity", "Selected connectCam1 option.");
 				// TODO let user choose camera here.
 				// The actual state will not be changed unit StateFetcher notifies about it.
-				connectCamera((byte) 1, "argus-3.student.lth.se");
+				currentCam = 1;
+				cameraPicker.show();
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
-        monitor.gracefullDisconnect((byte) 0);	
+				disconnectCamera(0);
 				break;
 		case R.id.disconnectCam1:
 				Log.d("VideoActivity", "Selected disconnectCam1");
-        monitor.gracefullDisconnect((byte) 1);	
+				disconnectCamera(1);
 		case R.id.setIdle:
 				monitor.setIdleMode();
 				break;
@@ -106,6 +165,19 @@ public class VideoActivity extends Activity {
             // display information text
         }
     }
+
+	/**
+	 * Disconnect a camera as well as some magic with the camera list.
+	 */
+	private void disconnectCamera(int cameraId) {
+		currentCam = cameraId;
+		int oppositeCam = currentCam == 0 ? 1 : 0;
+		connectedCameras[currentCam] = null;
+		setUpCameraDialog();
+		adapter.remove(connectedCameras[oppositeCam]);
+		adapter.notifyDataSetChanged();
+		monitor.gracefullDisconnect((byte) currentCam);
+	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
 				// TODO this overides the icons that otherwide would be used according to the xml. What to do?
