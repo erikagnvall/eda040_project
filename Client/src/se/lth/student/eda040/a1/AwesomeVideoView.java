@@ -4,55 +4,56 @@ import se.lth.student.eda040.a1.network.Image;
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.graphics.Canvas;
 import android.view.View.MeasureSpec;
+import android.view.Gravity;
 
 
 public class AwesomeVideoView extends LinearLayout {
-	private ImageView view0;
-	private ImageView view1;
+	private AwesomeFrameLayout frame0;
+	private AwesomeFrameLayout frame1;
 
 	public AwesomeVideoView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		Log.d("AwesomeVideoView", "In constructor.");
 	}
 
 	public void onFinishInflate() {
-		this.view0 = (ImageView) findViewById(R.id.view0);
-		this.view1 = (ImageView) findViewById(R.id.view1);
-		view0.setImageBitmap(BitmapFactory.decodeFile("/sdcard/test2.jpg"));
-		view1.setImageBitmap(BitmapFactory.decodeFile("/sdcard/test2.jpg"));
+		Log.d("AwesomeVideoView", "In onFinishInflate.");
+		this.frame0 = (AwesomeFrameLayout) findViewById(R.id.frame0);
+		this.frame1 = (AwesomeFrameLayout) findViewById(R.id.frame1);
 	}
 
-	//public void onDraw(Canvas canvas) {
-		//view0.draw(canvas);
-		//view1.draw(canvas);
-	//}
-	
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		Log.d("AwesomeVideoView", "Now measuring");
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) / 2, MeasureSpec.getMode(heightMeasureSpec));
+		//int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.getMode(heightMeasureSpec));
 
-		view0.measure(widthMeasureSpec, measureSpecHeight);
-		view1.measure(widthMeasureSpec, measureSpecHeight);
+		frame0.measure(widthMeasureSpec, measureSpecHeight);
+		frame1.measure(widthMeasureSpec, measureSpecHeight);
 
-		setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+		//setMeasuredDimension(widthMeasureSpec, measureSpecHeight); //dont call, brejks overlay
 	}
 	
 	
 	public void drawImage(Image image) {
-		ImageView view = null;
+		AwesomeFrameLayout frame = null;
 		switch (image.getCameraId()) {
 			case 0:
-				view = view0;
+				frame = frame0;
 				break;
 			case 1:
-				view = view1;
+				frame = frame1;
 				break;
 		}
 		Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
-		view.setImageBitmap(image.toBitmap());
+		frame.drawImage(image);
 	}
 }

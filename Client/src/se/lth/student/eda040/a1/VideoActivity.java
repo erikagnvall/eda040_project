@@ -64,13 +64,13 @@ public class VideoActivity extends Activity {
 		case R.id.connectCam0:
 				Log.d("VideoActivity", "Selected connectCam0 option.");
 				// TODO let user choose camera here.
-				connectCamera((byte) 0, "argus-5.student.lth.se");
+				connectCamera((byte) 0, "argus-2.student.lth.se");
 				break;
 		case R.id.connectCam1:
 				Log.d("VideoActivity", "Selected connectCam1 option.");
 				// TODO let user choose camera here.
 				// The actual state will not be changed unit StateFetcher notifies about it.
-				connectCamera((byte) 1, "argus-4.student.lth.se");
+				connectCamera((byte) 1, "argus-3.student.lth.se");
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
