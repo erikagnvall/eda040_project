@@ -14,7 +14,7 @@ import android.util.Log;
 public class ClientMonitor {
 
     public static final int SYNC_THRESHOLD = 200;
-
+    private int nunsync;
 	private Queue<Command>[] commandQueues;
 	private Queue<Image> imageBuffer;
 	private boolean[] isVideoMode;
@@ -78,13 +78,15 @@ public class ClientMonitor {
 	    Image p1 = null;
 	    Image p2 = null;
 
+	    int delayDiff = 0;
+	    int cameraId = 0;
 		//Log.d("ClientMonitor", "Waiting for image in buffer");
 		while (imageBuffer.isEmpty()) {
 			wait();
 		}
+		/*
 		while (System.currentTimeMillis() < delayNextUntil)
 		    wait(delayNextUntil - System.currentTimeMillis());
-
 		Image image = imageBuffer.poll();
 		Image next = imageBuffer.peek();
 		int delayDiff = 0;
@@ -100,8 +102,19 @@ public class ClientMonitor {
 
 		//Log.d("ClientMonitor", "Polled image in buffer");
 		this.delay[image.getCameraId()] = image.getDelay();
+		*/
+		p1 = imageBuffer.poll();
+		cameraId = p1.getCameraId();
+		delayDiff = Math.abs(p1.getDelay() - delay[cameraId]);
+		if (delayDiff < SYNC_THRESHOLD || nunsync < 15) {
+		    wait(1000 - p1.getDelay());
+		    nunsync = 0;
+		} else {
+		    nunsync++;
+		}
+		delay[cameraId] = p1.getDelay();
 		notifyAll(); 
-		return image;
+		return p1;
 	}
 
 	public synchronized void addProtocol(byte cameraId, ClientProtocol protocol) {
