@@ -1,7 +1,7 @@
-# TODO support two host names
 #!/bin/bash
 # Cross-compiles the server software for the camera, upload and starts it. 
 # Usage: ./compile2c.sh [host1 [host2]] [< passwordfile]
+# TODO support two host names
 DEST=c
 HOST1="argus-7"
 HOST2="argus-8"
