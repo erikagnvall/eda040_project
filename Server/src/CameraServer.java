@@ -38,10 +38,14 @@ public class CameraServer implements Runnable {
 				System.err.println("Could not accept connection");
 			}
 			System.out.println("Waiting for disconnect");
-			monitor.awaitDisconnect();
-			System.out.println("Diconnected");
+			try{
+				monitor.awaitDisconnect();
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+			}
+			System.out.println("Disconnecting");
 			//try {
-			    socket.close();
+			socket.close();
 			//} catch (IOException e) {
 				//System.err.println("cold not close connection");
 			//}			    

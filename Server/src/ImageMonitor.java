@@ -22,7 +22,9 @@ public class ImageMonitor {
 	}
 	
 	public synchronized Image getImage() throws InterruptedException {
-		connectionCheck();
+		while (!isConnected) {
+			wait();
+		}
 		if (!isVideo) {
 			long stopTime = System.currentTimeMillis() + 5000;
 			while (stopTime > System.currentTimeMillis()) {
@@ -57,13 +59,9 @@ public class ImageMonitor {
 		notifyAll(); 
     }
 	
-	public synchronized void awaitDisconnect() {
+	public synchronized void awaitDisconnect() throws InterruptedException{
 		while (isConnected) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				System.err.println("Interrupted in awaitDisc.");
-			}
+			wait();
 		}
 	}
 	

@@ -28,17 +28,19 @@ public class ServerProtocol {
 	}
 
 	public void sendImage(Image image) throws IOException {
+		System.out.println("Sending image.");
 		socket.getOutputStream().write(image.toBytes());
 	}
 
 	public byte awaitCommand() throws IOException {
 	    byte[] buff = new byte[MSG_LEN];
 	    int readBytes = 0;
-	    //System.out.println("reading");
-	    readBytes = input.read(buff, 0, MSG_LEN);
-	    //System.out.println("rb: "+ readBytes);
-	    if (readBytes == -1)
-			throw new IOException("connection dropped");
+		System.out.println("Reading 1 byte.");
+		while(readBytes < MSG_LEN){
+			readBytes = input.read(buff, 0, MSG_LEN);
+			if (readBytes == -1)
+				throw new IOException("connection dropped");
+		}
 	    return (byte) (buff[0] < 0 ? buff[0] + 256 : buff[0]);
 	}
 }

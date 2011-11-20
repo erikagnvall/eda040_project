@@ -33,7 +33,7 @@ public class In extends Thread {
 			    }
 			
 			} catch (IOException e) {
-				// TODO 
+				System.out.println("Got IOException: " + e.getMessage() + "\nDisconnecting.");
 				monitor.disconnect();
 			} catch (InterruptedException ie) {
 				// noop.
