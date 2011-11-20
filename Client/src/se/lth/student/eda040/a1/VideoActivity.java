@@ -61,14 +61,14 @@ public class VideoActivity extends Activity {
 	private String[] connectedCameras = new String[2];
 	private ArrayAdapter<String> adapter;
 	private AlertDialog cameraPicker;
+	private AwesomeVideoView avv;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videoview);
-		AwesomeVideoView avv = (AwesomeVideoView) findViewById(R.id.avv);
-
 		setUpCameraDialog();
-
+		avv = (AwesomeVideoView) findViewById(R.id.avv);
+		
 		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
 		handler = new Handler();
 		monitor = new ClientMonitor();
@@ -120,24 +120,25 @@ public class VideoActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.connectCam0:
 				Log.d("VideoActivity", "Selected connectCam0 option.");
-				// TODO let user choose camera here.
 				currentCam = 0;
 				cameraPicker.show();
+				avv.connect((byte) 0);
 				break;
 		case R.id.connectCam1:
 				Log.d("VideoActivity", "Selected connectCam1 option.");
-				// TODO let user choose camera here.
-				// The actual state will not be changed unit StateFetcher notifies about it.
 				currentCam = 1;
 				cameraPicker.show();
+				avv.connect((byte) 1);
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
 				disconnectCamera(0);
+				avv.disconnect((byte) 0);
 				break;
 		case R.id.disconnectCam1:
 				Log.d("VideoActivity", "Selected disconnectCam1");
 				disconnectCamera(1);
+				avv.disconnect((byte) 1);
 		case R.id.setIdle:
 				monitor.setIdleMode();
 				break;
@@ -148,11 +149,11 @@ public class VideoActivity extends Activity {
 	}
 
     private void connectCamera(byte cameraId, String host){
-        try{
+        try {
 			monitor.connectTo(cameraId, host);
 			Log.d("videoactivity", "Connected to camera: " + cameraId);
 			// display information text
-        }catch (UnknownHostException e){
+        } catch (UnknownHostException e){
             Log.d("videoactivity", "failed to connect camera: " + cameraId +
                     ". unable to conect to host: " + host + ".");
             // display information text

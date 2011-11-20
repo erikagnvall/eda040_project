@@ -7,5 +7,5 @@
 	android:padding="12dip"
 	android:background="#AA000000"
 	android:textColor="#ffffffff"
-	android:text="Golden Gate"
 	/>
+	<!--android:text="default text"-->

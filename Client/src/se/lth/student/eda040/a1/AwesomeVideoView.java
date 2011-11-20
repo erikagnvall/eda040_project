@@ -56,4 +56,28 @@ public class AwesomeVideoView extends LinearLayout {
 		Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
 		frame.drawImage(image);
 	}
+	public void connect(byte cameraId) {
+		AwesomeFrameLayout frame = null;
+		switch (cameraId) {
+			case 0:
+				frame = frame0;
+				break;
+			case 1:
+				frame = frame1;
+				break;
+		}
+		frame.connect();
+	}
+	public void disconnect(byte cameraId) {
+		AwesomeFrameLayout frame = null;
+		switch (cameraId) {
+			case 0:
+				frame = frame0;
+				break;
+			case 1:
+				frame = frame1;
+				break;
+		}
+		frame.disconnect();
+	}
 }
