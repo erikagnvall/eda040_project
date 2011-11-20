@@ -69,7 +69,7 @@ public class ClientMonitor {
 	    }
 
 	    isVideoMode[cameraId] = image.isVideoMode();
-	    //Log.d("ClientMonitor", "Put image in buffer");
+	    Log.d("ClientMonitor", "Put image in buffer");
 	    notifyAll(); 
 	}
 
@@ -84,29 +84,10 @@ public class ClientMonitor {
 		while (imageBuffer.isEmpty()) {
 			wait();
 		}
-		/*
-		while (System.currentTimeMillis() < delayNextUntil)
-		    wait(delayNextUntil - System.currentTimeMillis());
-		Image image = imageBuffer.poll();
-		Image next = imageBuffer.peek();
-		int delayDiff = 0;
-		if(next != null){
-			delayDiff = Math.abs((int)image.getDelay() - this.delay[image.getCameraId()]);
-		}
-		if (delayDiff < SYNC_THRESHOLD && next != null){
-			int dt = (int)(next.getTimestamp() - image.getTimestamp());
-			delayNextUntil = System.currentTimeMillis() + dt;
-		} else {
-			delayNextUntil = 0;
-		}
-
-		//Log.d("ClientMonitor", "Polled image in buffer");
-		this.delay[image.getCameraId()] = image.getDelay();
-		*/
 		p1 = imageBuffer.poll();
 		cameraId = p1.getCameraId();
 		delayDiff = Math.abs(p1.getDelay() - delay[cameraId]);
-		if (delayDiff < SYNC_THRESHOLD || nunsync < 15) {
+		if ((delayDiff < SYNC_THRESHOLD || nunsync < 15) && p1.getDelay() < 1000) {
 		    wait(1000 - p1.getDelay());
 		    nunsync = 0;
 		} else {
@@ -114,6 +95,7 @@ public class ClientMonitor {
 		}
 		delay[cameraId] = p1.getDelay();
 		notifyAll(); 
+		Log.d("ClientMonitor", "Released image");
 		return p1;
 	}
 
@@ -129,30 +111,23 @@ public class ClientMonitor {
      * Throws IllegalArgumentException if the cameraId is invalid.
      * Throws Exceptions also thrown by socket.connect().
      */
-	public synchronized boolean connectTo(byte cameraId, String host)
+	public synchronized void connectTo(byte cameraId, String host)
             throws UnknownHostException, IOException, IllegalArgumentException{
-		boolean success = false;
 		if (protocols.containsKey(cameraId)) {
 			ClientProtocol protocol = protocols.get(cameraId);
-            protocol.connectTo(host);
-            Log.d("ClientMonitor", "Camera: " + cameraId + " is connected.");
-            success = true;
+			protocol.connectTo(host);
+			Log.d("ClientMonitor", "Camera: " + cameraId + " is connected.");
 		} else {
 			Log.d("ClientMonitor", "Could not find protocol for camera " + cameraId);
 			System.err.println("missing protocol.");
-            throw new IllegalArgumentException("No camera with id: " + cameraId + "!");
+			throw new IllegalArgumentException("No camera with id: " + cameraId + "!");
 		}
 
-        // TODO this could be simplified rigth? The camera should be connected if
-        // we've gotten this far.
-		if (success) {
-			Log.d("ClientMonitor", "Successfully connected to host with " + cameraId);
-			connected[cameraId] = true;
-			notifyAll();
-		} else {
-			Log.d("ClientMonitor", "Unsuccessfull connecttion to host with " + cameraId);
-		}
-		return success;
+		// TODO this could be simplified rigth? The camera should be connected if
+		// we've gotten this far.
+		Log.d("ClientMonitor", "Successfully connected to host with " + cameraId);
+		connected[cameraId] = true;
+		notifyAll();
 	}
 
 	/**
@@ -163,7 +138,7 @@ public class ClientMonitor {
 			putCommand(new Command(Command.DISCONNECT, protocols.get(cameraId)), cameraId);
 		}
 		connected[cameraId] = false;
-		Log.d("ClientMonitor", "Disconnected camera " + cameraId);
+		Log.d("ClientMonitor", "Gracefull disconnected camera " + cameraId);
 	}
 
 	/**
@@ -171,14 +146,15 @@ public class ClientMonitor {
 	 * To be used in emergencies only! Will without warning disconnect the specified camera socket.
 	 */
 	public synchronized void disconnect(byte cameraId) {
-		if (protocols.containsKey(cameraId)) {
+		if (protocols.containsKey(cameraId) && connected[cameraId]) {
+			connected[cameraId] = false;
 			protocols.get(cameraId).disconnect();
 		}
 		Log.d("ClientMonitor", "Disconnected camera " + cameraId);
 	}
 
 	public synchronized void connectionCheck(byte cameraId) throws InterruptedException{
-		Log.d("ClientMonitor", "Waiting in connectionCheck for camera " + cameraId);
+		//Log.d("ClientMonitor", "Waiting in connectionCheck for camera " + cameraId);
 		while (!connected[cameraId]) {
 			wait();
 		}

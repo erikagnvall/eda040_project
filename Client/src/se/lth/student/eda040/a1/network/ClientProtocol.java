@@ -30,7 +30,7 @@ public class ClientProtocol {
 		byte[] headerBytes = new byte[5];
 		int bytesRead = 0;
 		int returnValue = 0;
-		Log.d("ClientProtocol", "Start reading header from inputStream");
+		//Log.d("ClientProtocol", "Start reading header from inputStream");
 		while (bytesRead < 5) {
 			returnValue = inputStream.read(headerBytes, bytesRead, (5 - bytesRead));
 			if (returnValue == -1) {
@@ -38,18 +38,18 @@ public class ClientProtocol {
 			}
 			bytesRead += returnValue;
 		}
-		Log.d("ClientProtocol", "Stopt reading header from inputStream");
+		//Log.d("ClientProtocol", "Stopt reading header from inputStream");
 		int imageLen = 0;
 		for (int i = 0; i < 4; ++i) {
 			imageLen |= (int) ((headerBytes[1 + i] < 0 ? 256 + headerBytes[i +1] : headerBytes[i + 1]) << (8 * (3 - i)));
 		}
 
 		System.out.println(cameraId + "<>" + this);
-		Log.d("ClientProtocol", "imageLen == " + imageLen);
+		//Log.d("ClientProtocol", "imageLen == " + imageLen);
 		bytesRead = 0;
 		byte[] imageBytes = new byte[imageLen];
 
-		Log.d("ClientProtocol", "Start reading data from inputStream");
+		//Log.d("ClientProtocol", "Start reading data from inputStream");
 		while (bytesRead < imageLen) {
 			returnValue = inputStream.read(imageBytes, bytesRead, (imageLen - bytesRead));
 			if (returnValue == -1){
@@ -57,21 +57,22 @@ public class ClientProtocol {
 			}
 			bytesRead += returnValue;
 		}
-		Log.d("ClientProtocol", "Stopt reading data from inputStream");
+		//Log.d("ClientProtocol", "Stopt reading data from inputStream");
 
 		long timestamp = 0;
 		for (int i = 0; i < 4; ++i) {
 				timestamp |= (long) ((imageBytes[25 + i] < 0 ? 256 + imageBytes[25 + i] : imageBytes[25 + i]) << (8 * (3 - i)));
 		}
 		timestamp *= 1000;
-		Log.d("ClientProtocol", "Timestamp == " + timestamp + ", or in HR == " + new Date(timestamp));
+		//Log.d("ClientProtocol", "Timestamp == " + timestamp + ", or in HR == " + new Date(timestamp));
 		timestamp |= (long) (imageBytes[29] < 0 ? 256 + imageBytes[29] : imageBytes[29]);
 		return new Image(cameraId, imageBytes, timestamp, ((int) headerBytes[0]) == VIDEO_MODE);
 	}
 
 	public void sendCommand(Command command) throws IOException{
 		Log.d("ClientProtocol", "Sending command: " + command.getCommand());
-		outputStream.write(command.getCommand());
+		byte c = command.getCommand();
+		outputStream.write(c);
 	}
 
 	public byte getCameraId() {
@@ -86,28 +87,24 @@ public class ClientProtocol {
 		outputStream = socket.getOutputStream();
 		Log.d("ClientProtocol", "Got in and output streams");
 	}
-	
-	public void gracefullDisconnect() {
+
+	public void disconnect() {
+		if(!socket.isConnected() || socket.isClosed()){
+			return;
+		}
 		try {
 			inputStream.close();
 			outputStream.flush();
 			outputStream.close();
 		} catch (IOException ioe) {
-			Log.d("ClientProtocol", "Gracefull disconnections failed.");
+			Log.d("ClientProtocol", "Failed to close and flush streams.");
+		}finally{
+			try{
+				socket.close();
+			} catch (IOException e) {
+				// Dont care!
+			}
 		}
-		Log.d("ClientProtocol", "Gracefullt disconnect camera " + cameraId);
-		disconnect();
-	}
-
-	// emergency 
-	public void disconnect() {
-		try {
-			socket.close();
-		} catch (IOException ioe) {
-			Log.d("ClientProtocol", "Problem closing connection.");
-		}
-		inputStream = null;
-		outputStream = null;
-		Log.d("ClientProtocol", "Hard-Disconnect camera " + cameraId);
+		Log.d("ClientProtocol", "Disconnected camera " + cameraId);
 	}
 }

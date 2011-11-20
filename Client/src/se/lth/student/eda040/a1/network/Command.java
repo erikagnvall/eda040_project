@@ -6,7 +6,6 @@ public class Command {
 	public static final byte DISCONNECT = 'd';
 
 	private byte command;
-	private byte cameraId;
 	private ClientProtocol protocol;
 
 	public Command(byte command, ClientProtocol protocol) {
@@ -24,7 +23,7 @@ public class Command {
 	public void doPost() {
 		switch(command) {
 			case Command.DISCONNECT:
-				protocol.gracefullDisconnect();
+				protocol.disconnect();
 				break;
 		}
 	}
