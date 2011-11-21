@@ -119,7 +119,6 @@ public class ClientMonitor {
 			Log.d("ClientMonitor", "Camera: " + cameraId + " is connected.");
 		} else {
 			Log.d("ClientMonitor", "Could not find protocol for camera " + cameraId);
-			System.err.println("missing protocol.");
 			throw new IllegalArgumentException("No camera with id: " + cameraId + "!");
 		}
 

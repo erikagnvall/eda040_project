@@ -6,12 +6,14 @@ import java.io.IOException;
 import java.util.Date;
 import java.net.UnknownHostException;
 import java.net.Socket;
+import java.net.InetSocketAddress;
 import android.util.Log;
 
 // TODO needs to be synchronized because of connectTo? if they share the socket? But that no good since is.read is blocking....
 public class ClientProtocol {
 	public static byte VIDEO_MODE = 'v';
 	public static int CAMERA_PORT = 8080;
+	private static final int TIMEOUT = 5000;
 
 	private byte cameraId;
 	private Socket socket;
@@ -80,12 +82,13 @@ public class ClientProtocol {
 	}
 
 	public void connectTo(String host) throws IOException, UnknownHostException {
-		Log.d("ClientProtocol", "Pre socket instanciation for host " + host);
-		socket = new Socket(host, CAMERA_PORT);
-		Log.d("ClientProtocol", "Post socket instanciation for host " + host);
+		//socket = new Socket(host, CAMERA_PORT);
+		socket = new Socket();
+		Log.d("ClientProtocol", "Trying to connect to " + host + ":" + CAMERA_PORT);
+		socket.connect(new InetSocketAddress(host, CAMERA_PORT), TIMEOUT);
+		Log.d("ClientProtocol", "Connected");
 		inputStream = socket.getInputStream();
 		outputStream = socket.getOutputStream();
-		Log.d("ClientProtocol", "Got in and output streams");
 	}
 
 	public void disconnect() {
