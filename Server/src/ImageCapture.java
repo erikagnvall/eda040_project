@@ -29,8 +29,13 @@ public class ImageCapture extends Thread {
 		int readBytes;
 		byte mode;
 		Image image;
+
+		//dbg
 		long then = System.currentTimeMillis();
 		long now;
+		long mean = 0;
+		int n = 10;
+
 		while (!interrupted()) {
 			//try {
 				//sleep(400);
@@ -47,7 +52,9 @@ public class ImageCapture extends Thread {
 			image = new Image(buffer, readBytes, mode);
 			monitor.putImage(image);
 			now = System.currentTimeMillis();
-			System.out.format("Capture rate %l fps", (now - then) / 1000);
+			mean = mean * (n-1) / n + 1000 / (now - then) / n;
+			    System.out.println("Capture rate: " + mean + "fps");
+			then = now;
 		}
 	}
 
