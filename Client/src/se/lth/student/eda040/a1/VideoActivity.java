@@ -96,15 +96,19 @@ public class VideoActivity extends Activity {
 		builder.setTitle("Pick a camera");
 		builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialogInterface, int item) {
-				connectedCameras[currentCam] = adapter.getItem(item);
-				if (connectedCameras[currentCam].equals("fake cam")) {
-					connectCamera((byte) currentCam, "10.0.2.2");
+				String host = adapter.getItem(item);
+				boolean connected = false;
+				if (host.equals("fake cam")) {
+					connected = connectCamera((byte) currentCam, "10.0.2.2");
 				} else {
-					connectCamera((byte) currentCam, connectedCameras[currentCam] + ".student.lth.se");
+					connected = connectCamera((byte) currentCam, host +
+						".student.lth.se");
 				}
-
-				adapter.remove(connectedCameras[currentCam]);
-				adapter.notifyDataSetChanged();
+				if(connected){
+					connectedCameras[currentCam] = host;
+					adapter.remove(host);
+					adapter.notifyDataSetChanged();
+				}
 			}
 		});
 		cameraPicker = builder.create();
@@ -148,9 +152,11 @@ public class VideoActivity extends Activity {
 		return true;
 	}
 
-    private void connectCamera(byte cameraId, String host){
+    private boolean connectCamera(byte cameraId, String host){
+		boolean connected = false;
         try {
 			monitor.connectTo(cameraId, host);
+			connected = true;
 			Log.d("videoactivity", "Connected to camera: " + cameraId);
 			// display information text
         } catch (UnknownHostException e){
@@ -165,6 +171,7 @@ public class VideoActivity extends Activity {
                     "Camera has not been set up!");
             // display information text
         }
+		return connected;
     }
 
 	/**
