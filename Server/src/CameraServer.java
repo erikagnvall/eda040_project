@@ -17,7 +17,7 @@ public class CameraServer implements Runnable {
 			System.err.println("Could not bind to port.");
 		}
 		this.protocol = new ServerProtocol();
-		monitor = new ImageMonitor(protocol);
+		this.monitor = new ImageMonitor();
 		this.in = new In(protocol, monitor);
 		this.out = new Out(protocol, monitor);
 		this.capture = new ImageCapture(monitor);
@@ -33,7 +33,8 @@ public class CameraServer implements Runnable {
 			try {
 				socket = serverSocket.accept();
 				System.out.println("Got new connection");
-				monitor.setConnection(socket);
+				protocol.setConnection(socket);
+				monitor.setConnection();
 			} catch (IOException e) {
 				System.err.println("Could not accept connection");
 			}

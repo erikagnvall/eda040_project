@@ -4,15 +4,13 @@ public class ImageMonitor {
 	private boolean isConnected;
 	private boolean isVideo;
 	private Image image;
-	private ServerProtocol protocol;
 	
-	public ImageMonitor(ServerProtocol protocol) {
-		this.protocol = protocol;
+	public ImageMonitor() {
 		isVideo = false;
 		isConnected = false;
 	}
 	
-	public boolean isVideo() {
+	public synchronized boolean isVideo() {
 		return isVideo;
 	}
 		
@@ -22,16 +20,16 @@ public class ImageMonitor {
 	}
 	
 	public synchronized Image getImage() throws InterruptedException {
-		while (!isConnected) {
-			wait();
-		}
 		if (!isVideo) {
 			long stopTime = System.currentTimeMillis() + 5000;
+			long ttw;
 			while (stopTime > System.currentTimeMillis()) {
-				wait(stopTime - System.currentTimeMillis());
+			    ttw = stopTime - System.currentTimeMillis();
+			    if (ttw > 0) //could it bee a timing issue where we stuck when we get negative on the second calc. Maybe hadled badly when xcompiled? who knows...
+				wait(ttw);
 			}
 		}
-		while (image == null && isConnected) {
+		while (image == null) {
 			wait();
 		}
 		Image tmp = image;
@@ -43,7 +41,7 @@ public class ImageMonitor {
 		this.isVideo = isVideo;
 	}
 	
-	public boolean hasConnection() {
+	public synchronized boolean hasConnection() {
 		return this.isConnected;
 	}
 	
@@ -52,9 +50,8 @@ public class ImageMonitor {
 		notifyAll();
 	}
 
-    public synchronized void setConnection(Socket socket) {
+    public synchronized void setConnection() {
 		System.out.println("Monitor seting up a new connection.");
-		protocol.setConnection(socket);
 		isConnected = true;
 		notifyAll(); 
     }

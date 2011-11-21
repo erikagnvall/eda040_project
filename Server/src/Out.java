@@ -14,22 +14,21 @@ public class Out extends Thread {
 	public void run() {
 		Image image = null;
 	    while (!interrupted()) {
-			try {
-				image = monitor.getImage();
-			} catch (InterruptedException ie) {
-				// do nothing.
-				System.out.println("Out got interrupted.");
-			}
-			if (image != null) {
-				try {
-					protocol.sendImage(image);
-				} catch (IOException e) {
-					System.out.println("oh noes, ioexception");
-					monitor.disconnect();
-				}
-				//System.out.println("out got picture");
-			}
+		try {
+		    monitor.connectionCheck();
+		    image = monitor.getImage();
+		} catch (InterruptedException ie) {
+		    System.out.println("Out got interrupted.");
+		}
+		if (image != null) {
+		    try {
+			protocol.sendImage(image);
+		    } catch (IOException e) {
+			System.out.println("oh noes, ioexception");
+			monitor.disconnect();
+		    }
+		}
 	    }
-		System.out.println("out done running");
+	    System.out.println("out done running");
 	}
 }
