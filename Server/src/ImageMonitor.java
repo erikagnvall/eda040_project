@@ -1,13 +1,18 @@
 import java.net.Socket;
 
 public class ImageMonitor {
+
+	private static final int IDLE_PERIOD = 5000;
+
 	private boolean isConnected;
 	private boolean isVideo;
 	private Image image;
+	private long fetchedImageAt;
 	
 	public ImageMonitor() {
 		isVideo = false;
 		isConnected = false;
+		this.fetchedImageAt = 0;
 	}
 	
 	public synchronized boolean isVideo() {
@@ -19,22 +24,32 @@ public class ImageMonitor {
 		notifyAll();
 	}
 	
+	/**Returns next image to be sent.
+	 * Waits until the image should be sent.
+	 * Waits until connection is set.
+	 * Will never return null.
+	 */
 	public synchronized Image getImage() throws InterruptedException {
-		if (!isVideo) {
-			long stopTime = System.currentTimeMillis() + 5000;
-			long ttw;
-			while (stopTime > System.currentTimeMillis()) {
-			    ttw = stopTime - System.currentTimeMillis();
-			    if (ttw > 0) //could it bee a timing issue where we stuck when we get negative on the second calc. Maybe hadled badly when xcompiled? who knows...
-				wait(ttw);
-			}
+		awaitConnected();
+		long stopTime = this.fetchedImageAt + IDLE_PERIOD;
+		long ttw = stopTime - System.currentTimeMillis();
+		while (ttw > 0 && !isVideo) {
+			wait(ttw);
+			ttw = stopTime - System.currentTimeMillis();
 		}
 		while (image == null) {
 			wait();
 		}
+		this.fetchedImageAt = System.currentTimeMillis();
 		Image tmp = image;
 		image = null;
 		return tmp;
+	}
+
+	private void awaitConnected(){
+		while (!isConnected) {
+			wait();
+		}
 	}
 	
 	public synchronized void setVideo(boolean isVideo) {
@@ -63,8 +78,6 @@ public class ImageMonitor {
 	}
 	
 	public synchronized void connectionCheck() throws InterruptedException {
-		while (!isConnected) {
-			wait();
-		}
+		awaitConnected();
 	}
 }
