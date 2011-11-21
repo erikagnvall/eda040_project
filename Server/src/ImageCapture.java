@@ -29,6 +29,8 @@ public class ImageCapture extends Thread {
 		int readBytes;
 		byte mode;
 		Image image;
+		long then = System.currentTimeMillis();
+		long now;
 		while (!interrupted()) {
 			//try {
 				//sleep(400);
@@ -44,6 +46,8 @@ public class ImageCapture extends Thread {
 			mode = (monitor.isVideo()) ? ServerProtocol.VIDEO_MODE : ServerProtocol.IDLE_MODE;
 			image = new Image(buffer, readBytes, mode);
 			monitor.putImage(image);
+			now = System.currentTimeMillis();
+			System.out.format("Capture rate %l fps", (now - then) / 1000);
 		}
 	}
 
