@@ -28,6 +28,7 @@ public class ServerProtocol {
 	public void sendImage(Image image) throws IOException {
 		System.out.println("Sending image.");
 		socket.getOutputStream().write(image.toBytes());
+		System.out.println("Sent image.");
 	}
 
 	public byte awaitCommand() throws IOException {

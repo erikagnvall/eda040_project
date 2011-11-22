@@ -14,7 +14,8 @@ public class CameraServer implements Runnable {
 		try {
 			this.serverSocket = new ServerSocket(8080);
 		} catch (IOException e) {
-			System.err.println("Could not bind to port.");
+			System.err.println("FATAL: Could not bind to port.");
+			System.exit(1);
 		}
 		this.protocol = new ServerProtocol();
 		this.monitor = new ImageMonitor();

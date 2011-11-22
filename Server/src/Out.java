@@ -15,7 +15,6 @@ public class Out extends Thread {
 		Image image = null;
 	    while (!interrupted()) {
 			try {
-				//monitor.connectionCheck();
 				image = monitor.getImage();
 				protocol.sendImage(image);
 			} catch (IOException e) {

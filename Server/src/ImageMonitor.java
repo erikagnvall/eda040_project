@@ -68,6 +68,7 @@ public class ImageMonitor {
 	}
 	
 	public synchronized void disconnect() {
+		System.out.println("Monitor: DISCONNECTING");
 		isConnected = false;
 		notifyAll();
 	}
