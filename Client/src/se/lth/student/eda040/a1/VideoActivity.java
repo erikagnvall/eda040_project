@@ -4,6 +4,7 @@ import se.lth.student.eda040.a1.data.Input;
 import se.lth.student.eda040.a1.data.Output;
 import se.lth.student.eda040.a1.data.ClientMonitor;
 import se.lth.student.eda040.a1.data.ImageFetcher;
+import se.lth.student.eda040.a1.data.DisconnectionDetecter;
 import se.lth.student.eda040.a1.network.ClientProtocol;
 import se.lth.student.eda040.a1.network.Command;
 
@@ -71,11 +72,13 @@ public class VideoActivity extends Activity {
 		setContentView(R.layout.videoview);
 		setUpCameraDialog();
 		avv = (AwesomeVideoView) findViewById(R.id.avv);
+		avv.setVideoActivity(this);
 		
 		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
 		handler = new Handler();
 		monitor = new ClientMonitor();
 		ImageFetcher fetcher = new ImageFetcher(monitor, avv, handler);
+		DisconnectionDetecter detecter = new DisconnectionDetecter(monitor, avv, handler);
 		ClientProtocol protocol0 = new ClientProtocol((byte) 0);
 		ClientProtocol protocol1 = new ClientProtocol((byte) 1);
 		monitor.addProtocol((byte) 0, protocol0);
@@ -90,6 +93,7 @@ public class VideoActivity extends Activity {
 		out0.start();
 		out1.start();
 		fetcher.start();
+		detecter.start();
 	}
 
 	private void setUpCameraDialog() {
@@ -139,12 +143,12 @@ public class VideoActivity extends Activity {
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
-				disconnectCamera(0);
+				disconnectCamera((byte) 0);
 				avv.disconnect((byte) 0);
 				break;
 		case R.id.disconnectCam1:
 				Log.d("VideoActivity", "Selected disconnectCam1");
-				disconnectCamera(1);
+				disconnectCamera((byte) 1);
 				avv.disconnect((byte) 1);
 		case R.id.setIdle:
 				monitor.setIdleMode();
@@ -185,7 +189,7 @@ public class VideoActivity extends Activity {
 	/**
 	 * Disconnect a camera as well as some magic with the camera list.
 	 */
-	private void disconnectCamera(int cameraId) {
+	public void disconnectCamera(byte cameraId) {
 		currentCam = cameraId;
 		int oppositeCam = currentCam == 0 ? 1 : 0;
 		connectedCameras[currentCam] = null;
@@ -193,6 +197,16 @@ public class VideoActivity extends Activity {
 		adapter.remove(connectedCameras[oppositeCam]);
 		adapter.notifyDataSetChanged();
 		monitor.gracefullDisconnect((byte) currentCam);
+	}
+
+	public void emergencyDisconnenctCamera(byte cameraId) {
+		currentCam = cameraId;
+		int oppositeCam = currentCam == 0 ? 1 : 0;
+		connectedCameras[currentCam] = null;
+		setUpCameraDialog();
+		adapter.remove(connectedCameras[oppositeCam]);
+		adapter.notifyDataSetChanged();
+		avv.disconnect(cameraId);
 	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {

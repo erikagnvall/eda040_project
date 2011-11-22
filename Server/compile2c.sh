@@ -1,6 +1,6 @@
 #!/bin/bash
 # Cross-compiles the server software for the camera, upload and starts it. 
-# Usage: ./compile2c.sh [host1 [host2]] [< passwordfile]
+# Usage: ./compile2c.sh [host1 [host2 [--no-compile || -n]] [< passwordfile]
 DEST=c
 HOST1="argus-7"
 HOST2="argus-8"
@@ -29,16 +29,21 @@ if [ -n "$2" ]; then
 else 
 	echo "Using default host2, ${HOST2}"
 fi
-/usr/local/cs/bin/initcs.sh
-rm -rf $DEST
-mkdir $DEST
-cp -R src/ $DEST
-cd $DEST
-/usr/local/cs/rtp/lab/build_camera.sh
-if [ "$?" -ne "0" ]; then
-	cat build.err
-	exit 1
+
+
+if !([ -n "$3" ] && ([[ "$3" == "--no-compile" ]] || [[ "$3" == "-n" ]])); then
+	/usr/local/cs/bin/initcs.sh
+	rm -rf $DEST
+	mkdir $DEST
+	cp -R src/ $DEST
+	cd $DEST
+	/usr/local/cs/rtp/lab/build_camera.sh
+	if [ "$?" -ne "0" ]; then
+		cat build.err
+		exit 1
+	fi
+	cd ..
 fi
-cd ..
+
 PW=$PW ../cli/ftp.pl $HOST1 $HOST2
 PW=$PW ../cli/run.pl $HOST1 $HOST2

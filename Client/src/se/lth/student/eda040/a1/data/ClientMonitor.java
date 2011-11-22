@@ -17,6 +17,7 @@ public class ClientMonitor {
     private int nunsync;
 	private Queue<Command>[] commandQueues;
 	private Queue<Image> imageBuffer;
+	private Queue<Byte> disconnectionQueue;
 	private boolean[] isVideoMode;
 	private Map<Byte, ClientProtocol> protocols;
 	private boolean[] connected;
@@ -33,6 +34,7 @@ public class ClientMonitor {
 		isVideoMode = new boolean[2];
 		protocols = new HashMap<Byte, ClientProtocol>();
 		connected = new boolean[2];
+		disconnectionQueue = new LinkedList<Byte>();
 		isSyncMode = false;
 		delay = new int[2];
 		latestTimestamp = new long[2];
@@ -148,8 +150,17 @@ public class ClientMonitor {
 		if (protocols.containsKey(cameraId) && connected[cameraId]) {
 			connected[cameraId] = false;
 			protocols.get(cameraId).disconnect();
+			disconnectionQueue.offer(cameraId);
+			notifyAll();
 		}
 		Log.d("ClientMonitor", "Disconnected camera " + cameraId);
+	}
+
+	public synchronized byte awaitDisconnection() throws InterruptedException {
+		while (disconnectionQueue.peek() == null) {
+			wait();		
+		}
+		return disconnectionQueue.poll();
 	}
 
 	public synchronized void connectionCheck(byte cameraId) throws InterruptedException{
