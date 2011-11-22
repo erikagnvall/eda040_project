@@ -92,10 +92,21 @@ public class VideoActivity extends Activity {
 	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
-				// Note: this overides the icons that otherwise would be used according to the xml.
-				menu.clear(); // Clears all items, below: rebuild from scratch.
-				menu.add(Menu.NONE, R.id.setIdle, 2, "Set Idle");
-				menu.add(Menu.NONE, R.id.setVideo, 2, "Set Video");
+		// Note: this overides the icons that otherwise would be used according to the xml.
+		menu.clear();	 // Clears all items, below: rebuild from scratch.
+		MenuItem setIdle = menu.add(Menu.NONE, R.id.setIdle, 2, "Set Idle");
+		MenuItem setVideo = menu.add(Menu.NONE, R.id.setVideo, 2, "Set Video");
+		if (monitor.isConnectedCamera((byte)0) || monitor.isConnectedCamera((byte)1)) {
+			if (!monitor.isVideoMode()) {
+				setIdle.setEnabled(false);
+			} else {
+				setVideo.setEnabled(false);
+			}
+		} else {
+			setIdle.setEnabled(false);
+			setVideo.setEnabled(false);
+		}
+
 		return true;
 	}
 }

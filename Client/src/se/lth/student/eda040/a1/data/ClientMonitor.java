@@ -184,6 +184,10 @@ public class ClientMonitor {
 	public synchronized boolean isConnectedCamera(byte cameraId) {
 		return connected[cameraId];
 	}
+
+	public synchronized boolean isVideoMode() {
+		return isVideoMode[0] || isVideoMode[1];
+	}
 	
 	public synchronized void setVideoMode(boolean video) {
 		for (ClientProtocol protocol : protocols.values()) {
