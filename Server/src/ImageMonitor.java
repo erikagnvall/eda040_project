@@ -1,13 +1,20 @@
 import java.net.Socket;
 
 public class ImageMonitor {
+
+	private static final int IDLE_PERIOD = 5000;
+
 	private boolean isConnected;
 	private boolean isVideo;
 	private Image image;
+	private boolean ackedImg;
+	private long fetchedImageAt;
 	
 	public ImageMonitor() {
 		isVideo = false;
 		isConnected = false;
+		this.fetchedImageAt = 0;
+		this.ackedImg = false;
 	}
 	
 	public synchronized boolean isVideo() {
@@ -16,29 +23,44 @@ public class ImageMonitor {
 		
 	public synchronized void putImage(Image image) {
 		this.image = image;
+		ackedImg = false;
 		notifyAll();
 	}
 	
+	/**Returns next image to be sent.
+	 * Waits until the image should be sent.
+	 * Waits until connection is set.
+	 * Will never return null.
+	 */
 	public synchronized Image getImage() throws InterruptedException {
-		if (!isVideo) {
-			long stopTime = System.currentTimeMillis() + 5000;
-			long ttw;
-			while (stopTime > System.currentTimeMillis()) {
-			    ttw = stopTime - System.currentTimeMillis();
-			    if (ttw > 0) //could it bee a timing issue where we stuck when we get negative on the second calc. Maybe hadled badly when xcompiled? who knows...
-				wait(ttw);
-			}
+		awaitConnected();
+		long stopTime = this.fetchedImageAt + IDLE_PERIOD;
+		long ttw = stopTime - System.currentTimeMillis();
+		while (ttw > 0 && !isVideo) {
+			wait(ttw);
+			ttw = stopTime - System.currentTimeMillis();
 		}
-		while (image == null) {
+		//while (image == null) {
+		while (ackedImg) {
 			wait();
 		}
-		Image tmp = image;
-		image = null;
-		return tmp;
+		this.fetchedImageAt = System.currentTimeMillis();
+		this.ackedImg = true;
+		//Image tmp = image;
+		//image = null;
+		//return tmp;
+		return image;
+	}
+
+	private void awaitConnected() throws InterruptedException {
+		while (!isConnected) {
+			wait();
+		}
 	}
 	
 	public synchronized void setVideo(boolean isVideo) {
 		this.isVideo = isVideo;
+		notifyAll();
 	}
 	
 	public synchronized boolean hasConnection() {
@@ -51,7 +73,6 @@ public class ImageMonitor {
 	}
 
     public synchronized void setConnection() {
-		System.out.println("Monitor seting up a new connection.");
 		isConnected = true;
 		notifyAll(); 
     }
@@ -63,8 +84,6 @@ public class ImageMonitor {
 	}
 	
 	public synchronized void connectionCheck() throws InterruptedException {
-		while (!isConnected) {
-			wait();
-		}
+		awaitConnected();
 	}
 }
