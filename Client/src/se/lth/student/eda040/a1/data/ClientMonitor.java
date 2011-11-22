@@ -14,6 +14,7 @@ import android.util.Log;
 public class ClientMonitor {
 
     public static final int SYNC_THRESHOLD = 200;
+	private static final int MAX_BUFFER_SIZE = 50;
     private int nunsync;
 	private Queue<Command>[] commandQueues;
 	private Queue<Image> imageBuffer;
@@ -57,17 +58,16 @@ public class ClientMonitor {
 	public synchronized void putImage(Image image){
 	    byte cameraId = image.getCameraId();
 	    byte otherCamera = (byte) (((int) cameraId + 1) % 2);
-	    int delay;
-
-	    delay = (int)(System.currentTimeMillis() - image.getTimestamp());
-	    image.setDelay(delay);
 
 
 		imageBuffer.offer(image);
+		while(imageBuffer.size() > MAX_BUFFER_SIZE){
+			imageBuffer.poll();
+		}
 
 		// If videomode distribute comand to other camera
 	    if (connected[otherCamera] && !isVideoMode[cameraId] && image.isVideoMode()) {
-		putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
+			putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
 	    }
 
 	    isVideoMode[cameraId] = image.isVideoMode();
@@ -77,28 +77,29 @@ public class ClientMonitor {
 
 	public synchronized Image awaitImage() throws InterruptedException{
 
-	    Image p1 = null;
-	    Image p2 = null;
-
-	    int delayDiff = 0;
-	    int cameraId = 0;
 		//Log.d("ClientMonitor", "Waiting for image in buffer");
 		while (imageBuffer.isEmpty()) {
 			wait();
 		}
-		p1 = imageBuffer.poll();
-		cameraId = p1.getCameraId();
-		delayDiff = Math.abs(p1.getDelay() - delay[cameraId]);
-		if ((delayDiff < SYNC_THRESHOLD || nunsync < 15) && p1.getDelay() < 1000) {
-		    wait(1000 - p1.getDelay());
-		    nunsync = 0;
-		} else {
-		    nunsync++;
-		}
-		delay[cameraId] = p1.getDelay();
+		Image image = imageBuffer.poll();
+
+		//syncDelay(image);
 		notifyAll(); 
 		Log.d("ClientMonitor", "Released image");
-		return p1;
+		return image;
+	}
+
+	private void syncDelay(Image img) throws InterruptedException {
+	    int delayDiff = 0;
+	    int cameraId = img.getCameraId();
+		int delay = img.getCurrentDelay();
+		delayDiff = Math.abs(img.getCurrentDelay() - this.delay[cameraId]);
+		if (delayDiff < SYNC_THRESHOLD  && delay < 1000 && delay > 0) {
+			while((delay = img.getCurrentDelay()) < 1000){
+				wait(1000 - delay);
+			}
+		}
+		this.delay[cameraId] = img.getCurrentDelay();
 	}
 
 	public synchronized void addProtocol(byte cameraId, ClientProtocol protocol) {
