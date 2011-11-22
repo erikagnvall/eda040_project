@@ -2,6 +2,10 @@
  
 Project in the course EDA040 at Lund University.
 
+# Server UML
+![Alt text](https://github.com/Meldanya/eda040_project/raw/dev/doc/uml_server.png)
+# Client UML
+![Alt text](https://github.com/Meldanya/eda040_project/raw/dev/doc/uml_client.png)
 
 # How to build and run
 	$git clone git://github.com/Meldanya/eda040_project.git
