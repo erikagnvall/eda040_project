@@ -58,7 +58,7 @@ public class AwesomeFrameLayout extends FrameLayout {
 		if (!disconnected) {
 			view.setImageBitmap(image.toBitmap());
 			overlay.setVisibility(View.VISIBLE);
-			overlay.setText("Δ " + image.getDelay() + " ms");
+			overlay.setText("Δ " + image.getCurrentDelay() + " ms");
 		}
 	}
 
