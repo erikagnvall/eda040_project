@@ -134,7 +134,7 @@
       <w>210</w>
       <h>50</h>
     </coordinates>
-    <panel_attributes>ConnectionSetup
+    <panel_attributes>CameraServer
 --------------------------</panel_attributes>
     <additional_attributes/>
   </element>
