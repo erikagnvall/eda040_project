@@ -7,12 +7,14 @@ public class ImageMonitor {
 	private boolean isConnected;
 	private boolean isVideo;
 	private Image image;
+	private boolean ackedImg;
 	private long fetchedImageAt;
 	
 	public ImageMonitor() {
 		isVideo = false;
 		isConnected = false;
 		this.fetchedImageAt = 0;
+		this.ackedImg = false;
 	}
 	
 	public synchronized boolean isVideo() {
@@ -21,6 +23,7 @@ public class ImageMonitor {
 		
 	public synchronized void putImage(Image image) {
 		this.image = image;
+		ackedImg = false;
 		notifyAll();
 	}
 	
@@ -37,16 +40,19 @@ public class ImageMonitor {
 			wait(ttw);
 			ttw = stopTime - System.currentTimeMillis();
 		}
-		while (image == null) {
+		//while (image == null) {
+		while (ackedImg) {
 			wait();
 		}
 		this.fetchedImageAt = System.currentTimeMillis();
-		Image tmp = image;
-		image = null;
-		return tmp;
+		this.ackedImg = true;
+		//Image tmp = image;
+		//image = null;
+		//return tmp;
+		return image;
 	}
 
-	private void awaitConnected(){
+	private void awaitConnected() throws InterruptedException {
 		while (!isConnected) {
 			wait();
 		}
@@ -54,6 +60,7 @@ public class ImageMonitor {
 	
 	public synchronized void setVideo(boolean isVideo) {
 		this.isVideo = isVideo;
+		notifyAll();
 	}
 	
 	public synchronized boolean hasConnection() {
@@ -66,7 +73,6 @@ public class ImageMonitor {
 	}
 
     public synchronized void setConnection() {
-		System.out.println("Monitor seting up a new connection.");
 		isConnected = true;
 		notifyAll(); 
     }

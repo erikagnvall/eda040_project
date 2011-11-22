@@ -18,9 +18,7 @@ public class ServerProtocol {
 		this.socket = socket;
 		System.out.println("Will try now.");
 		try {
-			System.out.println("Trying to get input stream");
 			this.input = socket.getInputStream();
-			System.out.println("Trying to get output stream");
 			this.output = socket.getOutputStream();
 		} catch (IOException ie) {
 			System.err.println("Could not get streams from socket.");
