@@ -22,7 +22,6 @@ import android.widget.TextView;
 public class AwesomeVideoView extends LinearLayout {
 
 	private Map<Integer, AwesomeFrameLayout> frameList;
-	private TextView tv;
 
 	public AwesomeVideoView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -38,16 +37,12 @@ public class AwesomeVideoView extends LinearLayout {
 		frame1.setCameraId((byte) 1);
 		this.frameList.put(0, frame0);
 		this.frameList.put(1, frame1);
-		this.tv = (TextView) findViewById(R.id.infotext);
 	}
 
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		Log.d("AwesomeVideoView", "Now measuring");
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		tv.measure(widthMeasureSpec, 0);
-		int tvHeight = tv.getMeasuredHeight();
-		// Do not remove the + 1 in the code line below, displays a pixel of white otherwise.
-		int measureSpecHeight = MeasureSpec.makeMeasureSpec((MeasureSpec.getSize(heightMeasureSpec) - tvHeight + 1) / 2, MeasureSpec.getMode(heightMeasureSpec));
+		int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) / 2, MeasureSpec.getMode(heightMeasureSpec));
 		//int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.getMode(heightMeasureSpec));
 
 		for(AwesomeFrameLayout f : this.frameList.values()){

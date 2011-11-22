@@ -11,13 +11,11 @@ public class ImageFetcher extends Thread {
 	private ClientMonitor monitor;
 	private AwesomeVideoView videoView;
 	private Handler handler;
-	private TextView infoText;
 
-	public ImageFetcher(ClientMonitor monitor, AwesomeVideoView videoView, Handler handler, TextView infoText) {
+	public ImageFetcher(ClientMonitor monitor, AwesomeVideoView videoView, Handler handler) {
 		this.monitor = monitor;
 		this.videoView = videoView;
 		this.handler = handler;
-		this.infoText = infoText;
 	}
 
 	public void run(){
@@ -25,7 +23,7 @@ public class ImageFetcher extends Thread {
 		while(!interrupted()){
 			try {
 				image = monitor.awaitImage();
-				handler.post(new ImageTransferer(videoView, image, infoText));
+				handler.post(new ImageTransferer(videoView, image));
 				Log.d("ImageTransferer", "^^Fetched an image and posted an ImageTransferer");
 			} catch(InterruptedException ie) {
 				// Do nothing

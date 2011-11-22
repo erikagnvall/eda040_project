@@ -176,6 +176,9 @@ public class AwesomeFrameLayout extends FrameLayout {
 			view.setImageBitmap(image.toBitmap());
 			overlay.setVisibility(View.VISIBLE);
 			overlay.setText("Δ " + image.getCurrentDelay() + " ms");
+			if (image.isVideoMode()) {
+				overlay.append(" / V");
+			}
 		}
 	}
 
