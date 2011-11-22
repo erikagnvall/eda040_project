@@ -28,6 +28,9 @@ public class In extends Thread {
 					case ServerProtocol.DISCONNECT:
 						monitor.disconnect();
 						break;
+					case ServerProtocol.HEARTBEAT:
+						monitor.heartbeat(System.currentTimeMillis());
+						break;
 					default:
 						System.err.println("IN: Unknown command recieved.");
 			    }

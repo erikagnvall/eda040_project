@@ -25,6 +25,8 @@ public class ClientMonitor {
     private long[] latestTimestamp;
     private int[] delay;
     private long delayNextUntil;
+	private long[] lastHeartbeat;
+
 
 	public ClientMonitor() {
 		commandQueues = (LinkedList<Command>[]) new LinkedList[2];
@@ -39,6 +41,7 @@ public class ClientMonitor {
 		delay = new int[2];
 		latestTimestamp = new long[2];
 		delayNextUntil = 0;
+		lastHeartbeat = new long[2];
 	}
 
 	// TODO private
@@ -48,8 +51,15 @@ public class ClientMonitor {
 	}
 
 	public synchronized Command awaitCommand(int cameraId) throws InterruptedException{
+		long timeNow = 0;
 		while (commandQueues[cameraId].isEmpty()) {
-			wait();
+			if (connected[cameraId] && lastHeartbeat[cameraId] + ClientProtocol.HEARTBEAT_TIMEOUT <= (timeNow = System.currentTimeMillis())) {
+				lastHeartbeat[cameraId] = timeNow;
+				commandQueues[cameraId].offer(new Command(Command.HEARTBEAT, protocols.get((byte) cameraId)));
+			}
+			long ttw = lastHeartbeat[cameraId] + ClientProtocol.HEARTBEAT_TIMEOUT - timeNow;
+			ttw = ttw < 0 ? ClientProtocol.HEARTBEAT_TIMEOUT : ttw;
+			wait(ttw);
 		}
 		return commandQueues[cameraId].poll();
 	}

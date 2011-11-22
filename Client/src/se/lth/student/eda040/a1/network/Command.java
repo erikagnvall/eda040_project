@@ -4,6 +4,7 @@ public class Command {
 	public static final byte MODE_IDLE = 'i';
 	public static final byte MODE_VIDEO = 'v';
 	public static final byte DISCONNECT = 'd';
+	public static final byte HEARTBEAT = 'h';
 
 	private byte command;
 	private ClientProtocol protocol;

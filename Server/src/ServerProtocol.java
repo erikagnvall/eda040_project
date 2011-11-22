@@ -8,6 +8,9 @@ public class ServerProtocol {
 	public static final byte VIDEO_MODE = 'v';
 	public static final byte IDLE_MODE = 'i';
 	public static final byte DISCONNECT = 'd';
+	public static final byte HEARTBEAT = 'h';
+	public static final int HEARTBEAT_TIMEOUT = 10000;
+
 
 	private InputStream input;
 	private OutputStream output;

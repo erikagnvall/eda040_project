@@ -13,6 +13,8 @@ import android.util.Log;
 public class ClientProtocol {
 	public static byte VIDEO_MODE = 'v';
 	public static int CAMERA_PORT = 8080;
+	public static final int HEARTBEAT_TIMEOUT = 5000;
+
 	private static final int TIMEOUT = 5000;
 
 	private byte cameraId;

@@ -1,7 +1,6 @@
 import java.net.Socket;
 
 public class ImageMonitor {
-
 	private static final int IDLE_PERIOD = 5000;
 
 	private boolean isConnected;
@@ -9,6 +8,7 @@ public class ImageMonitor {
 	private Image image;
 	private boolean ackedImg;
 	private long fetchedImageAt;
+	private long lastHeartbeat;
 	
 	public ImageMonitor() {
 		isVideo = false;
@@ -74,16 +74,29 @@ public class ImageMonitor {
 
     public synchronized void setConnection() {
 		isConnected = true;
+		this.lastHeartbeat = System.currentTimeMillis();
 		notifyAll(); 
     }
 	
 	public synchronized void awaitDisconnect() throws InterruptedException{
-		while (isConnected) {
-			wait();
+		long diff = Long.MAX_VALUE;
+		while (isConnected && lastHeartbeat > (diff = (System.currentTimeMillis() - ServerProtocol.HEARTBEAT_TIMEOUT))) {
+			System.out.println("waiting for " + (lastHeartbeat - diff));
+			wait(lastHeartbeat - diff);
+		}
+		System.out.println("Now returned from the heartbeat-while");
+		isConnected = false;
+		notifyAll();
+		if (lastHeartbeat > diff ) {
+			System.out.println("Did not recieve a hearbeat from client in time");
 		}
 	}
 	
 	public synchronized void connectionCheck() throws InterruptedException {
 		awaitConnected();
+	}
+
+	public synchronized void heartbeat(long beatTime) {
+		this.lastHeartbeat = beatTime;
 	}
 }
