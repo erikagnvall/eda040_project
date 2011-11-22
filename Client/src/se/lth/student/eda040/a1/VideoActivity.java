@@ -9,6 +9,7 @@ import se.lth.student.eda040.a1.network.Command;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -33,6 +34,7 @@ import java.util.Arrays;
 
 
 public class VideoActivity extends Activity {
+
 	private Input in0;
 	private Input in1;
 	private Output out0;
@@ -153,24 +155,30 @@ public class VideoActivity extends Activity {
 	}
 
     private boolean connectCamera(byte cameraId, String host){
+		Bundle args = new Bundle();
 		boolean connected = false;
         try {
 			monitor.connectTo(cameraId, host);
 			connected = true;
-			Log.d("videoactivity", "Connected to camera: " + cameraId);
-			// display information text
+			Log.d("VideoActivity", "Connected to camera: " + cameraId);
+			args.putString("msg", "Successfully connected to camera.");
         } catch (UnknownHostException e){
-            Log.d("videoactivity", "failed to connect camera: " + cameraId +
-                    ". unable to conect to host: " + host + ".");
-            // display information text
+			String msg = "Failed to connect camera: " + cameraId +
+                    ".\nUnable to connect to host: " + host + ".";
+            Log.d("VideoActivity", msg);
+			args.putString("msg", msg);
         } catch (IOException e){
-            Log.d("videoactivity", "failed to connect camera: " + cameraId + ">> " + e.getMessage());
-            // display information text
+			String msg = "Failed to connect camera: " + cameraId +
+				"\n" + e.getMessage();
+            Log.d("VideoActivity", msg);
+			args.putString("msg", msg);
         } catch (IllegalArgumentException e){
-            Log.d("videoactivity", "failed to connect camera: " + cameraId + 
-                    "Camera has not been set up!");
-            // display information text
+			String msg = "Failed to connect camera: " + cameraId + 
+                    "Camera has not been set up!";
+            Log.d("videoactivity", msg);
+			args.putString("msg", msg);
         }
+		showDialog(args.getString("msg").hashCode(), args);
 		return connected;
     }
 
@@ -188,7 +196,7 @@ public class VideoActivity extends Activity {
 	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
-				// TODO this overides the icons that otherwide would be used according to the xml. What to do?
+				// TODO this overides the icons that otherwise would be used according to the xml. What to do?
 				menu.clear();	 // Clears all items, below: rebuild from scratch.
 				if (monitor.isConnectedCamera((byte) 0)) {
 					menu.add(Menu.NONE, R.id.disconnectCam0, 0, "Disconnect c0");
@@ -203,5 +211,17 @@ public class VideoActivity extends Activity {
 				}
 				menu.add(Menu.NONE, R.id.setIdle, 2, "Set Idle");
 		return true;
+	}
+
+	public Dialog onCreateDialog(int id, Bundle args){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			})
+			.setMessage(args.getString("msg"));
+		AlertDialog alert = builder.create();
+		return alert;
 	}
 }
