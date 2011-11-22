@@ -17,6 +17,7 @@ public class ClientProtocol {
 
 	private byte cameraId;
 	private Socket socket;
+	private String host;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 
@@ -83,6 +84,7 @@ public class ClientProtocol {
 
 	public void connectTo(String host) throws IOException, UnknownHostException {
 		//socket = new Socket(host, CAMERA_PORT);
+		this.host = host;
 		socket = new Socket();
 		Log.d("ClientProtocol", "Trying to connect to " + host + ":" + CAMERA_PORT);
 		socket.connect(new InetSocketAddress(host, CAMERA_PORT), TIMEOUT);
@@ -108,6 +110,11 @@ public class ClientProtocol {
 				// Dont care!
 			}
 		}
+		this.host = null;
 		Log.d("ClientProtocol", "Disconnected camera " + cameraId);
+	}
+	
+	public String getHost(){
+		return this.host;
 	}
 }

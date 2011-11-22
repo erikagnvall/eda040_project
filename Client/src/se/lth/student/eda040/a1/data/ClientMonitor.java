@@ -3,6 +3,8 @@ package se.lth.student.eda040.a1.data;
 import se.lth.student.eda040.a1.network.*;
 
 import java.util.Queue;
+import java.util.Collection;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.LinkedList;
 import java.util.Map;
@@ -184,5 +186,15 @@ public class ClientMonitor {
 				putCommand(new Command(cmd, protocol), protocol.getCameraId());
 			}
 		}
+	}
+
+	public synchronized Collection<String> getConnectedHosts(){
+		ArrayList<String> hosts = new ArrayList<String>();
+		for(ClientProtocol cp : protocols.values()){
+			if(connected[cp.getCameraId()]){
+				hosts.add(cp.getHost());
+			}
+		}
+		return hosts;
 	}
 }

@@ -1,6 +1,7 @@
 package se.lth.student.eda040.a1;
 
 import se.lth.student.eda040.a1.network.Image;
+import se.lth.student.eda040.a1.data.ClientMonitor;
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +32,8 @@ public class AwesomeVideoView extends LinearLayout {
 		Log.d("AwesomeVideoView", "In onFinishInflate.");
 		this.frame0 = (AwesomeFrameLayout) findViewById(R.id.frame0);
 		this.frame1 = (AwesomeFrameLayout) findViewById(R.id.frame1);
+		frame0.setCameraId((byte) 0);
+		frame1.setCameraId((byte) 1);
 		this.tv = (TextView) findViewById(R.id.infotext);
 	}
 
@@ -53,6 +56,10 @@ public class AwesomeVideoView extends LinearLayout {
 		this.videoActivity = videoActivity;
 	}
 	
+	public void setMonitor(ClientMonitor monitor) {
+		frame0.setMonitor(monitor);
+		frame1.setMonitor(monitor);
+	}
 	
 	public void drawImage(Image image) {
 		AwesomeFrameLayout frame = null;

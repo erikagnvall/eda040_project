@@ -47,21 +47,7 @@ public class VideoActivity extends Activity {
 	private int currentCam = -1;
 	String errorKey = "errorKey";
 
-	private String[] cams = {
-		"argus-1",
-		"argus-2",
-		"argus-3",
-		"argus-4",
-		"argus-5",
-		"argus-6",
-		"argus-7",
-		"argus-8",
-		"argus-9",
-		"argus-10",
-		"fake cam",
-	};
 
-	private List<String> cameras = new ArrayList<String>(Arrays.asList(cams));
 
 	private String[] connectedCameras = new String[2];
 	private ArrayAdapter<String> adapter;
@@ -71,7 +57,7 @@ public class VideoActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videoview);
-		setUpCameraDialog();
+		//setUpCameraDialog();
 		avv = (AwesomeVideoView) findViewById(R.id.avv);
 		avv.setVideoActivity(this);
 		TextView infoText = (TextView) findViewById(R.id.infotext);
@@ -89,6 +75,7 @@ public class VideoActivity extends Activity {
 		in1 = new Input(monitor, protocol1);
 		out0 = new Output(monitor, protocol0);
 		out1 = new Output(monitor, protocol1);
+		avv.setMonitor(monitor);
 
 		in0.start();
 		in1.start();
@@ -98,30 +85,6 @@ public class VideoActivity extends Activity {
 		detecter.start();
 	}
 
-	private void setUpCameraDialog() {
-		cameras = new ArrayList<String>(Arrays.asList(cams));
-		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cameras);
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Pick a camera");
-		builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialogInterface, int item) {
-				String host = adapter.getItem(item);
-				boolean connected = false;
-				if (host.equals("fake cam")) {
-					connected = connectCamera((byte) currentCam, "10.0.2.2");
-				} else {
-					connected = connectCamera((byte) currentCam, host +
-						".student.lth.se");
-				}
-				if(connected){
-					connectedCameras[currentCam] = host;
-					adapter.remove(host);
-					adapter.notifyDataSetChanged();
-				}
-			}
-		});
-		cameraPicker = builder.create();
-	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -164,32 +127,6 @@ public class VideoActivity extends Activity {
 		return true;
 	}
 
-    private boolean connectCamera(byte cameraId, String host){
-		Bundle dialogArgs = new Bundle();
-		boolean connected = false;
-		String errorMsg = null;
-        try {
-			monitor.connectTo(cameraId, host);
-			connected = true;
-			Log.d("VideoActivity", "Connected to camera: " + cameraId);
-        } catch (UnknownHostException e){
-			errorMsg = "Failed to connect camera: " + cameraId +
-                    ".\nUnable to connect to host: " + host + ".";
-        } catch (IOException e){
-			errorMsg = "Failed to connect camera: " + cameraId +
-				"\n" + e.getMessage();
-        } catch (IllegalArgumentException e){
-			errorMsg = "Failed to connect camera: " + cameraId + 
-                    "Camera has not been set up!";
-        }
-
-		if (errorMsg != null) {
-            Log.d("VideoActivity", errorMsg);
-			dialogArgs.putString(errorKey, errorMsg);
-			showDialog(errorKey.hashCode(), dialogArgs);
-		}
-		return connected;
-    }
 
 	/**
 	 * Disconnect a camera as well as some magic with the camera list.
@@ -198,9 +135,9 @@ public class VideoActivity extends Activity {
 		currentCam = cameraId;
 		int oppositeCam = currentCam == 0 ? 1 : 0;
 		connectedCameras[currentCam] = null;
-		setUpCameraDialog();
-		adapter.remove(connectedCameras[oppositeCam]);
-		adapter.notifyDataSetChanged();
+		//setUpCameraDialog();
+		//adapter.remove(connectedCameras[oppositeCam]);
+		//adapter.notifyDataSetChanged();
 		monitor.gracefullDisconnect((byte) currentCam);
 	}
 
@@ -208,9 +145,9 @@ public class VideoActivity extends Activity {
 		currentCam = cameraId;
 		int oppositeCam = currentCam == 0 ? 1 : 0;
 		connectedCameras[currentCam] = null;
-		setUpCameraDialog();
-		adapter.remove(connectedCameras[oppositeCam]);
-		adapter.notifyDataSetChanged();
+		//setUpCameraDialog();
+		//adapter.remove(connectedCameras[oppositeCam]);
+		//adapter.notifyDataSetChanged();
 		avv.disconnect(cameraId);
 	}
 
