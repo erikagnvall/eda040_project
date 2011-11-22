@@ -74,13 +74,12 @@ public class VideoActivity extends Activity {
 		setUpCameraDialog();
 		avv = (AwesomeVideoView) findViewById(R.id.avv);
 		avv.setVideoActivity(this);
-		TextView infoText = (TextView) findViewById(R.id.infotext);
 		
 		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
 		handler = new Handler();
 		monitor = new ClientMonitor();
 		DisconnectionDetecter detecter = new DisconnectionDetecter(monitor, avv, handler);
-		ImageFetcher fetcher = new ImageFetcher(monitor, avv, handler, infoText);
+		ImageFetcher fetcher = new ImageFetcher(monitor, avv, handler);
 		ClientProtocol protocol0 = new ClientProtocol((byte) 0);
 		ClientProtocol protocol1 = new ClientProtocol((byte) 1);
 		monitor.addProtocol((byte) 0, protocol0);

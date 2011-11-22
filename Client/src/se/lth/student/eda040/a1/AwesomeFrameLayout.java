@@ -52,13 +52,15 @@ public class AwesomeFrameLayout extends FrameLayout {
 		//setMeasuredDimensionwidthMeasureSpec, measureSpecHeight); //dont call, brejks overlay
 	}
 	
-	
 	public void drawImage(Image image) {
 		//Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
 		if (!disconnected) {
 			view.setImageBitmap(image.toBitmap());
 			overlay.setVisibility(View.VISIBLE);
 			overlay.setText("Δ " + image.getCurrentDelay() + " ms");
+			if (image.isVideoMode()) {
+				overlay.append(" / V");
+			}
 		}
 	}
 

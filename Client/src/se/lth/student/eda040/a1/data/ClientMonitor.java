@@ -66,7 +66,7 @@ public class ClientMonitor {
 		}
 
 		// If videomode distribute comand to other camera
-	    if (connected[otherCamera] && !isVideoMode[cameraId] && image.isVideoMode()) {
+	    if (connected[otherCamera] && !isVideoMode[otherCamera] && image.isVideoMode()) {
 			putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
 	    }
 
