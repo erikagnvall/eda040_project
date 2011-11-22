@@ -72,6 +72,7 @@ public class VideoActivity extends Activity {
 		setContentView(R.layout.videoview);
 		setUpCameraDialog();
 		avv = (AwesomeVideoView) findViewById(R.id.avv);
+		avv.setVideoActivity(this);
 		
 		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
 		handler = new Handler();
@@ -142,12 +143,12 @@ public class VideoActivity extends Activity {
 				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
-				disconnectCamera(0);
+				disconnectCamera((byte) 0);
 				avv.disconnect((byte) 0);
 				break;
 		case R.id.disconnectCam1:
 				Log.d("VideoActivity", "Selected disconnectCam1");
-				disconnectCamera(1);
+				disconnectCamera((byte) 1);
 				avv.disconnect((byte) 1);
 		case R.id.setIdle:
 				monitor.setIdleMode();
@@ -188,7 +189,7 @@ public class VideoActivity extends Activity {
 	/**
 	 * Disconnect a camera as well as some magic with the camera list.
 	 */
-	private void disconnectCamera(int cameraId) {
+	public void disconnectCamera(byte cameraId) {
 		currentCam = cameraId;
 		int oppositeCam = currentCam == 0 ? 1 : 0;
 		connectedCameras[currentCam] = null;
@@ -196,6 +197,16 @@ public class VideoActivity extends Activity {
 		adapter.remove(connectedCameras[oppositeCam]);
 		adapter.notifyDataSetChanged();
 		monitor.gracefullDisconnect((byte) currentCam);
+	}
+
+	public void emergencyDisconnenctCamera(byte cameraId) {
+		currentCam = cameraId;
+		int oppositeCam = currentCam == 0 ? 1 : 0;
+		connectedCameras[currentCam] = null;
+		setUpCameraDialog();
+		adapter.remove(connectedCameras[oppositeCam]);
+		adapter.notifyDataSetChanged();
+		avv.disconnect(cameraId);
 	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {

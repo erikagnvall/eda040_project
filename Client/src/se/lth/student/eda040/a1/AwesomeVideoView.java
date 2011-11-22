@@ -16,6 +16,7 @@ import android.view.Gravity;
 
 
 public class AwesomeVideoView extends LinearLayout {
+	private VideoActivity videoActivity;
 	private AwesomeFrameLayout frame0;
 	private AwesomeFrameLayout frame1;
 
@@ -40,6 +41,10 @@ public class AwesomeVideoView extends LinearLayout {
 		frame1.measure(widthMeasureSpec, measureSpecHeight);
 
 		//setMeasuredDimension(widthMeasureSpec, measureSpecHeight); //dont call, brejks overlay
+	}
+
+	public void setVideoActivity(VideoActivity videoActivity) {
+		this.videoActivity = videoActivity;
 	}
 	
 	
@@ -81,5 +86,17 @@ public class AwesomeVideoView extends LinearLayout {
 				break;
 		}
 		frame.disconnect();
+	}
+
+	/**
+	 * Disconnection caused by error on conenction, maybe the server died.
+	 **/
+	public void disconnectEmergency(byte cameraId) {
+		Log.d("AwesomeVideoView", "Emegency disconnect for camera" + cameraId);
+		if (videoActivity != null) {
+			videoActivity.emergencyDisconnenctCamera(cameraId);
+		} else {
+			Log.d("AwesomeVideoView", "Forgot to give me an activity.");
+		}
 	}
 }
