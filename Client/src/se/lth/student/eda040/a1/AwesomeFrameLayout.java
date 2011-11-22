@@ -61,12 +61,15 @@ public class AwesomeFrameLayout extends FrameLayout {
 		this.view = (ImageView) findViewById(R.id.view);
 		this.overlay = (TextView) findViewById(R.id.overlay);
 		this.disconnectedImage = BitmapFactory.decodeResource(getResources(), R.drawable.disconnected);
-		//view.setImageBitmap(BitmapFactory.decodeFile("/sdcard/test2.jpg"));
 
 		view.setLongClickable(true);
 		view.setOnLongClickListener(new View.OnLongClickListener() {
 			public boolean onLongClick(View v){
-				showConnectDialog();
+				if(monitor.isConnectedCamera(cameraId)){
+					showDisconnectDialog();
+				} else {
+					showConnectDialog();
+				}
 				return true;
 			}
 		});
@@ -91,13 +94,39 @@ public class AwesomeFrameLayout extends FrameLayout {
 		cameraPicker.show();
 	}
 
-	private boolean connectCamera(byte cameraId, String host){
-		//Bundle dialogArgs = new Bundle();
-		boolean connected = false;
+	private void showDisconnectDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			})
+			.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id){
+					disconnectCamera();
+				}
+			})
+			.setMessage("Do you really want to disconnect?");
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void showErrorDialog(String msg){
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			})
+			.setMessage(msg);
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void connectCamera(byte cameraId, String host){
 		String errorMsg = null;
 		try {
 			monitor.connectTo(cameraId, host);
-			connected = true;
 			Log.d("VideoActivity", "Connected to camera: " + cameraId);
 		} catch (UnknownHostException e){
 			errorMsg = "Failed to connect camera: " + cameraId +
@@ -112,11 +141,13 @@ public class AwesomeFrameLayout extends FrameLayout {
 
 		if (errorMsg != null) {
 			Log.d("VideoActivity", errorMsg);
-			//dialogArgs.putString(errorKey, errorMsg);
-			//showDialog(errorKey.hashCode(), dialogArgs);
+			showErrorDialog(errorMsg);
 		}
-		connect();
-		return connected;
+	}
+
+	private void disconnectCamera(){
+		monitor.gracefullDisconnect(cameraId);
+		//disconnected();
 	}
 
 	public void setMonitor(ClientMonitor monitor){
@@ -126,33 +157,21 @@ public class AwesomeFrameLayout extends FrameLayout {
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		Log.d("AwesomeFrameLayout", " In onMeasure");
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		//int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) / 2, MeasureSpec.getMode(heightMeasureSpec));
 		int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.getMode(heightMeasureSpec));
-
 		view.measure(widthMeasureSpec, measureSpecHeight);
-
 		overlay.measure(0, 0);
 		overlay.measure(overlay.getMeasuredWidth(), getMeasuredHeight());
-		//overlay.setText(String.valueOf(Math.random()));
-
-		//setMeasuredDimensionwidthMeasureSpec, measureSpecHeight); //dont call, brejks overlay
 	}
 
 	public void drawImage(Image image) {
-		//Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
-		if (!disconnected) {
+		if (monitor.isConnectedCamera(cameraId)) {
 			view.setImageBitmap(image.toBitmap());
 			overlay.setVisibility(View.VISIBLE);
 			overlay.setText("Δ " + image.getCurrentDelay() + " ms");
 		}
 	}
 
-	public void connect() {
-		disconnected = false;
-	}
-
-	public void disconnect() {
-		disconnected = true;
+	public void disconnected() {
 		view.setImageBitmap(disconnectedImage);
 		overlay.setVisibility(View.INVISIBLE);
 	}

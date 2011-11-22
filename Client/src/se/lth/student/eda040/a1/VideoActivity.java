@@ -44,12 +44,7 @@ public class VideoActivity extends Activity {
 	private Handler handler;
 	private ClientMonitor monitor;
 	private ContextMenu contextMenu;
-	private int currentCam = -1;
-	String errorKey = "errorKey";
 
-
-
-	private String[] connectedCameras = new String[2];
 	private ArrayAdapter<String> adapter;
 	private AlertDialog cameraPicker;
 	private AwesomeVideoView avv;
@@ -57,7 +52,6 @@ public class VideoActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videoview);
-		//setUpCameraDialog();
 		avv = (AwesomeVideoView) findViewById(R.id.avv);
 		avv.setVideoActivity(this);
 		TextView infoText = (TextView) findViewById(R.id.infotext);
@@ -94,27 +88,15 @@ public class VideoActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.connectCam0:
-				Log.d("VideoActivity", "Selected connectCam0 option.");
-				currentCam = 0;
-				cameraPicker.show();
-				avv.connect((byte) 0);
-				break;
-		case R.id.connectCam1:
-				Log.d("VideoActivity", "Selected connectCam1 option.");
-				currentCam = 1;
-				cameraPicker.show();
-				avv.connect((byte) 1);
-				break;
 		case R.id.disconnectCam0:
 				Log.d("VideoActivity", "Selected disconnectCam0");
-				disconnectCamera((byte) 0);
-				avv.disconnect((byte) 0);
+				//disconnectCamera((byte) 0);
+				//avv.disconnect((byte) 0);
 				break;
 		case R.id.disconnectCam1:
 				Log.d("VideoActivity", "Selected disconnectCam1");
-				disconnectCamera((byte) 1);
-				avv.disconnect((byte) 1);
+				//disconnectCamera((byte) 1);
+				//avv.disconnect((byte) 1);
 		case R.id.setIdle:
 				monitor.setVideoMode(false);
 				break;
@@ -131,24 +113,12 @@ public class VideoActivity extends Activity {
 	/**
 	 * Disconnect a camera as well as some magic with the camera list.
 	 */
-	public void disconnectCamera(byte cameraId) {
-		currentCam = cameraId;
-		int oppositeCam = currentCam == 0 ? 1 : 0;
-		connectedCameras[currentCam] = null;
-		//setUpCameraDialog();
-		//adapter.remove(connectedCameras[oppositeCam]);
-		//adapter.notifyDataSetChanged();
-		monitor.gracefullDisconnect((byte) currentCam);
-	}
+	//public void disconnectCamera(byte cameraId) {
+	//	monitor.gracefullDisconnect((byte) cameraId);
+	//}
 
-	public void emergencyDisconnenctCamera(byte cameraId) {
-		currentCam = cameraId;
-		int oppositeCam = currentCam == 0 ? 1 : 0;
-		connectedCameras[currentCam] = null;
-		//setUpCameraDialog();
-		//adapter.remove(connectedCameras[oppositeCam]);
-		//adapter.notifyDataSetChanged();
-		avv.disconnect(cameraId);
+	public void disconnenctedCamera(byte cameraId) {
+		avv.disconnectedCamera(cameraId);
 	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -168,17 +138,5 @@ public class VideoActivity extends Activity {
 				menu.add(Menu.NONE, R.id.setIdle, 2, "Set Idle");
 				menu.add(Menu.NONE, R.id.setVideo, 2, "Set Video");
 		return true;
-	}
-
-	public Dialog onCreateDialog(int id, Bundle dialogArgs){
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-				}
-			})
-			.setMessage(dialogArgs.getString(errorKey));
-		AlertDialog alert = builder.create();
-		return alert;
 	}
 }

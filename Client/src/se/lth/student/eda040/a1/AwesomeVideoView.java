@@ -74,20 +74,8 @@ public class AwesomeVideoView extends LinearLayout {
 		Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
 		frame.drawImage(image);
 	}
-	public void connect(byte cameraId) {
-		AwesomeFrameLayout frame = null;
-		switch (cameraId) {
-			case 0:
-				frame = frame0;
-				break;
-			case 1:
-				frame = frame1;
-				break;
-		}
-		frame.connect();
-	}
 
-	public void disconnect(byte cameraId) {
+	public void disconnectedCamera(byte cameraId) {
 		Log.d("AwesomeVideoView", "Disconnecting camera " + cameraId);
 		AwesomeFrameLayout frame = null;
 		switch (cameraId) {
@@ -98,18 +86,18 @@ public class AwesomeVideoView extends LinearLayout {
 				frame = frame1;
 				break;
 		}
-		frame.disconnect();
+		frame.disconnected();
 	}
 
 	/**
 	 * Disconnection caused by error on conenction, maybe the server died.
 	 **/
-	public void disconnectEmergency(byte cameraId) {
-		Log.d("AwesomeVideoView", "Emegency disconnect for camera" + cameraId);
-		if (videoActivity != null) {
-			videoActivity.emergencyDisconnenctCamera(cameraId);
-		} else {
-			Log.d("AwesomeVideoView", "Forgot to give me an activity.");
-		}
-	}
+	//public void disconnectEmergency(byte cameraId) {
+	//	Log.d("AwesomeVideoView", "Emegency disconnect for camera" + cameraId);
+	//	if (videoActivity != null) {
+	//		videoActivity.emergencyDisconnenctCamera(cameraId);
+	//	} else {
+	//		Log.d("AwesomeVideoView", "Forgot to give me an activity.");
+	//	}
+	//}
 }

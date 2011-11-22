@@ -142,6 +142,8 @@ public class ClientMonitor {
 			putCommand(new Command(Command.DISCONNECT, protocols.get(cameraId)), cameraId);
 		}
 		connected[cameraId] = false;
+		disconnectionQueue.offer(cameraId);
+		notifyAll();
 		Log.d("ClientMonitor", "Gracefull disconnected camera " + cameraId);
 	}
 
@@ -160,7 +162,7 @@ public class ClientMonitor {
 	}
 
 	public synchronized byte awaitDisconnection() throws InterruptedException {
-		while (disconnectionQueue.peek() == null) {
+		while (disconnectionQueue.isEmpty()) {
 			wait();		
 		}
 		return disconnectionQueue.poll();
