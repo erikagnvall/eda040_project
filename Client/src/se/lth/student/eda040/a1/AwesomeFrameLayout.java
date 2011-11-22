@@ -179,6 +179,9 @@ public class AwesomeFrameLayout extends FrameLayout {
 			if (image.isVideoMode()) {
 				overlay.append(" / V");
 			}
+			if (image.wasTrigger()) {
+			    overlay.append(" [T]");
+			}
 		}
 	}
 

@@ -28,6 +28,7 @@ public class ClientMonitor {
     private long[] latestTimestamp;
     private int[] delay;
     private long delayNextUntil;
+    private int trigger;
 
 	public ClientMonitor() {
 		commandQueues = (LinkedList<Command>[]) new LinkedList[2];
@@ -42,6 +43,7 @@ public class ClientMonitor {
 		delay = new int[2];
 		latestTimestamp = new long[2];
 		delayNextUntil = 0;
+		trigger = -1;
 	}
 
 	// TODO private
@@ -70,8 +72,11 @@ public class ClientMonitor {
 		// If videomode distribute comand to other camera
 	    if (connected[otherCamera] && !isVideoMode[otherCamera] && image.isVideoMode()) {
 			putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
+			this.trigger = cameraId;
 	    }
-
+	    if (cameraId == trigger) {
+		image.setTrigger(true);
+	    }
 	    isVideoMode[cameraId] = image.isVideoMode();
 	    Log.d("ClientMonitor", "Put image in buffer");
 	    notifyAll(); 
@@ -187,6 +192,9 @@ public class ClientMonitor {
 				Log.d("ClientMonitor", "about to send command: " + cmd);
 				putCommand(new Command(cmd, protocol), protocol.getCameraId());
 			}
+		}
+		if (!video) {
+		    this.trigger = -1;
 		}
 	}
 

@@ -8,12 +8,14 @@ public class Image implements Comparable<Image>{
 	private byte[] data;
 	private long timestamp;
 	private boolean videoMode;
+	private boolean wasTrigger;
 
 	public Image(byte cameraID, byte[] data, long timestamp, boolean videoMode) {
 		this.cameraID = cameraID;
 		this.data = data;
 		this.timestamp = timestamp;
 		this.videoMode = videoMode;
+		this.wasTrigger = false;
 	}
 	
 	public byte[] getImageData(){
@@ -42,5 +44,13 @@ public class Image implements Comparable<Image>{
 
 	public int compareTo(Image other){
 		return (int)(this.timestamp - other.timestamp);
+	}
+
+	public boolean wasTrigger() {
+	    return wasTrigger;
+	}
+	
+	public void setTrigger(boolean trigged) {
+	    this.wasTrigger = trigged;
 	}
 }
