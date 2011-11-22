@@ -29,7 +29,6 @@ public class VideoActivity extends Activity {
 	private Handler handler;
 	private ClientMonitor monitor;
 	private ContextMenu contextMenu;
-
 	private AwesomeVideoView avv;
 
 	public void onCreate(Bundle savedInstanceState) {
