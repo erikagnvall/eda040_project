@@ -29,18 +29,15 @@ public class ImageCapture extends Thread {
 		int readBytes;
 		byte mode;
 		Image image;
-		while (!interrupted()) {
-			//try {
-				//sleep(400);
-			//} catch (InterruptedException ie) {
 
-			//}
+		while (!interrupted()) {
 			buffer = new byte[Axis211A.IMAGE_BUFFER_SIZE];
 			readBytes = 0;
 			readBytes = camera.getJPEG(buffer, 0);
 
-			if (!monitor.isVideo() && motionDetector.detect())
-			    monitor.setVideo(true);
+			if(motionDetector.detect()){
+				monitor.setVideo(true);
+			}
 			mode = (monitor.isVideo()) ? ServerProtocol.VIDEO_MODE : ServerProtocol.IDLE_MODE;
 			image = new Image(buffer, readBytes, mode);
 			monitor.putImage(image);

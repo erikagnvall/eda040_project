@@ -17,7 +17,7 @@ public class In extends Thread {
 				// TODO not thread safe.
 				monitor.connectionCheck();
 			    cmd = protocol.awaitCommand();
-			    System.out.println("Recieved command " + cmd);
+			    System.out.println("IN: Recieved command " + cmd);
 			    switch (cmd) {
 					case ServerProtocol.IDLE_MODE:
 						monitor.setVideo(false);
@@ -29,17 +29,17 @@ public class In extends Thread {
 						monitor.disconnect();
 						break;
 					default:
-						System.err.println("Unknown command recieved.");
+						System.err.println("IN: Unknown command recieved.");
 			    }
 			
 			} catch (IOException e) {
-				System.out.println("Got IOException: " + e.getMessage() + "\nDisconnecting.");
+				System.out.println("IN: Got IOException: " + e.getMessage() + "\nDisconnecting.");
 				monitor.disconnect();
 			} catch (InterruptedException ie) {
 				// noop.
 			}
 		}
-		System.out.println("In done running");
+		System.out.println("IN: Done running");
 	}
 
 }
