@@ -13,12 +13,14 @@ import android.util.Log;
 import android.graphics.Canvas;
 import android.view.View.MeasureSpec;
 import android.view.Gravity;
+import android.widget.TextView;
 
 
 public class AwesomeVideoView extends LinearLayout {
 	private VideoActivity videoActivity;
 	private AwesomeFrameLayout frame0;
 	private AwesomeFrameLayout frame1;
+	private TextView tv;
 
 	public AwesomeVideoView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -29,12 +31,16 @@ public class AwesomeVideoView extends LinearLayout {
 		Log.d("AwesomeVideoView", "In onFinishInflate.");
 		this.frame0 = (AwesomeFrameLayout) findViewById(R.id.frame0);
 		this.frame1 = (AwesomeFrameLayout) findViewById(R.id.frame1);
+		this.tv = (TextView) findViewById(R.id.infotext);
 	}
 
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		Log.d("AwesomeVideoView", "Now measuring");
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) / 2, MeasureSpec.getMode(heightMeasureSpec));
+		tv.measure(widthMeasureSpec, 0);
+		int tvHeight = tv.getMeasuredHeight();
+		// Do not remove the + 1 in the code line below, displays a pixel of white otherwise.
+		int measureSpecHeight = MeasureSpec.makeMeasureSpec((MeasureSpec.getSize(heightMeasureSpec) - tvHeight + 1) / 2, MeasureSpec.getMode(heightMeasureSpec));
 		//int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.getMode(heightMeasureSpec));
 
 		frame0.measure(widthMeasureSpec, measureSpecHeight);

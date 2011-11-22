@@ -13,9 +13,18 @@
 	<item android:id="@+id/disconnectCam1"
 		android:icon="@drawable/ic_launcher"
 		android:title="@string/disconnectCam1" />
-
+	<!--<menu>-->
+		<!--<item android:id="@+id/create_new"-->
+			<!--android:title="@string/create_new" />-->
+		<!--<item android:id="@+id/open"-->
+			<!--android:title="@string/open" />-->
+	<!--</menu>-->
 
 	<item android:id="@+id/setIdle"
 		android:icon="@drawable/ic_launcher"
 		android:title="@string/setIdle" />
+
+	<item android:id="@+id/setVideo"
+		android:icon="@drawable/ic_launcher"
+		android:title="@string/setVideo" />
 </menu>

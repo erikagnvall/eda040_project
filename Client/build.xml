@@ -82,36 +82,36 @@
     <!-- version-tag: 1 -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
 
-    <target name="-post-compile" depends="test">
-    </target>
+    <!--<target name="-post-compile" depends="test">-->
+    <!--</target>-->
 
-    <path id="classpath.tests">
-	<pathelement location="lib/junit-4.10.jar"/>
-	<pathelement location="lib/robolectric-1.0-RC4-jar-with-dependencies.jar"/>
-	<pathelement location="lib/android.jar"/>
+    <!--<path id="classpath.tests">-->
+	<!--<pathelement location="lib/junit-4.10.jar"/>-->
+	<!--<pathelement location="lib/robolectric-1.0-RC4-jar-with-dependencies.jar"/>-->
+	<!--<pathelement location="lib/android.jar"/>-->
 	<!-- <fileset dir="lib">
 		<include name="*.jar"/>
 	</fileset> -->
-	<pathelement location="bin/classes"/>
-	<pathelement location="tests/"/>
-    </path>
+	<!--<pathelement location="bin/classes"/>-->
+	<!--<pathelement location="tests/"/>-->
+    <!--</path>-->
 
-    <target name="compile-test" >
-	    <javac srcdir="tests">
-		    <classpath refid="classpath.tests"/>
-		</javac>
+    <!--<target name="compile-test" >-->
+		<!--<javac srcdir="tests">-->
+			<!--<classpath refid="classpath.tests"/>-->
+		<!--</javac>-->
 
-    </target>
+    <!--</target>-->
 
-    <target name="test" depends="compile-test">
-        <junit>
-            <formatter type="brief" usefile="false"/>
-            <classpath refid="classpath.tests" />
-            <batchtest>
-                <fileset dir="./tests/">
-                    <include name="tests/*.java" />
-                </fileset>
-            </batchtest>
-        </junit>
-    </target>
+    <!--<target name="test" depends="compile-test">-->
+        <!--<junit>-->
+            <!--<formatter type="brief" usefile="false"/>-->
+            <!--<classpath refid="classpath.tests" />-->
+            <!--<batchtest>-->
+                <!--<fileset dir="./tests/">-->
+                    <!--<include name="tests/*.java" />-->
+                <!--</fileset>-->
+            <!--</batchtest>-->
+        <!--</junit>-->
+    <!--</target>-->
 </project>

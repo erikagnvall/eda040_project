@@ -176,10 +176,12 @@ public class ClientMonitor {
 		return connected[cameraId];
 	}
 	
-	public synchronized void setIdleMode() {
+	public synchronized void setVideoMode(boolean video) {
 		for (ClientProtocol protocol : protocols.values()) {
 			if (connected[protocol.getCameraId()]) {
-				putCommand(new Command(Command.MODE_IDLE, protocol), protocol.getCameraId());
+				byte cmd = video ? Command.MODE_VIDEO : Command.MODE_IDLE;
+				Log.d("ClientMonitor", "about to send command: " + cmd);
+				putCommand(new Command(cmd, protocol), protocol.getCameraId());
 			}
 		}
 	}

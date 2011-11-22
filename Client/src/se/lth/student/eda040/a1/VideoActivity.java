@@ -25,6 +25,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.UnknownHostException;
@@ -73,12 +74,13 @@ public class VideoActivity extends Activity {
 		setUpCameraDialog();
 		avv = (AwesomeVideoView) findViewById(R.id.avv);
 		avv.setVideoActivity(this);
+		TextView infoText = (TextView) findViewById(R.id.infotext);
 		
 		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
 		handler = new Handler();
 		monitor = new ClientMonitor();
-		ImageFetcher fetcher = new ImageFetcher(monitor, avv, handler);
 		DisconnectionDetecter detecter = new DisconnectionDetecter(monitor, avv, handler);
+		ImageFetcher fetcher = new ImageFetcher(monitor, avv, handler, infoText);
 		ClientProtocol protocol0 = new ClientProtocol((byte) 0);
 		ClientProtocol protocol1 = new ClientProtocol((byte) 1);
 		monitor.addProtocol((byte) 0, protocol0);
@@ -151,7 +153,10 @@ public class VideoActivity extends Activity {
 				disconnectCamera((byte) 1);
 				avv.disconnect((byte) 1);
 		case R.id.setIdle:
-				monitor.setIdleMode();
+				monitor.setVideoMode(false);
+				break;
+		case R.id.setVideo:
+				monitor.setVideoMode(true);
 				break;
 		default:
 				super.onOptionsItemSelected(item);
@@ -224,6 +229,7 @@ public class VideoActivity extends Activity {
 					menu.add(Menu.NONE, R.id.connectCam1, 1, "Connect c1");
 				}
 				menu.add(Menu.NONE, R.id.setIdle, 2, "Set Idle");
+				menu.add(Menu.NONE, R.id.setVideo, 2, "Set Video");
 		return true;
 	}
 
