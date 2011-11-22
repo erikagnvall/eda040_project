@@ -43,6 +43,7 @@ public class VideoActivity extends Activity {
 	private ClientMonitor monitor;
 	private ContextMenu contextMenu;
 	private int currentCam = -1;
+	String errorKey = "errorKey";
 
 	private String[] cams = {
 		"argus-1",
@@ -155,30 +156,29 @@ public class VideoActivity extends Activity {
 	}
 
     private boolean connectCamera(byte cameraId, String host){
-		Bundle args = new Bundle();
+		Bundle dialogArgs = new Bundle();
 		boolean connected = false;
+		String errorMsg = null;
         try {
 			monitor.connectTo(cameraId, host);
 			connected = true;
 			Log.d("VideoActivity", "Connected to camera: " + cameraId);
-			args.putString("msg", "Successfully connected to camera.");
         } catch (UnknownHostException e){
-			String msg = "Failed to connect camera: " + cameraId +
+			errorMsg = "Failed to connect camera: " + cameraId +
                     ".\nUnable to connect to host: " + host + ".";
-            Log.d("VideoActivity", msg);
-			args.putString("msg", msg);
         } catch (IOException e){
-			String msg = "Failed to connect camera: " + cameraId +
+			errorMsg = "Failed to connect camera: " + cameraId +
 				"\n" + e.getMessage();
-            Log.d("VideoActivity", msg);
-			args.putString("msg", msg);
         } catch (IllegalArgumentException e){
-			String msg = "Failed to connect camera: " + cameraId + 
+			errorMsg = "Failed to connect camera: " + cameraId + 
                     "Camera has not been set up!";
-            Log.d("videoactivity", msg);
-			args.putString("msg", msg);
         }
-		showDialog(args.getString("msg").hashCode(), args);
+
+		if (errorMsg != null) {
+            Log.d("VideoActivity", errorMsg);
+			dialogArgs.putString(errorKey, errorMsg);
+			showDialog(errorKey.hashCode(), dialogArgs);
+		}
 		return connected;
     }
 
@@ -196,7 +196,7 @@ public class VideoActivity extends Activity {
 	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
-				// TODO this overides the icons that otherwise would be used according to the xml. What to do?
+				// Note: this overides the icons that otherwise would be used according to the xml.
 				menu.clear();	 // Clears all items, below: rebuild from scratch.
 				if (monitor.isConnectedCamera((byte) 0)) {
 					menu.add(Menu.NONE, R.id.disconnectCam0, 0, "Disconnect c0");
@@ -213,14 +213,14 @@ public class VideoActivity extends Activity {
 		return true;
 	}
 
-	public Dialog onCreateDialog(int id, Bundle args){
+	public Dialog onCreateDialog(int id, Bundle dialogArgs){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
 				}
 			})
-			.setMessage(args.getString("msg"));
+			.setMessage(dialogArgs.getString(errorKey));
 		AlertDialog alert = builder.create();
 		return alert;
 	}
