@@ -68,7 +68,9 @@ public class AwesomeVideoView extends LinearLayout {
 		}
 		frame.connect();
 	}
+
 	public void disconnect(byte cameraId) {
+		Log.d("AwesomeVideoView", "Disconnecting camera " + cameraId);
 		AwesomeFrameLayout frame = null;
 		switch (cameraId) {
 			case 0:

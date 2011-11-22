@@ -4,6 +4,7 @@ import se.lth.student.eda040.a1.data.Input;
 import se.lth.student.eda040.a1.data.Output;
 import se.lth.student.eda040.a1.data.ClientMonitor;
 import se.lth.student.eda040.a1.data.ImageFetcher;
+import se.lth.student.eda040.a1.data.DisconnectionDetecter;
 import se.lth.student.eda040.a1.network.ClientProtocol;
 import se.lth.student.eda040.a1.network.Command;
 
@@ -76,6 +77,7 @@ public class VideoActivity extends Activity {
 		handler = new Handler();
 		monitor = new ClientMonitor();
 		ImageFetcher fetcher = new ImageFetcher(monitor, avv, handler);
+		DisconnectionDetecter detecter = new DisconnectionDetecter(monitor, avv, handler);
 		ClientProtocol protocol0 = new ClientProtocol((byte) 0);
 		ClientProtocol protocol1 = new ClientProtocol((byte) 1);
 		monitor.addProtocol((byte) 0, protocol0);
@@ -90,6 +92,7 @@ public class VideoActivity extends Activity {
 		out0.start();
 		out1.start();
 		fetcher.start();
+		detecter.start();
 	}
 
 	private void setUpCameraDialog() {
