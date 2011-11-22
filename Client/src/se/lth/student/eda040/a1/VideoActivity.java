@@ -151,6 +151,7 @@ public class VideoActivity extends Activity {
 				Log.d("VideoActivity", "Selected disconnectCam1");
 				disconnectCamera((byte) 1);
 				avv.disconnect((byte) 1);
+				break;
 		case R.id.setIdle:
 				monitor.setVideoMode(false);
 				break;
@@ -227,8 +228,20 @@ public class VideoActivity extends Activity {
 				} else {
 					menu.add(Menu.NONE, R.id.connectCam1, 1, "Connect c1");
 				}
-				menu.add(Menu.NONE, R.id.setIdle, 2, "Set Idle");
-				menu.add(Menu.NONE, R.id.setVideo, 2, "Set Video");
+				
+				MenuItem setIdle = menu.add(Menu.NONE, R.id.setIdle, 2, "Set Idle");
+				MenuItem setVideo = menu.add(Menu.NONE, R.id.setVideo, 2, "Set Video");
+				if (monitor.isConnectedCamera((byte)0) || monitor.isConnectedCamera((byte)1)) {
+					if (!monitor.isVideoMode()) {
+						setIdle.setEnabled(false);
+					} else {
+						setVideo.setEnabled(false);
+					}
+				} else {
+					setIdle.setEnabled(false);
+					setVideo.setEnabled(false);
+				}
+
 		return true;
 	}
 
