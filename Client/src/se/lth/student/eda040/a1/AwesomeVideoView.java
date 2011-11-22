@@ -65,5 +65,4 @@ public class AwesomeVideoView extends LinearLayout {
 		Log.d("AwesomeVideoView", "Camera disconnected: " + cameraId);
 		this.frameList.get((int)cameraId).disconnected();
 	}
-
 }
