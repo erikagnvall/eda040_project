@@ -32,9 +32,11 @@ menu button on your Android device for forcing the cameras to enter
 video or idle mode.
 
 ## Server UML
-![Server UML](https://github.com/Meldanya/eda040_project/raw/dev/doc/uml_server.png)
+<!--![Server UML](https://github.com/Meldanya/eda040_project/raw/dev/doc/uml_server.png)-->
+![Server UML](./doc/uml_server.png)
 ## Client UML
-![Client UML](https://github.com/Meldanya/eda040_project/raw/dev/doc/uml_client.png)
+<!--![Client UML](https://github.com/Meldanya/eda040_project/raw/dev/doc/uml_client.png)-->
+![Client UML](./doc/uml_client.png)
 
 ## How to build and run
 	$git clone git://github.com/Meldanya/eda040_project.git
