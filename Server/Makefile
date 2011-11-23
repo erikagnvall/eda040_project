@@ -22,13 +22,13 @@
 ## Change this to the name of the main file of your project           #####
 ###########################################################################
 
-MAIN_NAME=Main # TODO change to the name of our main class.
+MAIN_NAME=src/ConnectionSetup.java # TODO change to the name of our main class.
 
 ###########################################################################
 ## Source dependencies required for correct rebuild                      ##
 ###########################################################################
 
-SOURCE_DEPENDS=
+SOURCE_DEPENDS=data/ImageMonitor.java data/In.java data/Out.java network/ImageCapture.java network/Image.java network/ServerProtocol.java
 
 ###########################################################################
 ## Any extra native source files required for the project                ##

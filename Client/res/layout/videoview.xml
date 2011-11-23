@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<se.lth.student.eda040.a1.AwesomeVideoView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/avv"
+	android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	>
+    <!--android:layout_height="wrap_content"-->
+
+	<include android:id="@+id/frame0" layout="@layout/awesomeframelayouttemplate" />	
+	<include android:id="@+id/frame1" layout="@layout/awesomeframelayouttemplate" />	
+	<TextView
+		android:id="@+id/infotext"
+		android:background = "#000000"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text=" "
+		android:textColor="#9db166"
+		android:textStyle="bold"
+		/>
+
+</se.lth.student.eda040.a1.AwesomeVideoView>

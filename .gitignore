@@ -2,4 +2,13 @@
 .metadata
 bin
 gen
-
+.*.swp
+*.class
+tags
+build
+local.properties
+*.local
+*~
+*#*
+tmp
+Server/c/

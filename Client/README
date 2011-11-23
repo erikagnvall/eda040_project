@@ -1,0 +1,9 @@
+## Build ##
+$android create avd -n api_10 -t target-10
+$emulator -avd api_10 &
+
+$ant debug
+$ant installd
+or 
+$adb install <apk-file>
+
