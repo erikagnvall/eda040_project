@@ -6,14 +6,8 @@ import se.lth.student.eda040.a1.data.ClientMonitor;
 import se.lth.student.eda040.a1.data.ImageFetcher;
 import se.lth.student.eda040.a1.data.DisconnectionDetecter;
 import se.lth.student.eda040.a1.network.ClientProtocol;
-import se.lth.student.eda040.a1.network.Command;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,17 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.net.UnknownHostException;
-import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 
 public class VideoActivity extends Activity {
 
@@ -45,18 +30,18 @@ public class VideoActivity extends Activity {
 	private ClientMonitor monitor;
 	private ContextMenu contextMenu;
 
-	private ArrayAdapter<String> adapter;
-	private AlertDialog cameraPicker;
 	private AwesomeVideoView avv;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videoview);
 		avv = (AwesomeVideoView) findViewById(R.id.avv);
-		avv.setVideoActivity(this);
+		//avv.setVideoActivity(this);
 		TextView infoText = (TextView) findViewById(R.id.infotext);
 		
 		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
+		// Socket connect has a timeout specified in ClientProtocol, as of
+		// writing this it is 5000 ms.
 		handler = new Handler();
 		monitor = new ClientMonitor();
 		DisconnectionDetecter detecter = new DisconnectionDetecter(monitor, avv, handler);
@@ -88,15 +73,6 @@ public class VideoActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.disconnectCam0:
-				Log.d("VideoActivity", "Selected disconnectCam0");
-				//disconnectCamera((byte) 0);
-				//avv.disconnect((byte) 0);
-				break;
-		case R.id.disconnectCam1:
-				Log.d("VideoActivity", "Selected disconnectCam1");
-				//disconnectCamera((byte) 1);
-				//avv.disconnect((byte) 1);
 		case R.id.setIdle:
 				monitor.setVideoMode(false);
 				break;
@@ -109,32 +85,17 @@ public class VideoActivity extends Activity {
 		return true;
 	}
 
-
-	/**
-	 * Disconnect a camera as well as some magic with the camera list.
+	/** Notify the Activity of disconnected camera.
+	 * This will simply make the GUI perform apropriate actions when a camera
+	 * has disconnected. For example switch the image in an AwesomeFrameView.
 	 */
-	//public void disconnectCamera(byte cameraId) {
-	//	monitor.gracefullDisconnect((byte) cameraId);
-	//}
-
 	public void disconnenctedCamera(byte cameraId) {
 		avv.disconnectedCamera(cameraId);
 	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
 				// Note: this overides the icons that otherwise would be used according to the xml.
-				menu.clear();	 // Clears all items, below: rebuild from scratch.
-				if (monitor.isConnectedCamera((byte) 0)) {
-					menu.add(Menu.NONE, R.id.disconnectCam0, 0, "Disconnect c0");
-				} else {
-					menu.add(Menu.NONE, R.id.connectCam0, 0, "Connect c0");
-				}
-
-				if (monitor.isConnectedCamera((byte) 1)) {
-					menu.add(Menu.NONE, R.id.disconnectCam1, 1, "Disconnect c1");
-				} else {
-					menu.add(Menu.NONE, R.id.connectCam1, 1, "Connect c1");
-				}
+				menu.clear(); // Clears all items, below: rebuild from scratch.
 				menu.add(Menu.NONE, R.id.setIdle, 2, "Set Idle");
 				menu.add(Menu.NONE, R.id.setVideo, 2, "Set Video");
 		return true;

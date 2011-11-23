@@ -62,8 +62,8 @@ public class AwesomeFrameLayout extends FrameLayout {
 		this.overlay = (TextView) findViewById(R.id.overlay);
 		this.disconnectedImage = BitmapFactory.decodeResource(getResources(), R.drawable.disconnected);
 
-		view.setLongClickable(true);
-		view.setOnLongClickListener(new View.OnLongClickListener() {
+		this.view.setLongClickable(true);
+		this.view.setOnLongClickListener(new View.OnLongClickListener() {
 			public boolean onLongClick(View v){
 				if(monitor.isConnectedCamera(cameraId)){
 					showDisconnectDialog();
@@ -106,7 +106,7 @@ public class AwesomeFrameLayout extends FrameLayout {
 					disconnectCamera();
 				}
 			})
-			.setMessage("Do you really want to disconnect?");
+			.setMessage("Do you really want to\ndisconnect this camera?");
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -147,11 +147,19 @@ public class AwesomeFrameLayout extends FrameLayout {
 
 	private void disconnectCamera(){
 		monitor.gracefullDisconnect(cameraId);
-		//disconnected();
+	}
+
+	public void disconnected() {
+		view.setImageBitmap(disconnectedImage);
+		overlay.setVisibility(View.INVISIBLE);
 	}
 
 	public void setMonitor(ClientMonitor monitor){
 		this.monitor = monitor;
+	}
+
+	public void setCameraId(byte cameraId) {
+		this.cameraId = cameraId;
 	}
 
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -171,12 +179,4 @@ public class AwesomeFrameLayout extends FrameLayout {
 		}
 	}
 
-	public void disconnected() {
-		view.setImageBitmap(disconnectedImage);
-		overlay.setVisibility(View.INVISIBLE);
-	}
-
-	public void setCameraId(byte cameraId) {
-		this.cameraId = cameraId;
-	}
 }
