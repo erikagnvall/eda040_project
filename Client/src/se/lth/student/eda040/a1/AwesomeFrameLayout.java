@@ -27,6 +27,7 @@ import android.graphics.Canvas;
 import android.view.View.MeasureSpec;
 import android.view.Gravity;
 import android.view.View;
+import android.os.Vibrator;
 
 
 public class AwesomeFrameLayout extends FrameLayout {
@@ -36,6 +37,8 @@ public class AwesomeFrameLayout extends FrameLayout {
 	private boolean disconnected;
 	private ClientMonitor monitor;
 	private byte cameraId;
+	private Vibrator vibrator;
+	private Context context;
 
 	private String[] hosts = {
 		"argus-1.student.lth.se",
@@ -54,6 +57,7 @@ public class AwesomeFrameLayout extends FrameLayout {
 	public AwesomeFrameLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		Log.d("AwesomeFrameLayout", " In constructor");
+		this.context = context;
 	}
 
 	public void onFinishInflate() {
@@ -61,6 +65,9 @@ public class AwesomeFrameLayout extends FrameLayout {
 		this.view = (ImageView) findViewById(R.id.view);
 		this.overlay = (TextView) findViewById(R.id.overlay);
 		this.disconnectedImage = BitmapFactory.decodeResource(getResources(), R.drawable.disconnected);
+
+		// Get instance of Vibrator from current Context
+		vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
 		this.view.setLongClickable(true);
 		this.view.setOnLongClickListener(new View.OnLongClickListener() {
@@ -142,6 +149,8 @@ public class AwesomeFrameLayout extends FrameLayout {
 		if (errorMsg != null) {
 			Log.d("VideoActivity", errorMsg);
 			showErrorDialog(errorMsg);
+		} else {
+			vibrator.vibrate(300);
 		}
 	}
 
