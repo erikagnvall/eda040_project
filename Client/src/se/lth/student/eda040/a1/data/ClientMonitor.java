@@ -3,6 +3,8 @@ package se.lth.student.eda040.a1.data;
 import se.lth.student.eda040.a1.network.*;
 
 import java.util.Queue;
+import java.util.Collection;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.LinkedList;
 import java.util.Map;
@@ -145,6 +147,8 @@ public class ClientMonitor {
 			putCommand(new Command(Command.DISCONNECT, protocols.get(cameraId)), cameraId);
 		}
 		connected[cameraId] = false;
+		disconnectionQueue.offer(cameraId);
+		notifyAll();
 		Log.d("ClientMonitor", "Gracefull disconnected camera " + cameraId);
 	}
 
@@ -163,7 +167,7 @@ public class ClientMonitor {
 	}
 
 	public synchronized byte awaitDisconnection() throws InterruptedException {
-		while (disconnectionQueue.peek() == null) {
+		while (disconnectionQueue.isEmpty()) {
 			wait();		
 		}
 		return disconnectionQueue.poll();
@@ -196,5 +200,15 @@ public class ClientMonitor {
 		if (!video) {
 		    this.trigger = -1;
 		}
+	}
+
+	public synchronized Collection<String> getConnectedHosts(){
+		ArrayList<String> hosts = new ArrayList<String>();
+		for(ClientProtocol cp : protocols.values()){
+			if(connected[cp.getCameraId()]){
+				hosts.add(cp.getHost());
+			}
+		}
+		return hosts;
 	}
 }

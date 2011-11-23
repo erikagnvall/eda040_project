@@ -14,7 +14,7 @@ public class DisonnectNotifier implements Runnable {
 	}
 
 	public void run() {
-		Log.d("DisonnectNotifier", "Now calling videoView.disconnectEmergency()");
-		videoView.disconnectEmergency(disconnectedCamera);
+		Log.d("DisonnectNotifier", "Now calling videoView.disconnectedCamera()");
+		videoView.disconnectedCamera(disconnectedCamera);
 	}
 }
