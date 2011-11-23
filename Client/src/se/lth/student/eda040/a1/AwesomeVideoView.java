@@ -8,7 +8,6 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
@@ -16,7 +15,6 @@ import android.util.Log;
 import android.graphics.Canvas;
 import android.view.View.MeasureSpec;
 import android.view.Gravity;
-import android.widget.TextView;
 
 
 public class AwesomeVideoView extends LinearLayout {
