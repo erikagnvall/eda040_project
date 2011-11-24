@@ -28,7 +28,6 @@ public class ImageFetcher extends Thread {
 			} catch(InterruptedException ie) {
 				// Do nothing
 			}
-			//handler.postDelayed(new ImageTransferer(videoView, image), 4000);
 		}
 	}
 }

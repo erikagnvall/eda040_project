@@ -36,6 +36,16 @@ video or idle mode.
 ## Client UML
 ![Client UML](https://github.com/Meldanya/eda040_project/raw/master/doc/uml_client.png)
 
+## Problems experienced
+We can't say that we have experienced that many problems, except with LJRT.
+Mostly, the development has been smooth. We have had several problems with
+Eduroam, specifically with the lack of open ports making it impossible to test the
+app on a physical device.
+
+Also, the LJRT library has carried with it some problems. Mostly some implementation
+details which differ between that and Java.
+
+
 ## How to build and run
 	$git clone git://github.com/Meldanya/eda040_project.git
 	$wget http://dl.google.com/android/android-sdk_r15-linux.tgz

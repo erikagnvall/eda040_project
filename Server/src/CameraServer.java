@@ -49,9 +49,8 @@ public class CameraServer implements Runnable {
 			//try {
 			socket.close();
 			//} catch (IOException e) {
-				//System.err.println("cold not close connection");
+			//System.err.println("cold not close connection");
 			//}
-			//System.out.println("Closed connection");
 		}
 	}
 

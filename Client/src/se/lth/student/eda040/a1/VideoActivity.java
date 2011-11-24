@@ -35,8 +35,7 @@ public class VideoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videoview);
 		avv = (AwesomeVideoView) findViewById(R.id.avv);
-		
-		// TODO the socket instantiation is blocking. OK for now but if possible do this in another setup-thread.
+
 		// Socket connect has a timeout specified in ClientProtocol, as of
 		// writing this it is 5000 ms.
 		handler = new Handler();
@@ -70,13 +69,13 @@ public class VideoActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.setIdle:
+			case R.id.setIdle:
 				monitor.setVideoMode(false);
 				break;
-		case R.id.setVideo:
+			case R.id.setVideo:
 				monitor.setVideoMode(true);
 				break;
-		default:
+			default:
 				super.onOptionsItemSelected(item);
 		}
 		return true;

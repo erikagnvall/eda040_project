@@ -15,20 +15,20 @@ import android.util.Log;
 
 public class ClientMonitor {
 
-    public static final int SYNC_THRESHOLD = 200;
+	public static final int SYNC_THRESHOLD = 200;
 	private static final int MAX_BUFFER_SIZE = 50;
-    private int nunsync;
+	private int nunsync;
 	private Queue<Command>[] commandQueues;
 	private Queue<Image> imageBuffer;
 	private Queue<Byte> disconnectionQueue;
 	private boolean[] isVideoMode;
 	private Map<Byte, ClientProtocol> protocols;
 	private boolean[] connected;
-    private boolean isSyncMode;
-    private long[] latestTimestamp;
-    private int[] delay;
-    private long delayNextUntil;
-    private int trigger;
+	private boolean isSyncMode;
+	private long[] latestTimestamp;
+	private int[] delay;
+	private long delayNextUntil;
+	private int trigger;
 
 	public ClientMonitor() {
 		commandQueues = (LinkedList<Command>[]) new LinkedList[2];
@@ -46,7 +46,6 @@ public class ClientMonitor {
 		trigger = -1;
 	}
 
-	// TODO private
 	public synchronized void putCommand(Command command, int cameraId){
 		commandQueues[cameraId].offer(command);
 		notifyAll();
@@ -60,8 +59,8 @@ public class ClientMonitor {
 	}
 
 	public synchronized void putImage(Image image){
-	    byte cameraId = image.getCameraId();
-	    byte otherCamera = (byte) (((int) cameraId + 1) % 2);
+		byte cameraId = image.getCameraId();
+		byte otherCamera = (byte) (((int) cameraId + 1) % 2);
 
 
 		imageBuffer.offer(image);
@@ -69,22 +68,20 @@ public class ClientMonitor {
 			imageBuffer.poll();
 		}
 
-		// If videomode distribute comand to other camera
-	    if (connected[otherCamera] && !isVideoMode[otherCamera] && image.isVideoMode()) {
+		if (connected[otherCamera] && !isVideoMode[otherCamera] && image.isVideoMode()) {
 			putCommand(new Command(Command.MODE_VIDEO, protocols.get(otherCamera)), otherCamera);
 			this.trigger = cameraId;
-	    }
-	    if (cameraId == trigger) {
-		image.setTrigger(true);
-	    }
-	    isVideoMode[cameraId] = image.isVideoMode();
-	    Log.d("ClientMonitor", "Put image in buffer");
-	    notifyAll(); 
+		}
+		if (cameraId == trigger) {
+			image.setTrigger(true);
+		}
+		isVideoMode[cameraId] = image.isVideoMode();
+		Log.d("ClientMonitor", "Put image in buffer");
+		notifyAll(); 
 	}
 
 	public synchronized Image awaitImage() throws InterruptedException{
 
-		//Log.d("ClientMonitor", "Waiting for image in buffer");
 		while (imageBuffer.isEmpty()) {
 			wait();
 		}
@@ -97,8 +94,8 @@ public class ClientMonitor {
 	}
 
 	private void syncDelay(Image img) throws InterruptedException {
-	    int delayDiff = 0;
-	    int cameraId = img.getCameraId();
+		int delayDiff = 0;
+		int cameraId = img.getCameraId();
 		int delay = img.getCurrentDelay();
 		delayDiff = Math.abs(img.getCurrentDelay() - this.delay[cameraId]);
 		if (delayDiff < SYNC_THRESHOLD  && delay < 1000 && delay > 0) {
@@ -114,15 +111,15 @@ public class ClientMonitor {
 		System.out.println(protocols.size());
 	}
 
-    /**
-     * Connects the specified camera to the specified host.
-     * Notifies threads waiting for connection.
-     * Returns true if successfull.
-     * Throws IllegalArgumentException if the cameraId is invalid.
-     * Throws Exceptions also thrown by socket.connect().
-     */
+	/**
+	 * Connects the specified camera to the specified host.
+	 * Notifies threads waiting for connection.
+	 * Returns true if successfull.
+	 * Throws IllegalArgumentException if the cameraId is invalid.
+	 * Throws Exceptions also thrown by socket.connect().
+	 */
 	public synchronized void connectTo(byte cameraId, String host)
-            throws UnknownHostException, IOException, IllegalArgumentException{
+		throws UnknownHostException, IOException, IllegalArgumentException{
 		if (protocols.containsKey(cameraId)) {
 			ClientProtocol protocol = protocols.get(cameraId);
 			protocol.connectTo(host);
@@ -132,8 +129,6 @@ public class ClientMonitor {
 			throw new IllegalArgumentException("No camera with id: " + cameraId + "!");
 		}
 
-		// TODO this could be simplified rigth? The camera should be connected if
-		// we've gotten this far.
 		Log.d("ClientMonitor", "Successfully connected to host with " + cameraId);
 		connected[cameraId] = true;
 		notifyAll();
@@ -174,7 +169,6 @@ public class ClientMonitor {
 	}
 
 	public synchronized void connectionCheck(byte cameraId) throws InterruptedException{
-		//Log.d("ClientMonitor", "Waiting in connectionCheck for camera " + cameraId);
 		while (!connected[cameraId]) {
 			wait();
 		}
@@ -188,7 +182,7 @@ public class ClientMonitor {
 	public synchronized boolean isVideoMode() {
 		return isVideoMode[0] || isVideoMode[1];
 	}
-	
+
 	public synchronized void setVideoMode(boolean video) {
 		for (ClientProtocol protocol : protocols.values()) {
 			if (connected[protocol.getCameraId()]) {
@@ -198,7 +192,7 @@ public class ClientMonitor {
 			}
 		}
 		if (!video) {
-		    this.trigger = -1;
+			this.trigger = -1;
 		}
 	}
 

@@ -19,9 +19,7 @@ public class Input extends Thread {
 		byte cameraId = protocol.getCameraId();
 		while (!interrupted()) {
 			try {
-				Log.d("Input", "Checking for connection in monitor");
 				monitor.connectionCheck(cameraId);
-				// TODO not threadsafe
 				image = protocol.awaitImage();
 				monitor.putImage(image);
 			} catch (IOException e) {

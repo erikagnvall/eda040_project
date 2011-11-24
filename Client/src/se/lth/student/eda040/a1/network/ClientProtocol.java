@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.net.InetSocketAddress;
 import android.util.Log;
 
-// TODO needs to be synchronized because of connectTo? if they share the socket? But that no good since is.read is blocking....
 public class ClientProtocol {
 	public static byte VIDEO_MODE = 'v';
 	public static int CAMERA_PORT = 8080;
@@ -33,7 +32,6 @@ public class ClientProtocol {
 		byte[] headerBytes = new byte[5];
 		int bytesRead = 0;
 		int returnValue = 0;
-		//Log.d("ClientProtocol", "Start reading header from inputStream");
 		while (bytesRead < 5) {
 			returnValue = inputStream.read(headerBytes, bytesRead, (5 - bytesRead));
 			if (returnValue == -1) {
@@ -41,18 +39,16 @@ public class ClientProtocol {
 			}
 			bytesRead += returnValue;
 		}
-		//Log.d("ClientProtocol", "Stopt reading header from inputStream");
+
 		int imageLen = 0;
 		for (int i = 0; i < 4; ++i) {
 			imageLen |= (int) ((headerBytes[1 + i] < 0 ? 256 + headerBytes[i +1] : headerBytes[i + 1]) << (8 * (3 - i)));
 		}
 
 		System.out.println(cameraId + "<>" + this);
-		//Log.d("ClientProtocol", "imageLen == " + imageLen);
 		bytesRead = 0;
 		byte[] imageBytes = new byte[imageLen];
 
-		//Log.d("ClientProtocol", "Start reading data from inputStream");
 		while (bytesRead < imageLen) {
 			returnValue = inputStream.read(imageBytes, bytesRead, (imageLen - bytesRead));
 			if (returnValue == -1){
@@ -60,15 +56,14 @@ public class ClientProtocol {
 			}
 			bytesRead += returnValue;
 		}
-		//Log.d("ClientProtocol", "Stopt reading data from inputStream");
 
 		long timestamp = 0;
 		for (int i = 0; i < 4; ++i) {
-				timestamp |= (long) ((imageBytes[25 + i] < 0 ? 256 + imageBytes[25 + i] : imageBytes[25 + i]) << (8 * (3 - i)));
+			timestamp |= (long) ((imageBytes[25 + i] < 0 ? 256 + imageBytes[25 + i] : imageBytes[25 + i]) << (8 * (3 - i)));
 		}
 		timestamp *= 1000;
-		//Log.d("ClientProtocol", "Timestamp == " + timestamp + ", or in HR == " + new Date(timestamp));
 		timestamp |= (long) (imageBytes[29] < 0 ? 256 + imageBytes[29] : imageBytes[29]);
+
 		return new Image(cameraId, imageBytes, timestamp, ((int) headerBytes[0]) == VIDEO_MODE);
 	}
 
@@ -83,7 +78,6 @@ public class ClientProtocol {
 	}
 
 	public void connectTo(String host) throws IOException, UnknownHostException {
-		//socket = new Socket(host, CAMERA_PORT);
 		this.host = host;
 		socket = new Socket();
 		Log.d("ClientProtocol", "Trying to connect to " + host + ":" + CAMERA_PORT);
@@ -113,7 +107,7 @@ public class ClientProtocol {
 		this.host = null;
 		Log.d("ClientProtocol", "Disconnected camera " + cameraId);
 	}
-	
+
 	public String getHost(){
 		return this.host;
 	}

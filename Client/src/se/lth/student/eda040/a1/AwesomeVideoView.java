@@ -41,19 +41,18 @@ public class AwesomeVideoView extends LinearLayout {
 		Log.d("AwesomeVideoView", "Now measuring");
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) / 2, MeasureSpec.getMode(heightMeasureSpec));
-		//int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.getMode(heightMeasureSpec));
 
 		for(AwesomeFrameLayout f : this.frameList.values()){
 			f.measure(widthMeasureSpec, measureSpecHeight);
 		}
 	}
-	
+
 	public void setMonitor(ClientMonitor monitor) {
 		for(AwesomeFrameLayout f : this.frameList.values()){
 			f.setMonitor(monitor);
 		}
 	}
-	
+
 	public void drawImage(Image image) {
 		Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
 		this.frameList.get((int)image.getCameraId()).drawImage(image);
