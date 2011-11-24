@@ -20,9 +20,9 @@ public class Output extends Thread {
 				protocol.sendCommand(command);
 				command.doPost();
 			} catch (IOException ie) {
-				// TODO 
+				// noop
 			} catch (InterruptedException e){
-				// Dont care!... yet
+				// noop
 			}
 		}
 

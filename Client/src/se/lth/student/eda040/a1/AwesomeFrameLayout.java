@@ -66,7 +66,6 @@ public class AwesomeFrameLayout extends FrameLayout {
 		this.overlay = (TextView) findViewById(R.id.overlay);
 		this.disconnectedImage = BitmapFactory.decodeResource(getResources(), R.drawable.disconnected);
 
-		// Get instance of Vibrator from current Context
 		vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
 		this.view.setLongClickable(true);
@@ -104,16 +103,16 @@ public class AwesomeFrameLayout extends FrameLayout {
 	private void showDisconnectDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-				}
-			})
-			.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id){
-					disconnectCamera();
-				}
-			})
-			.setMessage("Do you really want to\ndisconnect this camera?");
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		})
+		.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id){
+				disconnectCamera();
+			}
+		})
+		.setMessage("Do you really want to\ndisconnect this camera?");
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -121,11 +120,11 @@ public class AwesomeFrameLayout extends FrameLayout {
 	private void showErrorDialog(String msg){
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-				}
-			})
-			.setMessage(msg);
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		})
+		.setMessage(msg);
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -189,7 +188,7 @@ public class AwesomeFrameLayout extends FrameLayout {
 				overlay.append(" / V");
 			}
 			if (image.wasTrigger()) {
-			    overlay.append(" [T]");
+				overlay.append(" [T]");
 			}
 		}
 	}

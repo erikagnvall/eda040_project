@@ -17,7 +17,7 @@ public class Image implements Comparable<Image>{
 		this.videoMode = videoMode;
 		this.wasTrigger = false;
 	}
-	
+
 	public byte[] getImageData(){
 		return data;
 	}
@@ -47,10 +47,10 @@ public class Image implements Comparable<Image>{
 	}
 
 	public boolean wasTrigger() {
-	    return wasTrigger;
+		return wasTrigger;
 	}
-	
+
 	public void setTrigger(boolean trigged) {
-	    this.wasTrigger = trigged;
+		this.wasTrigger = trigged;
 	}
 }
