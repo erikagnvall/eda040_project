@@ -133,7 +133,7 @@ public class AwesomeFrameLayout extends FrameLayout {
 		String errorMsg = null;
 		try {
 			monitor.connectTo(cameraId, host);
-			Log.d("VideoActivity", "Connected to camera: " + cameraId);
+			//Log.d("VideoActivity", "Connected to camera: " + cameraId);
 		} catch (UnknownHostException e){
 			errorMsg = "Failed to connect camera: " + cameraId +
 				".\nUnable to connect to host: " + host + ".";
@@ -171,7 +171,7 @@ public class AwesomeFrameLayout extends FrameLayout {
 	}
 
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		Log.d("AwesomeFrameLayout", " In onMeasure");
+		//Log.d("AwesomeFrameLayout", " In onMeasure");
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.getMode(heightMeasureSpec));
 		view.measure(widthMeasureSpec, measureSpecHeight);

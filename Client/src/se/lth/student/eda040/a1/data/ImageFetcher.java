@@ -24,7 +24,7 @@ public class ImageFetcher extends Thread {
 			try {
 				image = monitor.awaitImage();
 				handler.post(new ImageTransferer(videoView, image));
-				Log.d("ImageTransferer", "^^Fetched an image and posted an ImageTransferer");
+				//Log.d("ImageTransferer", "Fetched an image and posted an ImageTransferer");
 			} catch(InterruptedException ie) {
 				// Do nothing
 			}

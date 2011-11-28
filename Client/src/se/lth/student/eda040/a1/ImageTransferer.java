@@ -15,7 +15,7 @@ public class ImageTransferer implements Runnable {
 	}
 
 	public void run() {
-		Log.d("ImageTransferer", "Now calling Handler.drawImage()");
+		//Log.d("ImageTransferer", "Now calling Handler.drawImage()");
 		videoView.drawImage(image);
 	}
 }
