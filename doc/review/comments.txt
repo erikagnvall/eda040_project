@@ -1,0 +1,28 @@
+
+
+
+
+BAD!!
+* No install instructions.
+* Eclipse dependent.
+* Error on initial setup according to instructions.
+* What about android specific libraries and setups?
+* No instructions on how to install server. Neither how to run it.
+
+
+Implementation
+
+GOOD <3
+* Server supports several connected cameras.
+* Client supports any number of connected servers.
+
+BAD!!!
+* Movie mode not entered as required. Up to 10 sec delayed, at least 5 sec. 
+* Server crashes on broken pipe.
+* Images not displayed in proper order.
+* If in DisplayActivity and clicks 'Connections' the client crashes.
+* Idle Mode option falsely gives the impression one can change display mode from the client
+* No mode, display or sync, can be set from client.
+* Client does not inform which server triggered movie mode.
+
+
