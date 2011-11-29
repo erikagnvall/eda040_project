@@ -51,9 +51,10 @@ details which differ between that and Java.
 	$wget http://dl.google.com/android/android-sdk_r15-linux.tgz
 	$tar xvzf android-sdk_r15-linux.tgz
 	$PATH=$PATH:"`pwd`/android-sdk-linux/tools"
+	$echo "sdk.dir = ../../android-sdk-linux/" > eda040_project/Client/local.properties
 	$cd eda040_project
 
-Beware! You have to redo the second last command if you switch shell.
+Beware! You have to redo the third last command if you switch shell.
 ### Server
 Server should be started before trying to connect with client....
 
