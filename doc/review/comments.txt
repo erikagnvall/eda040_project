@@ -24,5 +24,6 @@ BAD!!!
 * Idle Mode option falsely gives the impression one can change display mode from the client
 * No mode, display or sync, can be set from client.
 * Client does not inform which server triggered movie mode.
+* Can't reconnect!
 
 
