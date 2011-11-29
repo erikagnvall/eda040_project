@@ -150,6 +150,10 @@ Connect the phone to your computer.
 Start the application	
 Choose a real camera.
 
+## Implementation Details
+
+The sync feature is implemented but not currently used by our application. This is due to it requires synced timestamps on all systems, including the Emulator. This is not an issue we intend to solve.
+
 ##Contributors
 Erik Jansson
 

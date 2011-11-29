@@ -24,11 +24,8 @@ public class ClientMonitor {
 	private boolean[] isVideoMode;
 	private Map<Byte, ClientProtocol> protocols;
 	private boolean[] connected;
-	private boolean isSyncMode;
-	private long[] latestTimestamp;
-	private int[] delay;
-	private long delayNextUntil;
 	private int trigger;
+	private SyncManager syncManager;
 
 	public ClientMonitor() {
 		commandQueues = (LinkedList<Command>[]) new LinkedList[2];
@@ -39,11 +36,8 @@ public class ClientMonitor {
 		protocols = new HashMap<Byte, ClientProtocol>();
 		connected = new boolean[2];
 		disconnectionQueue = new LinkedList<Byte>();
-		isSyncMode = false;
-		delay = new int[2];
-		latestTimestamp = new long[2];
-		delayNextUntil = 0;
 		trigger = -1;
+		this.syncManager = new SyncManager(20, SYNC_THRESHOLD);
 	}
 
 	public synchronized void putCommand(Command command, int cameraId){
@@ -76,7 +70,7 @@ public class ClientMonitor {
 			image.setTrigger(true);
 		}
 		isVideoMode[cameraId] = image.isVideoMode();
-		Log.d("ClientMonitor", "Put image in buffer");
+		//Log.d("ClientMonitor", "Put image in buffer");
 		notifyAll(); 
 	}
 
@@ -89,26 +83,27 @@ public class ClientMonitor {
 
 		//syncDelay(image);
 		notifyAll(); 
-		Log.d("ClientMonitor", "Released image");
+		//Log.d("ClientMonitor", "Released image");
 		return image;
 	}
 
 	private void syncDelay(Image img) throws InterruptedException {
-		int delayDiff = 0;
-		int cameraId = img.getCameraId();
-		int delay = img.getCurrentDelay();
-		delayDiff = Math.abs(img.getCurrentDelay() - this.delay[cameraId]);
-		if (delayDiff < SYNC_THRESHOLD  && delay < 1000 && delay > 0) {
-			while((delay = img.getCurrentDelay()) < 1000){
-				wait(1000 - delay);
+		this.syncManager.addDelay(img.getCurrentDelay());
+		int targetDelay = syncManager.getMeanDelay();
+		int delay = 0;
+		if(syncManager.isSync()){
+			delay = img.getCurrentDelay();
+			Log.d("ClientMonitor", "Syncing image! target: " + targetDelay +
+					" delay: " + delay);
+			while((delay = img.getCurrentDelay()) < targetDelay){
+				wait(targetDelay - delay);
 			}
 		}
-		this.delay[cameraId] = img.getCurrentDelay();
 	}
 
 	public synchronized void addProtocol(byte cameraId, ClientProtocol protocol) {
 		protocols.put(cameraId, protocol);
-		System.out.println(protocols.size());
+		//System.out.println(protocols.size());
 	}
 
 	/**
@@ -172,7 +167,7 @@ public class ClientMonitor {
 		while (!connected[cameraId]) {
 			wait();
 		}
-		Log.d("ClientMonitor", "Released in connectionCheck for camera " + cameraId);
+		//Log.d("ClientMonitor", "Released in connectionCheck for camera " + cameraId);
 	}
 
 	public synchronized boolean isConnectedCamera(byte cameraId) {
@@ -205,4 +200,56 @@ public class ClientMonitor {
 		}
 		return hosts;
 	}
+
+	private class SyncManager{
+		private int[] delayHist;
+		private int currentIndex;
+		private int meanDelay;
+		private int meanDiff;
+		private int syncThreshold;
+
+		public SyncManager(int size, int threshold){
+			this.delayHist = new int[size];
+			this.currentIndex = 0;
+			this.meanDelay = 0;
+			this.meanDiff = 0;
+			this.syncThreshold = threshold;
+		}
+
+		public void addDelay(int delay){
+			this.currentIndex = (this.currentIndex + 1) % this.delayHist.length;
+			this.delayHist[this.currentIndex] = delay;
+			update();
+		}
+
+		public int getMeanDelay(){
+			return this.meanDelay;
+		}
+
+		private void update(){
+			this.meanDelay = calcMeanDelay();
+			this.meanDiff = getMeanDiff();
+		}
+
+		private int calcMeanDelay(){
+			int sum = 0;
+			for(int i = 0; i < this.delayHist.length; i++){
+				sum += this.delayHist[i];
+			}
+			return sum / this.delayHist.length;
+		}
+
+		private int getMeanDiff(){
+			int sum = 0;
+			for(int i = 0; i < this.delayHist.length; i++){
+				sum += Math.abs(this.meanDelay - this.delayHist[i]);
+			}
+			return sum / this.delayHist.length;
+		}
+
+		public boolean isSync(){
+			return meanDiff <= syncThreshold;
+		}
+	}
+
 }

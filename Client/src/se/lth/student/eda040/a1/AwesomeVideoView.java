@@ -38,7 +38,7 @@ public class AwesomeVideoView extends LinearLayout {
 	}
 
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		Log.d("AwesomeVideoView", "Now measuring");
+		//Log.d("AwesomeVideoView", "Now measuring");
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		int measureSpecHeight = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) / 2, MeasureSpec.getMode(heightMeasureSpec));
 
@@ -54,12 +54,12 @@ public class AwesomeVideoView extends LinearLayout {
 	}
 
 	public void drawImage(Image image) {
-		Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
+		//Log.d("VideoView", "Recieved image to draw from camera " + image.getCameraId());
 		this.frameList.get((int)image.getCameraId()).drawImage(image);
 	}
 
 	public void disconnectedCamera(byte cameraId) {
-		Log.d("AwesomeVideoView", "Camera disconnected: " + cameraId);
+		//Log.d("AwesomeVideoView", "Camera disconnected: " + cameraId);
 		this.frameList.get((int)cameraId).disconnected();
 	}
 }
