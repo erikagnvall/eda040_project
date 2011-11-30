@@ -8,6 +8,7 @@
 	* Intressant plattform.
 	* Bra med abstraktion. 
 	* Callback-monster.
+	* Latexig Rapport.
 
 * Otillräckliga instruktioner.
 	* Eclipse beroende
