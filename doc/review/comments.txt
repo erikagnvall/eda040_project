@@ -1,6 +1,8 @@
 
+Documentation:
 
-
+GODD <3
+* Have yet to find something.
 
 BAD!!
 * No install instructions.
@@ -8,7 +10,7 @@ BAD!!
 * Error on initial setup according to instructions.
 * What about android specific libraries and setups?
 * No instructions on how to install server. Neither how to run it.
-
+* The complex data flow really needs a diagram or something to be explained.
 
 Implementation
 
@@ -30,6 +32,7 @@ BAD!!!
 * WOW!!!! Complexity through the roof!
 * Way too many threads and monitors.
 * Why having ViewThread and DisplayThread?
+* Model depends on view, creating circular dependancies.
 
 
 Thread Safety:
