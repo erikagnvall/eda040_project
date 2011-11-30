@@ -15,6 +15,8 @@ Implementation
 GOOD <3
 * Server supports several connected cameras.
 * Client supports any number of connected servers.
+* Taking advantage of Android Service, i guess :S... Intents etc.
+* It seems to have been fun implementing this :D
 
 BAD!!!
 * Movie mode not entered as required. Up to 10 sec delayed, at least 5 sec. 
@@ -25,5 +27,13 @@ BAD!!!
 * No mode, display or sync, can be set from client.
 * Client does not inform which server triggered movie mode.
 * Can't reconnect!
+* WOW!!!! Complexity through the roof!
+* Way too many threads and monitors.
+* Why having ViewThread and DisplayThread?
+
+
+Thread Safety:
+
+* display.Panel.mBitmap used by ViewThread and DisplayThread without locking.
 
 
