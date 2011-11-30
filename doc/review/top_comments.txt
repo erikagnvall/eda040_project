@@ -1,0 +1,23 @@
+# Frågor
+* Server: Varför så många monitorer? Varför så få trådar? Blir svårt att följa dataflödet.
+* Klient: Varför så många monitorer? Varför så många trådar?
+
+# Kommentarer
+* Bra saker
+	* Stöd för flera anslutningar till både server och klient. 
+	* Intressant plattform.
+	* Bra med abstraktion. 
+	* Callback-monster.
+
+* Otillräckliga instruktioner.
+	* Eclipse beroende
+	* Inga instruktioner för installation.
+	* Inga instruktioner om Android-verktyg och hur de ska installeras.
+* SendServerThread busy-wait:ar om ingen kamera är ansluten.
+* Saknad funktionalitet 
+	* Klient: går ej att byta läge.
+	* Server: går ej att återansluta.
+	* Övergången till filmläge går inte direkt utan kan ta Thread.sleep(5000).
+	* Ingen C-version?
+* Trådosäkerhet i klient/Panel på attributet mBitMap som används av DisplayThread och ViewThread.
+

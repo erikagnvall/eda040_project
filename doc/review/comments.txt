@@ -1,10 +1,9 @@
+# Documentation
 
-Documentation:
+## GOOD <3
+* Fun commit comments.
 
-GODD <3
-* Have yet to find something.
-
-BAD!!
+## BAD
 * No install instructions.
 * Eclipse dependent.
 * Error on initial setup according to instructions.
@@ -12,31 +11,39 @@ BAD!!
 * No instructions on how to install server. Neither how to run it.
 * The complex data flow really needs a diagram or something to be explained.
 
-Implementation
+# Implementation
 
-GOOD <3
+## GOOD 
 * Server supports several connected cameras.
 * Client supports any number of connected servers.
 * Taking advantage of Android Service, i guess :S... Intents etc.
 * It seems to have been fun implementing this :D
+* Template method for recieving -- good for reuse with different GUI:s. 
 
-BAD!!!
+## BAD
 * Movie mode not entered as required. Up to 10 sec delayed, at least 5 sec. 
-* Server crashes on broken pipe.
-* Images not displayed in proper order.
-* If in DisplayActivity and clicks 'Connections' the client crashes.
-* Idle Mode option falsely gives the impression one can change display mode from the client
-* No mode, display or sync, can be set from client.
-* Client does not inform which server triggered movie mode.
-* Can't reconnect!
+* Client: bad cognitive mapping of controls in the desktop client.
+
+### Client
 * WOW!!!! Complexity through the roof!
 * Way too many threads and monitors.
 * Why having ViewThread and DisplayThread?
 * Model depends on view, creating circular dependancies.
+* Images not displayed in proper order.
+* If in DisplayActivity and clicks 'Connections' the client crashes.
+* Idle Mode option falsely gives the impression one can change display mode from the client
 
+### Server
+* Server crashes on broken pipe. exit(1) on failure.
+* No mode, display or sync, can be set from client.
+* Client does not inform which server triggered movie mode.
+* CameraThread.periodRecieve:  sleep() could be the reason for not switching to video-mode instantly.
+* There seems to be no version that can be cross-compiled to C.
+* ServerSendThread busy-wait on run()when not connected.
+* Connection.isConnected() does not return the real state.
 
-Thread Safety:
+# Thread Safety
 
-* display.Panel.mBitmap used by ViewThread and DisplayThread without locking.
+* Client: display.Panel.mBitmap used by ViewThread and DisplayThread without locking.
 
 
